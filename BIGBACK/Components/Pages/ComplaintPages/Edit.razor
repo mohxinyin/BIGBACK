@@ -1,0 +1,139 @@
+﻿@page "/complaints/edit"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Complaint</h2>
+<hr />
+@if (Complaint is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Complaint" OnValidSubmit="UpdateComplaint" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Complaint.Id" value="@Complaint.Id" />
+                <div class="mb-3">
+                    <label for="complaintid" class="form-label">ComplaintID:</label>
+                    <InputNumber id="complaintid" @bind-Value="Complaint.ComplaintID" class="form-control" />
+                    <ValidationMessage For="() => Complaint.ComplaintID" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="orderid" class="form-label">OrderID:</label>
+                    <InputNumber id="orderid" @bind-Value="Complaint.OrderID" class="form-control" />
+                    <ValidationMessage For="() => Complaint.OrderID" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="staffid" class="form-label">StaffID:</label>
+                    <InputNumber id="staffid" @bind-Value="Complaint.StaffID" class="form-control" />
+                    <ValidationMessage For="() => Complaint.StaffID" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="riderid" class="form-label">RiderID:</label>
+                    <InputNumber id="riderid" @bind-Value="Complaint.RiderID" class="form-control" />
+                    <ValidationMessage For="() => Complaint.RiderID" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="complaintdesc" class="form-label">ComplaintDesc:</label>
+                    <InputText id="complaintdesc" @bind-Value="Complaint.ComplaintDesc" class="form-control" />
+                    <ValidationMessage For="() => Complaint.ComplaintDesc" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="complaintstatus" class="form-label">ComplaintStatus:</label>
+                    <InputText id="complaintstatus" @bind-Value="Complaint.ComplaintStatus" class="form-control" />
+                    <ValidationMessage For="() => Complaint.ComplaintStatus" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="complaintdatetime" class="form-label">ComplaintDateTime:</label>
+                    <InputDate id="complaintdatetime" @bind-Value="Complaint.ComplaintDateTime" class="form-control" />
+                    <ValidationMessage For="() => Complaint.ComplaintDateTime" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="Complaint.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => Complaint.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="Complaint.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => Complaint.DateUpdated" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="Complaint.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => Complaint.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="Complaint.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => Complaint.UpdatedBy" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/complaints">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Complaint? Complaint { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Complaint ??= await context.Complaint.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Complaint is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateComplaint()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Complaint!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!ComplaintExists(Complaint!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/complaints");
+    }
+
+    private bool ComplaintExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Complaint.Any(e => e.Id == id);
+    }
+}

@@ -1,0 +1,62 @@
+﻿@page "/deliveryriders/details"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>DeliveryRider</h2>
+    <hr />
+    @if (deliveryrider is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DeliveryRiderId</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryRiderId</dd>
+            <dt class="col-sm-2">DeliveryRiderTaskType</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryRiderTaskType</dd>
+            <dt class="col-sm-2">DeliveryRiderStatus</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryRiderStatus</dd>
+            <dt class="col-sm-2">DeliveryId</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryId</dd>
+            <dt class="col-sm-2">RiderId</dt>
+            <dd class="col-sm-10">@deliveryrider.RiderId</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@deliveryrider.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@deliveryrider.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@deliveryrider.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@deliveryrider.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/deliveryriders/edit?id={deliveryrider.Id}")">Edit</a> |
+            <a href="@($"/deliveryriders")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private DeliveryRider? deliveryrider;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        deliveryrider = await context.DeliveryRider.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (deliveryrider is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

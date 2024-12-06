@@ -1,0 +1,60 @@
+﻿@page "/staff/details"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Staff</h2>
+    <hr />
+    @if (staff is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">StaffID</dt>
+            <dd class="col-sm-10">@staff.StaffID</dd>
+            <dt class="col-sm-2">StaffName</dt>
+            <dd class="col-sm-10">@staff.StaffName</dd>
+            <dt class="col-sm-2">StaffEmail</dt>
+            <dd class="col-sm-10">@staff.StaffEmail</dd>
+            <dt class="col-sm-2">StaffContact</dt>
+            <dd class="col-sm-10">@staff.StaffContact</dd>
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@staff.DateCreated</dd>
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@staff.DateUpdated</dd>
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@staff.CreatedBy</dd>
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@staff.UpdatedBy</dd>
+        </dl>
+        <div>
+            <a href="@($"/staff/edit?id={staff.Id}")">Edit</a> |
+            <a href="@($"/staff")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Staff? staff;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        staff = await context.Staff.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (staff is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

@@ -1,0 +1,44 @@
+﻿@page "/deliveryriders"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="deliveryriders/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.DeliveryRider">
+    <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryRiderId" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryRiderTaskType" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryRiderStatus" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryId" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.RiderId" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.DateCreated" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.DateUpdated" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.CreatedBy" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.UpdatedBy" />
+
+    <TemplateColumn Context="deliveryrider">
+        <a href="@($"deliveryriders/edit?id={deliveryrider.Id}")">Edit</a> |
+        <a href="@($"deliveryriders/details?id={deliveryrider.Id}")">Details</a> |
+        <a href="@($"deliveryriders/delete?id={deliveryrider.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private BIGBACKContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

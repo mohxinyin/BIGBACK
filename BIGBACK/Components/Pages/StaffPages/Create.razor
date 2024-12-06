@@ -1,0 +1,79 @@
+﻿@page "/staff/create"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Staff</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Staff" OnValidSubmit="AddStaff" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="staffid" class="form-label">StaffID:</label> 
+                <InputNumber id="staffid" @bind-Value="Staff.StaffID" class="form-control" /> 
+                <ValidationMessage For="() => Staff.StaffID" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="staffname" class="form-label">StaffName:</label> 
+                <InputText id="staffname" @bind-Value="Staff.StaffName" class="form-control" /> 
+                <ValidationMessage For="() => Staff.StaffName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="staffemail" class="form-label">StaffEmail:</label> 
+                <InputText id="staffemail" @bind-Value="Staff.StaffEmail" class="form-control" /> 
+                <ValidationMessage For="() => Staff.StaffEmail" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="staffcontact" class="form-label">StaffContact:</label> 
+                <InputText id="staffcontact" @bind-Value="Staff.StaffContact" class="form-control" /> 
+                <ValidationMessage For="() => Staff.StaffContact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="Staff.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => Staff.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="Staff.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => Staff.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="Staff.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Staff.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="Staff.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Staff.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/staff">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Staff Staff { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddStaff()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Staff.Add(Staff);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/staff");
+    }
+}

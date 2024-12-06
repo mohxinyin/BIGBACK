@@ -1,0 +1,87 @@
+﻿@page "/deliveryriders/delete"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>DeliveryRider</h2>
+    <hr />
+    @if (deliveryrider is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DeliveryRiderId</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryRiderId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DeliveryRiderTaskType</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryRiderTaskType</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DeliveryRiderStatus</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryRiderStatus</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DeliveryId</dt>
+            <dd class="col-sm-10">@deliveryrider.DeliveryId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">RiderId</dt>
+            <dd class="col-sm-10">@deliveryrider.RiderId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DateCreated</dt>
+            <dd class="col-sm-10">@deliveryrider.DateCreated</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">DateUpdated</dt>
+            <dd class="col-sm-10">@deliveryrider.DateUpdated</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">CreatedBy</dt>
+            <dd class="col-sm-10">@deliveryrider.CreatedBy</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">UpdatedBy</dt>
+            <dd class="col-sm-10">@deliveryrider.UpdatedBy</dd>
+        </dl>
+        <EditForm method="post" Model="deliveryrider" OnValidSubmit="DeleteDeliveryRider" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(deliveryrider is null)">Delete</button> |
+            <a href="/deliveryriders">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private DeliveryRider? deliveryrider;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        deliveryrider = await context.DeliveryRider.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (deliveryrider is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteDeliveryRider()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.DeliveryRider.Remove(deliveryrider!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/deliveryriders");
+    }
+}
