@@ -1,0 +1,54 @@
+﻿@page "/businessowners/details"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>BusinessOwner</h2>
+    <hr />
+    @if (businessowner is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">BusinessOwnerId</dt>
+            <dd class="col-sm-10">@businessowner.BusinessOwnerId</dd>
+            <dt class="col-sm-2">BusinessOwnerName</dt>
+            <dd class="col-sm-10">@businessowner.BusinessOwnerName</dd>
+            <dt class="col-sm-2">BusinessOwnerrContact</dt>
+            <dd class="col-sm-10">@businessowner.BusinessOwnerrContact</dd>
+            <dt class="col-sm-2">BusinessOwnerEmail</dt>
+            <dd class="col-sm-10">@businessowner.BusinessOwnerEmail</dd>
+            <dt class="col-sm-2">BusinessOwnerGender</dt>
+            <dd class="col-sm-10">@businessowner.BusinessOwnerGender</dd>
+        </dl>
+        <div>
+            <a href="@($"/businessowners/edit?id={businessowner.Id}")">Edit</a> |
+            <a href="@($"/businessowners")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private BusinessOwner? businessowner;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        businessowner = await context.BusinessOwner.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (businessowner is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}

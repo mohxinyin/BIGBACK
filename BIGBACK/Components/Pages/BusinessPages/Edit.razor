@@ -1,0 +1,114 @@
+﻿@page "/businesses/edit"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Edit</PageTitle>
+
+<h1>Edit</h1>
+
+<h2>Business</h2>
+<hr />
+@if (Business is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm method="post" Model="Business" OnValidSubmit="UpdateBusiness" FormName="edit" Enhance>
+                <DataAnnotationsValidator />
+                <ValidationSummary role="alert"/>
+                <input type="hidden" name="Business.Id" value="@Business.Id" />
+                <div class="mb-3">
+                    <label for="businessid" class="form-label">BusinessId:</label>
+                    <InputNumber id="businessid" @bind-Value="Business.BusinessId" class="form-control" />
+                    <ValidationMessage For="() => Business.BusinessId" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="businessname" class="form-label">BusinessName:</label>
+                    <InputText id="businessname" @bind-Value="Business.BusinessName" class="form-control" />
+                    <ValidationMessage For="() => Business.BusinessName" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="businessaddress" class="form-label">BusinessAddress:</label>
+                    <InputText id="businessaddress" @bind-Value="Business.BusinessAddress" class="form-control" />
+                    <ValidationMessage For="() => Business.BusinessAddress" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="businesscontact" class="form-label">BusinessContact:</label>
+                    <InputText id="businesscontact" @bind-Value="Business.BusinessContact" class="form-control" />
+                    <ValidationMessage For="() => Business.BusinessContact" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="businessrating" class="form-label">BusinessRating:</label>
+                    <InputText id="businessrating" @bind-Value="Business.BusinessRating" class="form-control" />
+                    <ValidationMessage For="() => Business.BusinessRating" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="businessstatus" class="form-label">BusinessStatus:</label>
+                    <InputNumber id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control" />
+                    <ValidationMessage For="() => Business.BusinessStatus" class="text-danger" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </EditForm>
+        </div>
+    </div>
+}
+
+<div>
+    <a href="/businesses">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    [SupplyParameterFromForm]
+    private Business? Business { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Business ??= await context.Business.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (Business is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task UpdateBusiness()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Attach(Business!).State = EntityState.Modified;
+
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            if (!BusinessExists(Business!.Id))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+            else
+            {
+                throw;
+            }
+        }
+
+        NavigationManager.NavigateTo("/businesses");
+    }
+
+    private bool BusinessExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Business.Any(e => e.Id == id);
+    }
+}

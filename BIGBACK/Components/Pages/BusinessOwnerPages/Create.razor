@@ -1,0 +1,64 @@
+﻿@page "/businessowners/create"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>BusinessOwner</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="BusinessOwner" OnValidSubmit="AddBusinessOwner" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="businessownerid" class="form-label">BusinessOwnerId:</label> 
+                <InputNumber id="businessownerid" @bind-Value="BusinessOwner.BusinessOwnerId" class="form-control" /> 
+                <ValidationMessage For="() => BusinessOwner.BusinessOwnerId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessownername" class="form-label">BusinessOwnerName:</label> 
+                <InputText id="businessownername" @bind-Value="BusinessOwner.BusinessOwnerName" class="form-control" /> 
+                <ValidationMessage For="() => BusinessOwner.BusinessOwnerName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessownerrcontact" class="form-label">BusinessOwnerrContact:</label> 
+                <InputText id="businessownerrcontact" @bind-Value="BusinessOwner.BusinessOwnerrContact" class="form-control" /> 
+                <ValidationMessage For="() => BusinessOwner.BusinessOwnerrContact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessowneremail" class="form-label">BusinessOwnerEmail:</label> 
+                <InputText id="businessowneremail" @bind-Value="BusinessOwner.BusinessOwnerEmail" class="form-control" /> 
+                <ValidationMessage For="() => BusinessOwner.BusinessOwnerEmail" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessownergender" class="form-label">BusinessOwnerGender:</label> 
+                <InputText id="businessownergender" @bind-Value="BusinessOwner.BusinessOwnerGender" class="form-control" /> 
+                <ValidationMessage For="() => BusinessOwner.BusinessOwnerGender" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/businessowners">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private BusinessOwner BusinessOwner { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddBusinessOwner()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.BusinessOwner.Add(BusinessOwner);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/businessowners");
+    }
+}

@@ -1,0 +1,69 @@
+﻿@page "/businesses/create"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Business</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Business" OnValidSubmit="AddBusiness" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="businessid" class="form-label">BusinessId:</label> 
+                <InputNumber id="businessid" @bind-Value="Business.BusinessId" class="form-control" /> 
+                <ValidationMessage For="() => Business.BusinessId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessname" class="form-label">BusinessName:</label> 
+                <InputText id="businessname" @bind-Value="Business.BusinessName" class="form-control" /> 
+                <ValidationMessage For="() => Business.BusinessName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessaddress" class="form-label">BusinessAddress:</label> 
+                <InputText id="businessaddress" @bind-Value="Business.BusinessAddress" class="form-control" /> 
+                <ValidationMessage For="() => Business.BusinessAddress" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businesscontact" class="form-label">BusinessContact:</label> 
+                <InputText id="businesscontact" @bind-Value="Business.BusinessContact" class="form-control" /> 
+                <ValidationMessage For="() => Business.BusinessContact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessrating" class="form-label">BusinessRating:</label> 
+                <InputText id="businessrating" @bind-Value="Business.BusinessRating" class="form-control" /> 
+                <ValidationMessage For="() => Business.BusinessRating" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="businessstatus" class="form-label">BusinessStatus:</label> 
+                <InputNumber id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control" /> 
+                <ValidationMessage For="() => Business.BusinessStatus" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/businesses">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Business Business { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddBusiness()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Business.Add(Business);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/businesses");
+    }
+}

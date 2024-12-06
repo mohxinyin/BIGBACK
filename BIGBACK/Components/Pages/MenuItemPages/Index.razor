@@ -1,0 +1,40 @@
+﻿@page "/menuitems"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="menuitems/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.MenuItem">
+    <PropertyColumn Property="menuitem => menuitem.MenuItemId" />
+    <PropertyColumn Property="menuitem => menuitem.MenuItemPrice" />
+    <PropertyColumn Property="menuitem => menuitem.MenuItemName" />
+    <PropertyColumn Property="menuitem => menuitem.MenuItemDesc" />
+    <PropertyColumn Property="menuitem => menuitem.MenuId" />
+
+    <TemplateColumn Context="menuitem">
+        <a href="@($"menuitems/edit?id={menuitem.Id}")">Edit</a> |
+        <a href="@($"menuitems/details?id={menuitem.Id}")">Details</a> |
+        <a href="@($"menuitems/delete?id={menuitem.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private BIGBACKContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

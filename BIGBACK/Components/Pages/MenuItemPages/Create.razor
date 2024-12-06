@@ -1,0 +1,64 @@
+﻿@page "/menuitems/create"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>MenuItem</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="MenuItem" OnValidSubmit="AddMenuItem" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="menuitemid" class="form-label">MenuItemId:</label> 
+                <InputNumber id="menuitemid" @bind-Value="MenuItem.MenuItemId" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.MenuItemId" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="menuitemprice" class="form-label">MenuItemPrice:</label> 
+                <InputNumber id="menuitemprice" @bind-Value="MenuItem.MenuItemPrice" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.MenuItemPrice" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="menuitemname" class="form-label">MenuItemName:</label> 
+                <InputText id="menuitemname" @bind-Value="MenuItem.MenuItemName" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.MenuItemName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="menuitemdesc" class="form-label">MenuItemDesc:</label> 
+                <InputText id="menuitemdesc" @bind-Value="MenuItem.MenuItemDesc" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.MenuItemDesc" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="menuid" class="form-label">MenuId:</label> 
+                <InputNumber id="menuid" @bind-Value="MenuItem.MenuId" class="form-control" /> 
+                <ValidationMessage For="() => MenuItem.MenuId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/menuitems">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private MenuItem MenuItem { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddMenuItem()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.MenuItem.Add(MenuItem);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/menuitems");
+    }
+}

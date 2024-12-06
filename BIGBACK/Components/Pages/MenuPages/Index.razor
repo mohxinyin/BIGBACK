@@ -1,0 +1,39 @@
+﻿@page "/menus"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="menus/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Menu">
+    <PropertyColumn Property="menu => menu.MenuId" />
+    <PropertyColumn Property="menu => menu.MenuName" />
+    <PropertyColumn Property="menu => menu.BusinessId" />
+    <PropertyColumn Property="menu => menu.MenuCategory" />
+
+    <TemplateColumn Context="menu">
+        <a href="@($"menus/edit?id={menu.Id}")">Edit</a> |
+        <a href="@($"menus/details?id={menu.Id}")">Details</a> |
+        <a href="@($"menus/delete?id={menu.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private BIGBACKContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

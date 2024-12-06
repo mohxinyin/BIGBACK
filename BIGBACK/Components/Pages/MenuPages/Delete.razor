@@ -1,0 +1,67 @@
+﻿@page "/menus/delete"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Delete</PageTitle>
+
+<h1>Delete</h1>
+
+<p>Are you sure you want to delete this?</p>
+<div>
+    <h2>Menu</h2>
+    <hr />
+    @if (menu is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">MenuId</dt>
+            <dd class="col-sm-10">@menu.MenuId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">MenuName</dt>
+            <dd class="col-sm-10">@menu.MenuName</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">BusinessId</dt>
+            <dd class="col-sm-10">@menu.BusinessId</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-sm-2">MenuCategory</dt>
+            <dd class="col-sm-10">@menu.MenuCategory</dd>
+        </dl>
+        <EditForm method="post" Model="menu" OnValidSubmit="DeleteMenu" FormName="delete" Enhance>
+            <button type="submit" class="btn btn-danger" disabled="@(menu is null)">Delete</button> |
+            <a href="/menus">Back to List</a>
+        </EditForm>
+    }
+</div>
+
+@code {
+    private Menu? menu;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        menu = await context.Menu.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (menu is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task DeleteMenu()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Menu.Remove(menu!);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/menus");
+    }
+}
