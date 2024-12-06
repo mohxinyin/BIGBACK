@@ -23,113 +23,113 @@ namespace BIGBACK.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("BIGBACK.Domain.Customer", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                b.Property<string>("CustomerAddress")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CustomerAddress")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("CustomerEmail")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CustomerEmail")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("CustomerGender")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CustomerGender")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("CustomerID")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CustomerID")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("CustomerMobileNumber")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CustomerMobileNumber")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("CustomerName")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Customer");
-            });
+                    b.ToTable("Customer");
+                });
 
             modelBuilder.Entity("BIGBACK.Domain.Order", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                b.Property<int>("CustomerId")
-                    .HasColumnType("int");
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("int");
 
-                b.Property<DateTime>("OrderDateTime")
-                    .HasColumnType("datetime2");
+                    b.Property<DateTime>("OrderDateTime")
+                        .HasColumnType("datetime2");
 
-                b.Property<string>("OrderStatus")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("OrderStatus")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<int?>("OrderTotal")
-                    .HasColumnType("int");
+                    b.Property<int?>("OrderTotal")
+                        .HasColumnType("int");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Order");
-            });
+                    b.ToTable("Order");
+                });
 
             modelBuilder.Entity("BIGBACK.Domain.OrderItem", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                b.Property<int>("MenuItemId")
-                    .HasColumnType("int");
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
 
-                b.Property<int>("OrderId")
-                    .HasColumnType("int");
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
-                b.Property<string>("OrderItemPromo")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("OrderItemPromo")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<int?>("OrderItemQty")
-                    .HasColumnType("int");
+                    b.Property<int?>("OrderItemQty")
+                        .HasColumnType("int");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("OrderItem");
-            });
+                    b.ToTable("OrderItem");
+                });
 
             modelBuilder.Entity("BIGBACK.Domain.Payment", b =>
-            {
-                b.Property<int>("Id")
-                    .ValueGeneratedOnAdd()
-                    .HasColumnType("int");
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                b.Property<int>("OrderId")
-                    .HasColumnType("int");
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
 
-                b.Property<int?>("PaymentAmount")
-                    .HasColumnType("int");
+                    b.Property<int?>("PaymentAmount")
+                        .HasColumnType("int");
 
-                b.Property<DateTime>("PaymentDateTime")
-                    .HasColumnType("datetime2");
+                    b.Property<DateTime>("PaymentDateTime")
+                        .HasColumnType("datetime2");
 
-                b.Property<string>("PaymentMethod")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PaymentMethod")
+                        .HasColumnType("nvarchar(max)");
 
-                b.Property<string>("PaymentStatus")
-                    .HasColumnType("nvarchar(max)");
+                    b.Property<string>("PaymentStatus")
+                        .HasColumnType("nvarchar(max)");
 
-                b.HasKey("Id");
+                    b.HasKey("Id");
 
-                b.ToTable("Payment");
-            });
+                    b.ToTable("Payment");
+                });
 
             modelBuilder.Entity("BIGBACK.Domain.Complaint", b =>
                 {

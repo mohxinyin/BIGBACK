@@ -1,0 +1,40 @@
+﻿@page "/payments"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="payments/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.Payment">
+    <PropertyColumn Property="payment => payment.PaymentDateTime" />
+    <PropertyColumn Property="payment => payment.PaymentAmount" />
+    <PropertyColumn Property="payment => payment.PaymentMethod" />
+    <PropertyColumn Property="payment => payment.PaymentStatus" />
+    <PropertyColumn Property="payment => payment.OrderId" />
+
+    <TemplateColumn Context="payment">
+        <a href="@($"payments/edit?id={payment.Id}")">Edit</a> |
+        <a href="@($"payments/details?id={payment.Id}")">Details</a> |
+        <a href="@($"payments/delete?id={payment.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private BIGBACKContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}
