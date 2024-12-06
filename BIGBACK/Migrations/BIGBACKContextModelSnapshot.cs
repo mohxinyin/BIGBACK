@@ -136,6 +136,12 @@ namespace BIGBACK.Migrations
             
             
             
+            
+            
+            
+            
+            
+            
             modelBuilder.Entity("BIGBACK.Domain.Complaint", b =>
                 {
                     b.Property<int>("Id")
