@@ -16,11 +16,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="riderid" class="form-label">RiderID:</label> 
-                <InputNumber id="riderid" @bind-Value="Rider.RiderID" class="form-control" /> 
-                <ValidationMessage For="() => Rider.RiderID" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
                 <label for="ridername" class="form-label">RiderName:</label> 
                 <InputText id="ridername" @bind-Value="Rider.RiderName" class="form-control" /> 
                 <ValidationMessage For="() => Rider.RiderName" class="text-danger" /> 

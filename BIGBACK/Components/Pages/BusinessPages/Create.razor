@@ -16,11 +16,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="businessid" class="form-label">BusinessId:</label> 
-                <InputNumber id="businessid" @bind-Value="Business.BusinessId" class="form-control" /> 
-                <ValidationMessage For="() => Business.BusinessId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
                 <label for="businessname" class="form-label">BusinessName:</label> 
                 <InputText id="businessname" @bind-Value="Business.BusinessName" class="form-control" /> 
                 <ValidationMessage For="() => Business.BusinessName" class="text-danger" /> 

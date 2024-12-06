@@ -16,11 +16,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="menuitemid" class="form-label">MenuItemId:</label> 
-                <InputNumber id="menuitemid" @bind-Value="MenuItem.MenuItemId" class="form-control" /> 
-                <ValidationMessage For="() => MenuItem.MenuItemId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
                 <label for="menuitemprice" class="form-label">MenuItemPrice:</label> 
                 <InputNumber id="menuitemprice" @bind-Value="MenuItem.MenuItemPrice" class="form-control" /> 
                 <ValidationMessage For="() => MenuItem.MenuItemPrice" class="text-danger" /> 

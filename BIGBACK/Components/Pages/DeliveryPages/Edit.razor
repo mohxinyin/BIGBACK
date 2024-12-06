@@ -23,11 +23,6 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Delivery.Id" value="@Delivery.Id" />
                 <div class="mb-3">
-                    <label for="deliveryid" class="form-label">DeliveryId:</label>
-                    <InputNumber id="deliveryid" @bind-Value="Delivery.DeliveryId" class="form-control" />
-                    <ValidationMessage For="() => Delivery.DeliveryId" class="text-danger" />
-                </div>
-                <div class="mb-3">
                     <label for="deliverytime" class="form-label">DeliveryTime:</label>
                     <InputDate id="deliverytime" @bind-Value="Delivery.DeliveryTime" class="form-control" />
                     <ValidationMessage For="() => Delivery.DeliveryTime" class="text-danger" />

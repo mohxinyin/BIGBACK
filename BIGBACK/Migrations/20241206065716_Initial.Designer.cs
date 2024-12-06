@@ -4,6 +4,7 @@ using BIGBACK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    partial class BIGBACKContextModelSnapshot : ModelSnapshot
+    [Migration("20241206065716_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,6 +38,9 @@ namespace BIGBACK.Migrations
 
                     b.Property<string>("BusinessContact")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("BusinessId")
+                        .HasColumnType("int");
 
                     b.Property<string>("BusinessName")
                         .HasColumnType("nvarchar(max)");
@@ -64,6 +70,9 @@ namespace BIGBACK.Migrations
                     b.Property<string>("BusinessOwnerGender")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("BusinessOwnerId")
+                        .HasColumnType("int");
+
                     b.Property<string>("BusinessOwnerName")
                         .HasColumnType("nvarchar(max)");
 
@@ -88,6 +97,9 @@ namespace BIGBACK.Migrations
 
                     b.Property<string>("ComplaintDesc")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ComplaintID")
+                        .HasColumnType("int");
 
                     b.Property<string>("ComplaintStatus")
                         .HasColumnType("nvarchar(max)");
@@ -157,6 +169,9 @@ namespace BIGBACK.Migrations
                     b.Property<decimal>("DeliveryFee")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("DeliveryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("DeliveryStatus")
                         .HasColumnType("nvarchar(max)");
 
@@ -180,6 +195,9 @@ namespace BIGBACK.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("DeliveryId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DeliveryRiderId")
                         .HasColumnType("int");
 
                     b.Property<string>("DeliveryRiderStatus")
@@ -210,6 +228,9 @@ namespace BIGBACK.Migrations
                     b.Property<string>("MenuCategory")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("MenuId")
+                        .HasColumnType("int");
+
                     b.Property<string>("MenuName")
                         .HasColumnType("nvarchar(max)");
 
@@ -231,6 +252,9 @@ namespace BIGBACK.Migrations
 
                     b.Property<string>("MenuItemDesc")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MenuItemId")
+                        .HasColumnType("int");
 
                     b.Property<string>("MenuItemName")
                         .HasColumnType("nvarchar(max)");
@@ -332,6 +356,9 @@ namespace BIGBACK.Migrations
                     b.Property<string>("RiderContact")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("RiderID")
+                        .HasColumnType("int");
+
                     b.Property<string>("RiderName")
                         .HasColumnType("nvarchar(max)");
 
@@ -356,6 +383,9 @@ namespace BIGBACK.Migrations
 
                     b.Property<string>("StaffEmail")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StaffID")
+                        .HasColumnType("int");
 
                     b.Property<string>("StaffName")
                         .HasColumnType("nvarchar(max)");

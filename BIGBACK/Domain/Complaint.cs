@@ -2,7 +2,6 @@
 {
     public class Complaint : BaseDomainModel
     { 
-        public int ComplaintID { get; set; }
         public int OrderID { get; set; }
         public int StaffID { get; set; }
         public int RiderID { get; set; }

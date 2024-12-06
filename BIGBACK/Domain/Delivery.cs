@@ -2,7 +2,6 @@
 {
     public class Delivery : BaseDomainModel
     {
-        public int DeliveryId { get; set; }
         public DateTime DeliveryTime { get; set; }
         public DateTime DeliveryDate { get; set; }
         public int CustomerID { get; set; }

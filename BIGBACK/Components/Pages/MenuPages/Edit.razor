@@ -23,11 +23,6 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Menu.Id" value="@Menu.Id" />
                 <div class="mb-3">
-                    <label for="menuid" class="form-label">MenuId:</label>
-                    <InputNumber id="menuid" @bind-Value="Menu.MenuId" class="form-control" />
-                    <ValidationMessage For="() => Menu.MenuId" class="text-danger" />
-                </div>
-                <div class="mb-3">
                     <label for="menuname" class="form-label">MenuName:</label>
                     <InputText id="menuname" @bind-Value="Menu.MenuName" class="form-control" />
                     <ValidationMessage For="() => Menu.MenuName" class="text-danger" />

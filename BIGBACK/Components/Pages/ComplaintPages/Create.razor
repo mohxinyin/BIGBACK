@@ -16,11 +16,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="complaintid" class="form-label">ComplaintID:</label> 
-                <InputNumber id="complaintid" @bind-Value="Complaint.ComplaintID" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.ComplaintID" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
                 <label for="orderid" class="form-label">OrderID:</label> 
                 <InputNumber id="orderid" @bind-Value="Complaint.OrderID" class="form-control" /> 
                 <ValidationMessage For="() => Complaint.OrderID" class="text-danger" /> 

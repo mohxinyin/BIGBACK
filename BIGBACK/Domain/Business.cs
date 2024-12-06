@@ -2,7 +2,6 @@
 {
     public class Business:BaseDomainModel
     {
-        public int BusinessId { get; set; }
         public string? BusinessName { get; set; }
         public string? BusinessAddress { get; set; }
         public string? BusinessContact { get; set; }

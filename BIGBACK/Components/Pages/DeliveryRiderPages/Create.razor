@@ -16,11 +16,6 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="deliveryriderid" class="form-label">DeliveryRiderId:</label> 
-                <InputNumber id="deliveryriderid" @bind-Value="DeliveryRider.DeliveryRiderId" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.DeliveryRiderId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
                 <label for="deliveryridertasktype" class="form-label">DeliveryRiderTaskType:</label> 
                 <InputText id="deliveryridertasktype" @bind-Value="DeliveryRider.DeliveryRiderTaskType" class="form-control" /> 
                 <ValidationMessage For="() => DeliveryRider.DeliveryRiderTaskType" class="text-danger" /> 
