@@ -37,22 +37,6 @@
             <dt class="col-sm-2">RiderId</dt>
             <dd class="col-sm-10">@deliveryrider.RiderId</dd>
         </dl>
-        <dl class="row">
-            <dt class="col-sm-2">DateCreated</dt>
-            <dd class="col-sm-10">@deliveryrider.DateCreated</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">DateUpdated</dt>
-            <dd class="col-sm-10">@deliveryrider.DateUpdated</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@deliveryrider.CreatedBy</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">UpdatedBy</dt>
-            <dd class="col-sm-10">@deliveryrider.UpdatedBy</dd>
-        </dl>
         <EditForm method="post" Model="deliveryrider" OnValidSubmit="DeleteDeliveryRider" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(deliveryrider is null)">Delete</button> |
             <a href="/deliveryriders">Back to List</a>

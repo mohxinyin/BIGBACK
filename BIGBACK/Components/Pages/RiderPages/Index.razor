@@ -19,10 +19,6 @@
     <PropertyColumn Property="rider => rider.RiderName" />
     <PropertyColumn Property="rider => rider.RiderContact" />
     <PropertyColumn Property="rider => rider.RiderRating" />
-    <PropertyColumn Property="rider => rider.DateCreated" />
-    <PropertyColumn Property="rider => rider.DateUpdated" />
-    <PropertyColumn Property="rider => rider.CreatedBy" />
-    <PropertyColumn Property="rider => rider.UpdatedBy" />
 
     <TemplateColumn Context="rider">
         <a href="@($"riders/edit?id={rider.Id}")">Edit</a> |

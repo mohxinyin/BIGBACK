@@ -50,26 +50,6 @@
                 <InputDate id="complaintdatetime" @bind-Value="Complaint.ComplaintDateTime" class="form-control" /> 
                 <ValidationMessage For="() => Complaint.ComplaintDateTime" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
-                <label for="datecreated" class="form-label">DateCreated:</label> 
-                <InputDate id="datecreated" @bind-Value="Complaint.DateCreated" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.DateCreated" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="dateupdated" class="form-label">DateUpdated:</label> 
-                <InputDate id="dateupdated" @bind-Value="Complaint.DateUpdated" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.DateUpdated" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="createdby" class="form-label">CreatedBy:</label> 
-                <InputText id="createdby" @bind-Value="Complaint.CreatedBy" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.CreatedBy" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="updatedby" class="form-label">UpdatedBy:</label> 
-                <InputText id="updatedby" @bind-Value="Complaint.UpdatedBy" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.UpdatedBy" class="text-danger" /> 
-            </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>

@@ -22,10 +22,6 @@
     <PropertyColumn Property="complaint => complaint.ComplaintDesc" />
     <PropertyColumn Property="complaint => complaint.ComplaintStatus" />
     <PropertyColumn Property="complaint => complaint.ComplaintDateTime" />
-    <PropertyColumn Property="complaint => complaint.DateCreated" />
-    <PropertyColumn Property="complaint => complaint.DateUpdated" />
-    <PropertyColumn Property="complaint => complaint.CreatedBy" />
-    <PropertyColumn Property="complaint => complaint.UpdatedBy" />
 
     <TemplateColumn Context="complaint">
         <a href="@($"complaints/edit?id={complaint.Id}")">Edit</a> |

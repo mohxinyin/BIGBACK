@@ -1,0 +1,60 @@
+﻿@page "/deliveries/details"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Details</PageTitle>
+
+<h1>Details</h1>
+
+<div>
+    <h2>Delivery</h2>
+    <hr />
+    @if (delivery is null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else {
+        <dl class="row">
+            <dt class="col-sm-2">DeliveryId</dt>
+            <dd class="col-sm-10">@delivery.DeliveryId</dd>
+            <dt class="col-sm-2">DeliveryTime</dt>
+            <dd class="col-sm-10">@delivery.DeliveryTime</dd>
+            <dt class="col-sm-2">DeliveryDate</dt>
+            <dd class="col-sm-10">@delivery.DeliveryDate</dd>
+            <dt class="col-sm-2">CustomerID</dt>
+            <dd class="col-sm-10">@delivery.CustomerID</dd>
+            <dt class="col-sm-2">OrderID</dt>
+            <dd class="col-sm-10">@delivery.OrderID</dd>
+            <dt class="col-sm-2">BusinessID</dt>
+            <dd class="col-sm-10">@delivery.BusinessID</dd>
+            <dt class="col-sm-2">DeliveryFee</dt>
+            <dd class="col-sm-10">@delivery.DeliveryFee</dd>
+            <dt class="col-sm-2">DeliveryStatus</dt>
+            <dd class="col-sm-10">@delivery.DeliveryStatus</dd>
+        </dl>
+        <div>
+            <a href="@($"/deliveries/edit?id={delivery.Id}")">Edit</a> |
+            <a href="@($"/deliveries")">Back to List</a>
+        </div>
+    }
+</div>
+
+@code {
+    private Delivery? delivery;
+
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        delivery = await context.Delivery.FirstOrDefaultAsync(m => m.Id == Id);
+
+        if (delivery is null)
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+}
