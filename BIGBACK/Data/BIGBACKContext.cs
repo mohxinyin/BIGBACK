@@ -14,6 +14,15 @@ namespace BIGBACK.Data
         {
         }
 
+        public DbSet<BIGBACK.Domain.Customer> Customer { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.Order> Order { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.OrderItem> OrderItem { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.Payment> Payment { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.Complaint> Complaint { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.Delivery> Delivery { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.DeliveryRider> DeliveryRider { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.Rider> Rider { get; set; } = default!;
+        public DbSet<BIGBACK.Domain.Staff> Staff { get; set; } = default!;
         public DbSet<BIGBACK.Domain.BusinessOwner> BusinessOwner { get; set; } = default!;
         public DbSet<BIGBACK.Domain.Business> Business { get; set; } = default!;
         public DbSet<BIGBACK.Domain.Menu> Menu { get; set; } = default!;

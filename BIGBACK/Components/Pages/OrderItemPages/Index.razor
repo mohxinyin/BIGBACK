@@ -1,0 +1,39 @@
+﻿@page "/orderitems"
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+
+<PageTitle>Index</PageTitle>
+
+<h1>Index</h1>
+
+<p>
+    <a href="orderitems/create">Create New</a>
+</p>
+
+<QuickGrid Class="table" Items="context.OrderItem">
+    <PropertyColumn Property="orderitem => orderitem.OrderItemQty" />
+    <PropertyColumn Property="orderitem => orderitem.OrderItemPromo" />
+    <PropertyColumn Property="orderitem => orderitem.OrderId" />
+    <PropertyColumn Property="orderitem => orderitem.MenuItemId" />
+
+    <TemplateColumn Context="orderitem">
+        <a href="@($"orderitems/edit?id={orderitem.Id}")">Edit</a> |
+        <a href="@($"orderitems/details?id={orderitem.Id}")">Details</a> |
+        <a href="@($"orderitems/delete?id={orderitem.Id}")">Delete</a>
+    </TemplateColumn>
+</QuickGrid>
+
+@code {
+    private BIGBACKContext context = default!;
+
+    protected override void OnInitialized()
+    {
+        context = DbFactory.CreateDbContext();
+    }
+
+    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+}

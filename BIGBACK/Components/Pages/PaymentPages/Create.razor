@@ -1,0 +1,64 @@
+﻿@page "/payments/create"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Payment</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Payment" OnValidSubmit="AddPayment" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="paymentdatetime" class="form-label">PaymentDateTime:</label> 
+                <InputDate id="paymentdatetime" @bind-Value="Payment.PaymentDateTime" class="form-control" /> 
+                <ValidationMessage For="() => Payment.PaymentDateTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="paymentamount" class="form-label">PaymentAmount:</label> 
+                <InputNumber id="paymentamount" @bind-Value="Payment.PaymentAmount" class="form-control" /> 
+                <ValidationMessage For="() => Payment.PaymentAmount" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="paymentmethod" class="form-label">PaymentMethod:</label> 
+                <InputText id="paymentmethod" @bind-Value="Payment.PaymentMethod" class="form-control" /> 
+                <ValidationMessage For="() => Payment.PaymentMethod" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="paymentstatus" class="form-label">PaymentStatus:</label> 
+                <InputText id="paymentstatus" @bind-Value="Payment.PaymentStatus" class="form-control" /> 
+                <ValidationMessage For="() => Payment.PaymentStatus" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="orderid" class="form-label">OrderId:</label> 
+                <InputNumber id="orderid" @bind-Value="Payment.OrderId" class="form-control" /> 
+                <ValidationMessage For="() => Payment.OrderId" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/payments">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Payment Payment { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddPayment()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Payment.Add(Payment);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/payments");
+    }
+}

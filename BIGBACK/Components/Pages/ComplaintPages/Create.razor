@@ -1,0 +1,94 @@
+﻿@page "/complaints/create"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Complaint</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Complaint" OnValidSubmit="AddComplaint" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="complaintid" class="form-label">ComplaintID:</label> 
+                <InputNumber id="complaintid" @bind-Value="Complaint.ComplaintID" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.ComplaintID" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="orderid" class="form-label">OrderID:</label> 
+                <InputNumber id="orderid" @bind-Value="Complaint.OrderID" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.OrderID" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="staffid" class="form-label">StaffID:</label> 
+                <InputNumber id="staffid" @bind-Value="Complaint.StaffID" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.StaffID" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="riderid" class="form-label">RiderID:</label> 
+                <InputNumber id="riderid" @bind-Value="Complaint.RiderID" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.RiderID" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="complaintdesc" class="form-label">ComplaintDesc:</label> 
+                <InputText id="complaintdesc" @bind-Value="Complaint.ComplaintDesc" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.ComplaintDesc" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="complaintstatus" class="form-label">ComplaintStatus:</label> 
+                <InputText id="complaintstatus" @bind-Value="Complaint.ComplaintStatus" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.ComplaintStatus" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="complaintdatetime" class="form-label">ComplaintDateTime:</label> 
+                <InputDate id="complaintdatetime" @bind-Value="Complaint.ComplaintDateTime" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.ComplaintDateTime" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="Complaint.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="Complaint.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="Complaint.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="Complaint.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/complaints">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Complaint Complaint { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddComplaint()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Complaint.Add(Complaint);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/complaints");
+    }
+}

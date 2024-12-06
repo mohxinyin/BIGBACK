@@ -1,0 +1,79 @@
+﻿@page "/riders/create"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Create</PageTitle>
+
+<h1>Create</h1>
+
+<h2>Rider</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <EditForm method="post" Model="Rider" OnValidSubmit="AddRider" FormName="create" Enhance>
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger" role="alert"/>
+            <div class="mb-3">
+                <label for="riderid" class="form-label">RiderID:</label> 
+                <InputNumber id="riderid" @bind-Value="Rider.RiderID" class="form-control" /> 
+                <ValidationMessage For="() => Rider.RiderID" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ridername" class="form-label">RiderName:</label> 
+                <InputText id="ridername" @bind-Value="Rider.RiderName" class="form-control" /> 
+                <ValidationMessage For="() => Rider.RiderName" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="ridercontact" class="form-label">RiderContact:</label> 
+                <InputText id="ridercontact" @bind-Value="Rider.RiderContact" class="form-control" /> 
+                <ValidationMessage For="() => Rider.RiderContact" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="riderrating" class="form-label">RiderRating:</label> 
+                <InputNumber id="riderrating" @bind-Value="Rider.RiderRating" class="form-control" /> 
+                <ValidationMessage For="() => Rider.RiderRating" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="datecreated" class="form-label">DateCreated:</label> 
+                <InputDate id="datecreated" @bind-Value="Rider.DateCreated" class="form-control" /> 
+                <ValidationMessage For="() => Rider.DateCreated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="dateupdated" class="form-label">DateUpdated:</label> 
+                <InputDate id="dateupdated" @bind-Value="Rider.DateUpdated" class="form-control" /> 
+                <ValidationMessage For="() => Rider.DateUpdated" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="createdby" class="form-label">CreatedBy:</label> 
+                <InputText id="createdby" @bind-Value="Rider.CreatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Rider.CreatedBy" class="text-danger" /> 
+            </div>        
+            <div class="mb-3">
+                <label for="updatedby" class="form-label">UpdatedBy:</label> 
+                <InputText id="updatedby" @bind-Value="Rider.UpdatedBy" class="form-control" /> 
+                <ValidationMessage For="() => Rider.UpdatedBy" class="text-danger" /> 
+            </div>        
+            <button type="submit" class="btn btn-primary">Create</button>
+        </EditForm>
+    </div>
+</div>
+
+<div>
+    <a href="/riders">Back to List</a>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private Rider Rider { get; set; } = new();
+
+    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    private async Task AddRider()
+    {
+        using var context = DbFactory.CreateDbContext();
+        context.Rider.Add(Rider);
+        await context.SaveChangesAsync();
+        NavigationManager.NavigateTo("/riders");
+    }
+}
