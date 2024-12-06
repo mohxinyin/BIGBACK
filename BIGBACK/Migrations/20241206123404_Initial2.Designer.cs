@@ -4,6 +4,7 @@ using BIGBACK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    partial class BIGBACKContextModelSnapshot : ModelSnapshot
+    [Migration("20241206123404_Initial2")]
+    partial class Initial2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -273,7 +276,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             BusinessId = 2,
                             MenuCategory = "Chicken Rice",
-                            MenuName = "Chicken Rice Delights"
+                            MenuName = "Chicken RIce Delights"
                         });
                 });
 
@@ -315,7 +318,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             MenuId = 2,
                             MenuItemDesc = "A savory dish of tender roasted chicken served with fragrant, perfectly seasoned rice for a satisfying meal",
-                            MenuItemName = "Roasted Chicken Rice",
+                            MenuItemName = "69876543",
                             MenuItemPrice = 5f
                         });
                 });

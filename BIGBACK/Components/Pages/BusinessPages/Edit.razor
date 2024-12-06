@@ -44,8 +44,13 @@ else
                 </div>
                 <div class="mb-3">
                     <label for="businessstatus" class="form-label">BusinessStatus:</label>
-                    <InputNumber id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control" />
+                    <InputText id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control" />
                     <ValidationMessage For="() => Business.BusinessStatus" class="text-danger" />
+                </div>
+                <div class="mb-3">
+                    <label for="businessownerid" class="form-label">BusinessOwnerId:</label>
+                    <InputNumber id="businessownerid" @bind-Value="Business.BusinessOwnerId" class="form-control" />
+                    <ValidationMessage For="() => Business.BusinessOwnerId" class="text-danger" />
                 </div>
                 <button type="submit" class="btn btn-primary">Save</button>
             </EditForm>

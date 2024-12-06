@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using BIGBACK.Domain;
+using BIGBACK.Configurations.Entities;
 
 namespace BIGBACK.Data
 {
@@ -27,5 +28,14 @@ namespace BIGBACK.Data
         public DbSet<BIGBACK.Domain.Business> Business { get; set; } = default!;
         public DbSet<BIGBACK.Domain.Menu> Menu { get; set; } = default!;
         public DbSet<BIGBACK.Domain.MenuItem> MenuItem { get; set; } = default!;
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+            builder.ApplyConfiguration(new BusinessOwnerSeed());
+            builder.ApplyConfiguration(new BusinessSeed());
+            builder.ApplyConfiguration(new MenuItemSeed());
+            builder.ApplyConfiguration(new MenuSeed());
+        }
     }
 }

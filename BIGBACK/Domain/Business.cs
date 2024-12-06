@@ -6,6 +6,7 @@
         public string? BusinessAddress { get; set; }
         public string? BusinessContact { get; set; }
         public string? BusinessRating { get; set; }
-        public int BusinessStatus { get; set; }
+        public string? BusinessStatus { get; set; }
+        public int BusinessOwnerId { get; set; }
     }
 }
