@@ -40,26 +40,6 @@
                 <InputNumber id="riderid" @bind-Value="DeliveryRider.RiderId" class="form-control" /> 
                 <ValidationMessage For="() => DeliveryRider.RiderId" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
-                <label for="datecreated" class="form-label">DateCreated:</label> 
-                <InputDate id="datecreated" @bind-Value="DeliveryRider.DateCreated" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.DateCreated" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="dateupdated" class="form-label">DateUpdated:</label> 
-                <InputDate id="dateupdated" @bind-Value="DeliveryRider.DateUpdated" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.DateUpdated" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="createdby" class="form-label">CreatedBy:</label> 
-                <InputText id="createdby" @bind-Value="DeliveryRider.CreatedBy" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.CreatedBy" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="updatedby" class="form-label">UpdatedBy:</label> 
-                <InputText id="updatedby" @bind-Value="DeliveryRider.UpdatedBy" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.UpdatedBy" class="text-danger" /> 
-            </div>        
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>

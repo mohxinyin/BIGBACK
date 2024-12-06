@@ -45,22 +45,6 @@
             <dt class="col-sm-2">ComplaintDateTime</dt>
             <dd class="col-sm-10">@complaint.ComplaintDateTime</dd>
         </dl>
-        <dl class="row">
-            <dt class="col-sm-2">DateCreated</dt>
-            <dd class="col-sm-10">@complaint.DateCreated</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">DateUpdated</dt>
-            <dd class="col-sm-10">@complaint.DateUpdated</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">CreatedBy</dt>
-            <dd class="col-sm-10">@complaint.CreatedBy</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">UpdatedBy</dt>
-            <dd class="col-sm-10">@complaint.UpdatedBy</dd>
-        </dl>
         <EditForm method="post" Model="complaint" OnValidSubmit="DeleteComplaint" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(complaint is null)">Delete</button> |
             <a href="/complaints">Back to List</a>
