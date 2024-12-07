@@ -40,6 +40,11 @@ namespace BIGBACK.Data
             builder.ApplyConfiguration(new OrderSeed());
             builder.ApplyConfiguration(new OrderItemSeed());
             builder.ApplyConfiguration(new PaymentSeed());
+            builder.ApplyConfiguration(new DeliverySeed());
+            builder.ApplyConfiguration(new DeliveryRiderSeed());
+            builder.ApplyConfiguration(new RiderSeed());
+            builder.ApplyConfiguration(new StaffSeed());
+            builder.ApplyConfiguration(new ComplaintSeed());
         }
     }
 }

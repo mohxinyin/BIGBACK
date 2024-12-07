@@ -12,13 +12,14 @@ namespace BIGBACK.Configurations.Entities
             builder.HasData(
                 new Complaint
                 {
-                     Id = 1,
-                     OrderID = 1,
-                     StaffID = 1,
-                     RiderID = 1,
-                     ComplaintDesc = "Late delivery",
-                     ComplaintStatus = "Open",
-                     ComplaintDateTime = DateTime.Now
+                    Id = 1,
+                    OrderID = 1,
+                    StaffID = 1,
+                    RiderID = 1,
+                    ComplaintDesc = "Late delivery",
+                    ComplaintStatus = "Open",
+                    
+                   
                 },
                 new Complaint
                 {
@@ -28,7 +29,7 @@ namespace BIGBACK.Configurations.Entities
                    RiderID = 2,
                    ComplaintDesc = "Damaged item",
                    ComplaintStatus = "Resolved",
-                   ComplaintDateTime = DateTime.Now.AddDays(-1)
+                   
                 }
               );
            
