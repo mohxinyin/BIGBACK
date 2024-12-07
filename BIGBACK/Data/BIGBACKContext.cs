@@ -36,6 +36,10 @@ namespace BIGBACK.Data
             builder.ApplyConfiguration(new BusinessSeed());
             builder.ApplyConfiguration(new MenuItemSeed());
             builder.ApplyConfiguration(new MenuSeed());
+            builder.ApplyConfiguration(new CustomerSeed());
+            builder.ApplyConfiguration(new OrderSeed());
+            builder.ApplyConfiguration(new OrderItemSeed());
+            builder.ApplyConfiguration(new PaymentSeed());
         }
     }
 }

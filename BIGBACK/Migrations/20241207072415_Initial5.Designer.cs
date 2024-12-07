@@ -4,6 +4,7 @@ using BIGBACK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    partial class BIGBACKContextModelSnapshot : ModelSnapshot
+    [Migration("20241207072415_Initial5")]
+    partial class Initial5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -178,26 +181,6 @@ namespace BIGBACK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Customer");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CustomerAddress = "3 AngMoKio Ave",
-                            CustomerEmail = "johndoe1@gmail.com",
-                            CustomerGender = "Male",
-                            CustomerMobileNumber = "91062378",
-                            CustomerName = "John Doe"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CustomerAddress = "3 Yishun Ave",
-                            CustomerEmail = "maryjane2@gmail.com",
-                            CustomerGender = "Female",
-                            CustomerMobileNumber = "91054379",
-                            CustomerName = "Mary Jane"
-                        });
                 });
 
             modelBuilder.Entity("BIGBACK.Domain.Delivery", b =>
@@ -363,24 +346,6 @@ namespace BIGBACK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Order");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            CustomerId = 1,
-                            OrderDateTime = new DateTime(2024, 12, 7, 15, 34, 41, 258, DateTimeKind.Local).AddTicks(1282),
-                            OrderStatus = "Pending",
-                            OrderTotal = 64.50m
-                        },
-                        new
-                        {
-                            Id = 2,
-                            CustomerId = 2,
-                            OrderDateTime = new DateTime(2024, 12, 7, 15, 34, 41, 258, DateTimeKind.Local).AddTicks(1304),
-                            OrderStatus = "Pending",
-                            OrderTotal = 55.70m
-                        });
                 });
 
             modelBuilder.Entity("BIGBACK.Domain.OrderItem", b =>
@@ -406,23 +371,6 @@ namespace BIGBACK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("OrderItem");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            MenuItemId = 1,
-                            OrderId = 1,
-                            OrderItemQty = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            MenuItemId = 2,
-                            OrderId = 2,
-                            OrderItemPromo = "NEWCUSTOMER25",
-                            OrderItemQty = 2
-                        });
                 });
 
             modelBuilder.Entity("BIGBACK.Domain.Payment", b =>
@@ -451,26 +399,6 @@ namespace BIGBACK.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Payment");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            OrderId = 1,
-                            PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2024, 12, 7, 15, 34, 41, 258, DateTimeKind.Local).AddTicks(1475),
-                            PaymentMethod = "VISA Debit",
-                            PaymentStatus = "Completed"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            OrderId = 2,
-                            PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2024, 12, 7, 15, 34, 41, 258, DateTimeKind.Local).AddTicks(1478),
-                            PaymentMethod = "PayNow",
-                            PaymentStatus = "Completed"
-                        });
                 });
 
             modelBuilder.Entity("BIGBACK.Domain.Rider", b =>
