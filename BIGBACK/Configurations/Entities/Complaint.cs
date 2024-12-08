@@ -18,6 +18,7 @@ namespace BIGBACK.Configurations.Entities
                     RiderID = 1,
                     ComplaintDesc = "Late delivery",
                     ComplaintStatus = "Open",
+                    ComplaintDateTime = DateTime.Now,
                     
                    
                 },
@@ -29,6 +30,7 @@ namespace BIGBACK.Configurations.Entities
                    RiderID = 2,
                    ComplaintDesc = "Damaged item",
                    ComplaintStatus = "Resolved",
+                   ComplaintDateTime = DateTime.Now,
                    
                 }
               );

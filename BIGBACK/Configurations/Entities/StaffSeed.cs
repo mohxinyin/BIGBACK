@@ -11,7 +11,7 @@ namespace BIGBACK.Configurations.Entities
             builder.HasData(
                 new Staff
                 {
-                    Id = 1,
+                    Id = 1, 
                     StaffName = "Alice Johnson",
                     StaffEmail = "alice.johnson@example.com",
                     StaffContact = "+1234567890"

@@ -4,6 +4,7 @@ using BIGBACK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    partial class BIGBACKContextModelSnapshot : ModelSnapshot
+    [Migration("20241208061919_Initial7")]
+    partial class Initial7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,7 +155,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
-                            ComplaintDateTime = new DateTime(2024, 12, 8, 14, 40, 25, 88, DateTimeKind.Local).AddTicks(8361),
+                            ComplaintDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ComplaintDesc = "Late delivery",
                             ComplaintStatus = "Open",
                             OrderID = 1,
@@ -162,7 +165,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 2,
-                            ComplaintDateTime = new DateTime(2024, 12, 8, 14, 40, 25, 88, DateTimeKind.Local).AddTicks(8365),
+                            ComplaintDateTime = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             ComplaintDesc = "Damaged item",
                             ComplaintStatus = "Resolved",
                             OrderID = 2,
@@ -433,7 +436,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            OrderDateTime = new DateTime(2024, 12, 8, 14, 40, 25, 88, DateTimeKind.Local).AddTicks(7476),
+                            OrderDateTime = new DateTime(2024, 12, 8, 14, 19, 19, 250, DateTimeKind.Local).AddTicks(2654),
                             OrderStatus = "Pending",
                             OrderTotal = 64.50m
                         },
@@ -441,7 +444,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            OrderDateTime = new DateTime(2024, 12, 8, 14, 40, 25, 88, DateTimeKind.Local).AddTicks(7505),
+                            OrderDateTime = new DateTime(2024, 12, 8, 14, 19, 19, 250, DateTimeKind.Local).AddTicks(2672),
                             OrderStatus = "Pending",
                             OrderTotal = 55.70m
                         });
@@ -522,7 +525,7 @@ namespace BIGBACK.Migrations
                             Id = 1,
                             OrderId = 1,
                             PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2024, 12, 8, 14, 40, 25, 88, DateTimeKind.Local).AddTicks(7758),
+                            PaymentDateTime = new DateTime(2024, 12, 8, 14, 19, 19, 250, DateTimeKind.Local).AddTicks(2846),
                             PaymentMethod = "VISA Debit",
                             PaymentStatus = "Completed"
                         },
@@ -531,7 +534,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             OrderId = 2,
                             PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2024, 12, 8, 14, 40, 25, 88, DateTimeKind.Local).AddTicks(7764),
+                            PaymentDateTime = new DateTime(2024, 12, 8, 14, 19, 19, 250, DateTimeKind.Local).AddTicks(2850),
                             PaymentMethod = "PayNow",
                             PaymentStatus = "Completed"
                         });

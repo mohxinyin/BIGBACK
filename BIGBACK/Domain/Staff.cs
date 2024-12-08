@@ -9,3 +9,4 @@ namespace BIGBACK.Domain
         public string? StaffContact { get; set; }
     }
 }
+ 

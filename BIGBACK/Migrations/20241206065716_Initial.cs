@@ -89,11 +89,8 @@ namespace BIGBACK.Migrations
                     RiderID = table.Column<int>(type: "int", nullable: false),
                     ComplaintDesc = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ComplaintStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ComplaintDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ComplaintDateTime = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    
                 },
                 constraints: table =>
                 {
@@ -113,11 +110,8 @@ namespace BIGBACK.Migrations
                     OrderID = table.Column<int>(type: "int", nullable: false),
                     BusinessID = table.Column<int>(type: "int", nullable: false),
                     DeliveryFee = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DeliveryStatus = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                   
                 },
                 constraints: table =>
                 {
@@ -134,11 +128,8 @@ namespace BIGBACK.Migrations
                     DeliveryRiderTaskType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeliveryRiderStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeliveryId = table.Column<int>(type: "int", nullable: false),
-                    RiderId = table.Column<int>(type: "int", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RiderId = table.Column<int>(type: "int", nullable: false)
+                    
                 },
                 constraints: table =>
                 {
@@ -154,11 +145,7 @@ namespace BIGBACK.Migrations
                     RiderID = table.Column<int>(type: "int", nullable: false),
                     RiderName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiderContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    RiderRating = table.Column<double>(type: "float", nullable: false),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    RiderRating = table.Column<double>(type: "float", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -174,11 +161,7 @@ namespace BIGBACK.Migrations
                     StaffID = table.Column<int>(type: "int", nullable: false),
                     StaffName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StaffEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    StaffContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DateUpdated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UpdatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    StaffContact = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
