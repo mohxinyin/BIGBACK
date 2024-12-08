@@ -83,7 +83,6 @@ namespace BIGBACK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ComplaintID = table.Column<int>(type: "int", nullable: false),
                     OrderID = table.Column<int>(type: "int", nullable: false),
                     StaffID = table.Column<int>(type: "int", nullable: false),
                     RiderID = table.Column<int>(type: "int", nullable: false),
@@ -103,7 +102,6 @@ namespace BIGBACK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeliveryId = table.Column<int>(type: "int", nullable: false),
                     DeliveryTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
@@ -124,7 +122,6 @@ namespace BIGBACK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DeliveryRiderId = table.Column<int>(type: "int", nullable: false),
                     DeliveryRiderTaskType = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeliveryRiderStatus = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DeliveryId = table.Column<int>(type: "int", nullable: false),
@@ -142,7 +139,6 @@ namespace BIGBACK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RiderID = table.Column<int>(type: "int", nullable: false),
                     RiderName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiderContact = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     RiderRating = table.Column<double>(type: "float", nullable: false)
@@ -158,7 +154,6 @@ namespace BIGBACK.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StaffID = table.Column<int>(type: "int", nullable: false),
                     StaffName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StaffEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     StaffContact = table.Column<string>(type: "nvarchar(max)", nullable: true)
