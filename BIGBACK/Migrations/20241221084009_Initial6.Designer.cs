@@ -4,6 +4,7 @@ using BIGBACK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    partial class BIGBACKContextModelSnapshot : ModelSnapshot
+    [Migration("20241221084009_Initial6")]
+    partial class Initial6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,7 +220,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
-                            ComplaintDateTime = new DateTime(2024, 12, 21, 16, 44, 14, 660, DateTimeKind.Local).AddTicks(5455),
+                            ComplaintDateTime = new DateTime(2024, 12, 21, 16, 40, 8, 272, DateTimeKind.Local).AddTicks(6014),
                             ComplaintDesc = "Late delivery",
                             ComplaintStatus = "Open",
                             OrderID = 1,
@@ -227,7 +230,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 2,
-                            ComplaintDateTime = new DateTime(2024, 12, 21, 16, 44, 14, 660, DateTimeKind.Local).AddTicks(5458),
+                            ComplaintDateTime = new DateTime(2024, 12, 21, 16, 40, 8, 272, DateTimeKind.Local).AddTicks(6017),
                             ComplaintDesc = "Damaged item",
                             ComplaintStatus = "Resolved",
                             OrderID = 2,
@@ -498,7 +501,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            OrderDateTime = new DateTime(2024, 12, 21, 16, 44, 14, 660, DateTimeKind.Local).AddTicks(4393),
+                            OrderDateTime = new DateTime(2024, 12, 21, 16, 40, 8, 272, DateTimeKind.Local).AddTicks(5327),
                             OrderStatus = "Pending",
                             OrderTotal = 64.50m
                         },
@@ -506,7 +509,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            OrderDateTime = new DateTime(2024, 12, 21, 16, 44, 14, 660, DateTimeKind.Local).AddTicks(4413),
+                            OrderDateTime = new DateTime(2024, 12, 21, 16, 40, 8, 272, DateTimeKind.Local).AddTicks(5348),
                             OrderStatus = "Pending",
                             OrderTotal = 55.70m
                         });
@@ -587,7 +590,7 @@ namespace BIGBACK.Migrations
                             Id = 1,
                             OrderId = 1,
                             PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2024, 12, 21, 16, 44, 14, 660, DateTimeKind.Local).AddTicks(4995),
+                            PaymentDateTime = new DateTime(2024, 12, 21, 16, 40, 8, 272, DateTimeKind.Local).AddTicks(5529),
                             PaymentMethod = "VISA Debit",
                             PaymentStatus = "Completed"
                         },
@@ -596,7 +599,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             OrderId = 2,
                             PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2024, 12, 21, 16, 44, 14, 660, DateTimeKind.Local).AddTicks(5000),
+                            PaymentDateTime = new DateTime(2024, 12, 21, 16, 40, 8, 272, DateTimeKind.Local).AddTicks(5533),
                             PaymentMethod = "PayNow",
                             PaymentStatus = "Completed"
                         });
