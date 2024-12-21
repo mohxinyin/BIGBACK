@@ -34,7 +34,7 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 builder.Services.AddIdentityCore<BIGBACKUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<IdentityContext>()
+    .AddEntityFrameworkStores<BIGBACKContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 

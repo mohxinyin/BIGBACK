@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using BIGBACK.Domain;
+using BIGBACK.Data;
 using BIGBACK.Configurations.Entities;
 
 namespace BIGBACK.Data
 {
-    public class BIGBACKContext : DbContext
+    public class BIGBACKContext(DbContextOptions<BIGBACKContext> options) : IdentityDbContext<BIGBACKUser>(options)
     {
-        public BIGBACKContext (DbContextOptions<BIGBACKContext> options)
-            : base(options)
-        {
-        }
-
+        
         public DbSet<BIGBACK.Domain.Customer> Customer { get; set; } = default!;
         public DbSet<BIGBACK.Domain.Order> Order { get; set; } = default!;
         public DbSet<BIGBACK.Domain.OrderItem> OrderItem { get; set; } = default!;
