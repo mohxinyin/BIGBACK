@@ -7,7 +7,7 @@ namespace BIGBACK.Data
 {
     public class BIGBACKContext(DbContextOptions<BIGBACKContext> options) : IdentityDbContext<BIGBACKUser>(options)
     {
-
+        
         public DbSet<BIGBACK.Domain.Customer> Customer { get; set; } = default!;
         public DbSet<BIGBACK.Domain.Order> Order { get; set; } = default!;
         public DbSet<BIGBACK.Domain.OrderItem> OrderItem { get; set; } = default!;
