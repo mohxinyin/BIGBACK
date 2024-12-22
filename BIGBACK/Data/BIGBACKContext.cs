@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using BIGBACK.Data;
 using BIGBACK.Configurations.Entities;
+using System.Reflection.Emit;
 
 namespace BIGBACK.Data
 {
@@ -38,6 +39,9 @@ namespace BIGBACK.Data
             builder.ApplyConfiguration(new RiderSeed());
             builder.ApplyConfiguration(new StaffSeed());
             builder.ApplyConfiguration(new ComplaintSeed());
+            builder.ApplyConfiguration(new RoleSeed());
+            builder.ApplyConfiguration(new UserSeed());
+            builder.ApplyConfiguration(new UserRoleSeed());
         }
     }
 }
