@@ -97,7 +97,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b24b9cc3-f40a-4096-b8da-2976b1a7ebc6",
+                            ConcurrencyStamp = "94ea59b7-7f2f-4e50-bccd-9ff994b523a5",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +105,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKQAxmkK4KnK0/kziASrDisIQI6AynNAZ4OctVq5ntETKw9CL+zz7go8uHXOx7E7dw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOnhgtWHXxx2Cj4+sUdUSlg+IyAjIw75J9d5I/NAbOzk+g4musNJ67y2MRd8Mrc93Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b8158f51-169c-4af4-98f6-e837f8c5ef60",
+                            SecurityStamp = "f5ec4cd8-e8d9-47af-855e-6ee96efe5500",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -243,7 +243,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
-                            ComplaintDateTime = new DateTime(2024, 12, 31, 16, 57, 53, 754, DateTimeKind.Local).AddTicks(6891),
+                            ComplaintDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(3116),
                             ComplaintDesc = "Late delivery",
                             ComplaintStatus = "Open",
                             OrderId = 1,
@@ -253,7 +253,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 2,
-                            ComplaintDateTime = new DateTime(2024, 12, 31, 16, 57, 53, 754, DateTimeKind.Local).AddTicks(6897),
+                            ComplaintDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(3118),
                             ComplaintDesc = "Damaged item",
                             ComplaintStatus = "Resolved",
                             OrderId = 2,
@@ -521,7 +521,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            OrderDateTime = new DateTime(2024, 12, 31, 16, 57, 53, 754, DateTimeKind.Local).AddTicks(5076),
+                            OrderDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2305),
                             OrderStatus = "Pending",
                             OrderTotal = 64.50m
                         },
@@ -529,7 +529,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            OrderDateTime = new DateTime(2024, 12, 31, 16, 57, 53, 754, DateTimeKind.Local).AddTicks(5124),
+                            OrderDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2329),
                             OrderStatus = "Pending",
                             OrderTotal = 55.70m
                         });
@@ -610,7 +610,7 @@ namespace BIGBACK.Migrations
                             Id = 1,
                             OrderId = 1,
                             PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2024, 12, 31, 16, 57, 53, 754, DateTimeKind.Local).AddTicks(5644),
+                            PaymentDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2556),
                             PaymentMethod = "VISA Debit",
                             PaymentStatus = "Completed"
                         },
@@ -619,7 +619,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             OrderId = 2,
                             PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2024, 12, 31, 16, 57, 53, 754, DateTimeKind.Local).AddTicks(5655),
+                            PaymentDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2558),
                             PaymentMethod = "PayNow",
                             PaymentStatus = "Completed"
                         });
