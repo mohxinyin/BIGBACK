@@ -2,7 +2,6 @@
 {
     public class Customer: BaseDomainModel
     {
-        public string? CustomerID { get; set; }
         public string? CustomerName { get; set; }
         public string? CustomerMobileNumber { get; set; }
         public string? CustomerGender { get; set; }

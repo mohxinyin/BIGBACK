@@ -16,19 +16,19 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert"/>
             <div class="mb-3">
-                <label for="orderid" class="form-label">OrderID:</label> 
-                <InputNumber id="orderid" @bind-Value="Complaint.OrderID" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.OrderID" class="text-danger" /> 
+                <label for="orderid" class="form-label">OrderId:</label> 
+                <InputNumber id="orderid" @bind-Value="Complaint.OrderId" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.OrderId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="staffid" class="form-label">StaffID:</label> 
-                <InputNumber id="staffid" @bind-Value="Complaint.StaffID" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.StaffID" class="text-danger" /> 
+                <InputNumber id="staffid" @bind-Value="Complaint.StaffId" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.StaffId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="riderid" class="form-label">RiderID:</label> 
-                <InputNumber id="riderid" @bind-Value="Complaint.RiderID" class="form-control" /> 
-                <ValidationMessage For="() => Complaint.RiderID" class="text-danger" /> 
+                <InputNumber id="riderid" @bind-Value="Complaint.RiderId" class="form-control" /> 
+                <ValidationMessage For="() => Complaint.RiderId" class="text-danger" /> 
             </div>        
             <div class="mb-3">
                 <label for="complaintdesc" class="form-label">ComplaintDesc:</label> 

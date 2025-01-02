@@ -13,9 +13,9 @@ namespace BIGBACK.Configurations.Entities
                 new Complaint
                 {
                     Id = 1,
-                    OrderID = 1,
-                    StaffID = 1,
-                    RiderID = 1,
+                    OrderId = 1,
+                    StaffId = 1,
+                    RiderId = 1,
                     ComplaintDesc = "Late delivery",
                     ComplaintStatus = "Open",
                     ComplaintDateTime = DateTime.Now,
@@ -25,9 +25,9 @@ namespace BIGBACK.Configurations.Entities
                 new Complaint
                 {
                    Id = 2,
-                   OrderID = 2,
-                   StaffID = 2,
-                   RiderID = 2,
+                   OrderId = 2,
+                   StaffId = 2,
+                   RiderId = 2,
                    ComplaintDesc = "Damaged item",
                    ComplaintStatus = "Resolved",
                    ComplaintDateTime = DateTime.Now,
