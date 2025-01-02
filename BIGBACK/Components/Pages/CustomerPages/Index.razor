@@ -15,7 +15,6 @@
 </p>
 
 <QuickGrid Class="table" Items="context.Customer">
-    <PropertyColumn Property="customer => customer.CustomerID" />
     <PropertyColumn Property="customer => customer.CustomerName" />
     <PropertyColumn Property="customer => customer.CustomerMobileNumber" />
     <PropertyColumn Property="customer => customer.CustomerGender" />
@@ -24,8 +23,10 @@
 
     <TemplateColumn Context="customer">
         <a href="@($"customers/edit?id={customer.Id}")">Edit</a> |
-        <a href="@($"customers/details?id={customer.Id}")">Details</a> |
+        <a href="@($"customers/details?id={customer.Id}")">Details</a> 
+        <AuthorizeView Roles="Administrator">|
         <a href="@($"customers/delete?id={customer.Id}")">Delete</a>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 

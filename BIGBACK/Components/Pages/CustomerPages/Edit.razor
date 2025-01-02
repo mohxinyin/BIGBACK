@@ -23,11 +23,6 @@ else
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Customer.Id" value="@Customer.Id" />
                 <div class="mb-3">
-                    <label for="customerid" class="form-label">CustomerID:</label>
-                    <InputText id="customerid" @bind-Value="Customer.CustomerID" class="form-control" />
-                    <ValidationMessage For="() => Customer.CustomerID" class="text-danger" />
-                </div>
-                <div class="mb-3">
                     <label for="customername" class="form-label">CustomerName:</label>
                     <InputText id="customername" @bind-Value="Customer.CustomerName" class="form-control" />
                     <ValidationMessage For="() => Customer.CustomerName" class="text-danger" />
