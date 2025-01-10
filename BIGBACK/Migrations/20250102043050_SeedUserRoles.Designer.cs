@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    [Migration("20241222144000_SeedUserRole")]
-    partial class SeedUserRole
+    [Migration("20250102043050_SeedUserRoles")]
+    partial class SeedUserRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,7 +100,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "757d69a1-b2d3-4e09-96ef-6321856b7d55",
+                            ConcurrencyStamp = "94ea59b7-7f2f-4e50-bccd-9ff994b523a5",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -108,9 +108,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELnq3J1RC/yxgFDiJ29TwkqcJUvuD5jefUiCPcKKk86LleJyud1vpp4l+Gy3LMHUoA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOnhgtWHXxx2Cj4+sUdUSlg+IyAjIw75J9d5I/NAbOzk+g4musNJ67y2MRd8Mrc93Q==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9d7866c1-666c-4788-82ad-9c936284d9ff",
+                            SecurityStamp = "f5ec4cd8-e8d9-47af-855e-6ee96efe5500",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         });
@@ -229,13 +229,13 @@ namespace BIGBACK.Migrations
                     b.Property<string>("ComplaintStatus")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OrderID")
+                    b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("RiderID")
+                    b.Property<int>("RiderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("StaffID")
+                    b.Property<int>("StaffId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -246,22 +246,22 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
-                            ComplaintDateTime = new DateTime(2024, 12, 22, 22, 39, 59, 718, DateTimeKind.Local).AddTicks(9584),
+                            ComplaintDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(3116),
                             ComplaintDesc = "Late delivery",
                             ComplaintStatus = "Open",
-                            OrderID = 1,
-                            RiderID = 1,
-                            StaffID = 1
+                            OrderId = 1,
+                            RiderId = 1,
+                            StaffId = 1
                         },
                         new
                         {
                             Id = 2,
-                            ComplaintDateTime = new DateTime(2024, 12, 22, 22, 39, 59, 718, DateTimeKind.Local).AddTicks(9586),
+                            ComplaintDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(3118),
                             ComplaintDesc = "Damaged item",
                             ComplaintStatus = "Resolved",
-                            OrderID = 2,
-                            RiderID = 2,
-                            StaffID = 2
+                            OrderId = 2,
+                            RiderId = 2,
+                            StaffId = 2
                         });
                 });
 
@@ -280,9 +280,6 @@ namespace BIGBACK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerGender")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("CustomerID")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CustomerMobileNumber")
@@ -527,7 +524,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            OrderDateTime = new DateTime(2024, 12, 22, 22, 39, 59, 718, DateTimeKind.Local).AddTicks(8991),
+                            OrderDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2305),
                             OrderStatus = "Pending",
                             OrderTotal = 64.50m
                         },
@@ -535,7 +532,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            OrderDateTime = new DateTime(2024, 12, 22, 22, 39, 59, 718, DateTimeKind.Local).AddTicks(9011),
+                            OrderDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2329),
                             OrderStatus = "Pending",
                             OrderTotal = 55.70m
                         });
@@ -616,7 +613,7 @@ namespace BIGBACK.Migrations
                             Id = 1,
                             OrderId = 1,
                             PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2024, 12, 22, 22, 39, 59, 718, DateTimeKind.Local).AddTicks(9189),
+                            PaymentDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2556),
                             PaymentMethod = "VISA Debit",
                             PaymentStatus = "Completed"
                         },
@@ -625,7 +622,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             OrderId = 2,
                             PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2024, 12, 22, 22, 39, 59, 718, DateTimeKind.Local).AddTicks(9193),
+                            PaymentDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2558),
                             PaymentMethod = "PayNow",
                             PaymentStatus = "Completed"
                         });
