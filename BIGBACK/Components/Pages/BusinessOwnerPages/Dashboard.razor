@@ -1,0 +1,54 @@
+﻿@page "/businessowners/dashboard"
+@using BIGBACK.Domain
+@inject HttpClient HttpClient
+
+<h3>Business Owner Dashboard</h3>
+
+<div class="dashboard">
+    <div class="welcome-section">
+        <h4>Welcome, @businessOwner?.BusinessOwnerName!</h4>
+    </div>
+
+    <div class="overview-section">
+        <h5>Your Profile</h5>
+        <ul>
+            <li><strong>Contact:</strong> @businessOwner?.BusinessOwnerrContact</li>
+            <li><strong>Email:</strong> @businessOwner?.BusinessOwnerEmail</li>
+            <li><strong>Gender:</strong> @businessOwner?.BusinessOwnerGender</li>
+        </ul>
+    </div>
+
+    <div class="stats-section">
+        <h5>Overview</h5>
+        <ul>
+            <li><strong>Total Businesses:</strong> @totalBusinesses</li>
+        </ul>
+    </div>
+</div>
+
+@code {
+    private BusinessOwner? businessOwner;
+    private int totalBusinesses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Fetch the current business owner details directly using HttpClient
+        var response = await HttpClient.GetAsync("https://localhost:7237/api/businessowner/current");
+        if (response.IsSuccessStatusCode)
+        {
+            businessOwner = await response.Content.ReadFromJsonAsync<BusinessOwner>();
+        }
+
+        // Fetch the total number of businesses owned by the business owner
+        if (businessOwner != null)
+        {
+            var businessesResponse = await HttpClient.GetAsync($"https://localhost:7237/api/businessowner/{businessOwner.Id}/totalbusinesses");
+            if (businessesResponse.IsSuccessStatusCode)
+            {
+                totalBusinesses = await businessesResponse.Content.ReadFromJsonAsync<int>();
+            }
+        }
+    }
+}
+
+
