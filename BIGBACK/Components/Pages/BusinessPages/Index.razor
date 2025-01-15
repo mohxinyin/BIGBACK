@@ -8,19 +8,20 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>Business List</h1>
 
 <p>
     <a href="businesses/create">Create New</a>
 </p>
 
 <QuickGrid Class="table" Items="context.Business">
-    <PropertyColumn Property="business => business.BusinessName" />
-    <PropertyColumn Property="business => business.BusinessAddress" />
-    <PropertyColumn Property="business => business.BusinessContact" />
-    <PropertyColumn Property="business => business.BusinessRating" />
-    <PropertyColumn Property="business => business.BusinessStatus" />
-    <PropertyColumn Property="business => business.BusinessOwnerId" />
+    <PropertyColumn Property="business => business.BusinessName" Title="Business Name" />
+    <PropertyColumn Property="business => business.BusinessAddress" Title="Address" />
+    <PropertyColumn Property="business => business.BusinessContact" Title="Contact" />
+    <PropertyColumn Property="business => business.BusinessRating" Title="Rating" />
+    <PropertyColumn Property="business => business.BusinessStatus" Title="Status" />
+    <PropertyColumn Property="business => business.BusinessOwnerId" Title="BusinessOwnerId" />
+    <PropertyColumn Property="business => business.BusinessOwner.BusinessOwnerName" Title="BusinessOwnerName" />
 
     <TemplateColumn Context="business">
         <a href="@($"businesses/edit?id={business.Id}")">Edit</a> |
@@ -31,10 +32,16 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<Business> businesses = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Eagerly load Business and related BusinessOwner
+        businesses = context.Business
+            .Include(b => b.BusinessOwner) // Eagerly load the navigation property
+            .ToList();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
