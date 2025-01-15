@@ -10,5 +10,6 @@ namespace BIGBACK.Domain
         public string?  BusinessOwnerEmail { get; set; }
         public string? BusinessOwnerGender { get; set; }
 
+
     }
 }

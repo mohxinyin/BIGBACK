@@ -8,19 +8,22 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>Business List</h1>
 
 <p>
     <a href="businesses/create">Create New</a>
 </p>
 
+<!-- Specify the explicit type argument for the QuickGrid component -->
 <QuickGrid Class="table" Items="context.Business">
     <PropertyColumn Property="business => business.BusinessName" />
     <PropertyColumn Property="business => business.BusinessAddress" />
     <PropertyColumn Property="business => business.BusinessContact" />
     <PropertyColumn Property="business => business.BusinessRating" />
     <PropertyColumn Property="business => business.BusinessStatus" />
-    <PropertyColumn Property="business => business.BusinessOwnerId" />
+
+    <!-- Display BusinessOwnerName from the related BusinessOwner -->
+    <PropertyColumn Property="business => business.BusinessOwner.BusinessOwnerName" />
 
     <TemplateColumn Context="business">
         <a href="@($"businesses/edit?id={business.Id}")">Edit</a> |
@@ -31,10 +34,17 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<Business> businesses = new List<Business>();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
+        // Create the context instance
         context = DbFactory.CreateDbContext();
+
+        // Fetch businesses and include the related BusinessOwner data
+        businesses = await context.Business
+            .Include(b => b.BusinessOwner)  // Include the related BusinessOwner entity
+            .ToListAsync();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
