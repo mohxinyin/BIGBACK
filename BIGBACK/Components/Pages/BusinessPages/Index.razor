@@ -42,7 +42,9 @@
         businesses = context.Business
             .Include(b => b.BusinessOwner) // Eagerly load the navigation property
             .ToList();
+
     }
+
     
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }
