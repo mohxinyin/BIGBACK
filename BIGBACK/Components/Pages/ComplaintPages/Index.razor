@@ -8,7 +8,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>Complaint List</h1>
 
 <p>
     <a href="complaints/create">Create New</a>
@@ -22,6 +22,10 @@
     <PropertyColumn Property="complaint => complaint.ComplaintStatus" />
     <PropertyColumn Property="complaint => complaint.ComplaintDateTime" />
 
+    <PropertyColumn Property="complaint => complaint.Customer.CustomerName" Title="CustomerName" />
+    <PropertyColumn Property="complaint => complaint.Business.BusinessName" Title="BusinessName" />
+    <PropertyColumn Property="complaint => complaint.Rider.RiderName" Title="RiderName" />
+
     <TemplateColumn Context="complaint">
         <a href="@($"complaints/edit?id={complaint.Id}")">Edit</a> |
         <a href="@($"complaints/details?id={complaint.Id}")">Details</a> |
@@ -31,10 +35,29 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<dynamic> complaints = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Fetch complaints with related CustomerName, and RiderName using joins
+        complaints = (from c in context.Complaint
+                      join o in context.Order on c.OrderId equals o.Id
+                      join cu in context.Customer on o.CustomerId equals cu.Id
+                      join r in context.Rider on c.RiderId equals r.Id
+                      select new
+                      {
+                          c.Id,
+                          c.OrderId,
+                          c.StaffId,
+                          c.RiderId,
+                          c.ComplaintDesc,
+                          c.ComplaintStatus,
+                          c.ComplaintDateTime,
+                          CustomerName = cu.CustomerName,
+                          RiderName = r.RiderName
+                      }).ToList<dynamic>();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

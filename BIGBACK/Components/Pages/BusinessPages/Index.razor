@@ -14,16 +14,14 @@
     <a href="businesses/create">Create New</a>
 </p>
 
-<!-- Specify the explicit type argument for the QuickGrid component -->
 <QuickGrid Class="table" Items="context.Business">
-    <PropertyColumn Property="business => business.BusinessName" />
-    <PropertyColumn Property="business => business.BusinessAddress" />
-    <PropertyColumn Property="business => business.BusinessContact" />
-    <PropertyColumn Property="business => business.BusinessRating" />
-    <PropertyColumn Property="business => business.BusinessStatus" />
-
-    <!-- Display BusinessOwnerName from the related BusinessOwner -->
-    <PropertyColumn Property="business => business.BusinessOwner.BusinessOwnerName" />
+    <PropertyColumn Property="business => business.BusinessName" Title="Business Name" />
+    <PropertyColumn Property="business => business.BusinessAddress" Title="Address" />
+    <PropertyColumn Property="business => business.BusinessContact" Title="Contact" />
+    <PropertyColumn Property="business => business.BusinessRating" Title="Rating" />
+    <PropertyColumn Property="business => business.BusinessStatus" Title="Status" />
+    <PropertyColumn Property="business => business.BusinessOwnerId" Title="BusinessOwnerId" />
+    <PropertyColumn Property="business => business.BusinessOwner.BusinessOwnerName" Title="BusinessOwnerName" />
 
     <TemplateColumn Context="business">
         <a href="@($"businesses/edit?id={business.Id}")">Edit</a> |
@@ -34,17 +32,16 @@
 
 @code {
     private BIGBACKContext context = default!;
-    private List<Business> businesses = new List<Business>();
+    private List<Business> businesses = new();
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        // Create the context instance
         context = DbFactory.CreateDbContext();
 
-        // Fetch businesses and include the related BusinessOwner data
-        businesses = await context.Business
-            .Include(b => b.BusinessOwner)  // Include the related BusinessOwner entity
-            .ToListAsync();
+        // Eagerly load Business and related BusinessOwner
+        businesses = context.Business
+            .Include(b => b.BusinessOwner) // Eagerly load the navigation property
+            .ToList();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
