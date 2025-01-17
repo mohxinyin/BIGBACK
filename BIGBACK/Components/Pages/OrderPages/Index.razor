@@ -8,7 +8,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>Order List</h1>
 
 <p>
     <a href="orders/create">Create New</a>
@@ -18,7 +18,10 @@
     <PropertyColumn Property="order => order.OrderDateTime" />
     <PropertyColumn Property="order => order.OrderStatus" />
     <PropertyColumn Property="order => order.OrderTotal" />
-    <PropertyColumn Property="order => order.CustomerId" />
+    @* <PropertyColumn Property="order => order.CustomerId" /> *@
+
+    <PropertyColumn Property="order => order.Customer.CustomerName" Title="CustomerName" />
+    <PropertyColumn Property="order => order.Customer.CustomerMobileNumber" Title="CustomerMobileNumber" />
 
     <TemplateColumn Context="order">
         <a href="@($"orders/edit?id={order.Id}")">Edit</a> |
@@ -29,10 +32,16 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<Order> orders = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Eagerly load related Customer entity
+        orders = context.Order
+            .Include(o => o.Customer) // Load Customer to access CustomerName and CustomerMobileNumber
+            .ToList();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

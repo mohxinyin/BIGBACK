@@ -8,7 +8,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>OrderItem List</h1>
 
 <p>
     <a href="orderitems/create">Create New</a>
@@ -17,8 +17,12 @@
 <QuickGrid Class="table" Items="context.OrderItem">
     <PropertyColumn Property="orderitem => orderitem.OrderItemQty" />
     <PropertyColumn Property="orderitem => orderitem.OrderItemPromo" />
-    <PropertyColumn Property="orderitem => orderitem.OrderId" />
-    <PropertyColumn Property="orderitem => orderitem.MenuItemId" />
+    @* <PropertyColumn Property="orderitem => orderitem.OrderId" />
+    <PropertyColumn Property="orderitem => orderitem.MenuItemId" /> *@
+
+    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemName" Title="MenuItemName" />
+    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemPrice" Title="MenuItemPrice" />
+    <PropertyColumn Property="orderitem => orderitem.Order.OrderTotal" Title="OrderTotal" />
 
     <TemplateColumn Context="orderitem">
         <a href="@($"orderitems/edit?id={orderitem.Id}")">Edit</a> |
@@ -29,11 +33,19 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<OrderItem> orderItems = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Eagerly load related entities
+        orderItems = context.OrderItem
+            .Include(oi => oi.MenuItem) // Load MenuItem to access MenuItemName and MenuItemPrice
+            .Include(oi => oi.Order)   // Load Order to access OrderTotal
+            .ToList();
     }
+
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

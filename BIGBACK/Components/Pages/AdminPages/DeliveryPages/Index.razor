@@ -6,7 +6,7 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Delivery List</PageTitle>
 
 <h1>Index</h1>
 
@@ -17,11 +17,16 @@
 <QuickGrid Class="table" Items="context.Delivery">
     <PropertyColumn Property="delivery => delivery.DeliveryTime" />
     <PropertyColumn Property="delivery => delivery.DeliveryDate" />
-    <PropertyColumn Property="delivery => delivery.CustomerID" />
+    @* <PropertyColumn Property="delivery => delivery.CustomerID" />
     <PropertyColumn Property="delivery => delivery.OrderID" />
-    <PropertyColumn Property="delivery => delivery.BusinessID" />
+    <PropertyColumn Property="delivery => delivery.BusinessID" /> *@
     <PropertyColumn Property="delivery => delivery.DeliveryFee" />
     <PropertyColumn Property="delivery => delivery.DeliveryStatus" />
+
+    <PropertyColumn Property="delivery => delivery.Business.BusinessName" Title="BusinessName" />
+    <PropertyColumn Property="delivery => delivery.Customer.CustomerName" Title="CustomerName" />
+    <PropertyColumn Property="delivery => delivery.Order.OrderTotal" Title="OrderTotal" />
+    <PropertyColumn Property="delivery => delivery.Order.OrderStatus" Title="OrderStatus" />
 
     <TemplateColumn Context="delivery">
         <a href="@($"deliveries/edit?id={delivery.Id}")">Edit</a> |
@@ -32,10 +37,18 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<Delivery> deliveries = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Eagerly load related entities
+        deliveries = context.Delivery
+            .Include(d => d.Customer)
+            .Include(d => d.Order)
+            .Include(d => d.Business)
+            .ToList();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

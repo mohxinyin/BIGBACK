@@ -5,5 +5,8 @@
         public string? MenuName { get; set; }
         public int BusinessId { get; set; }
         public string? MenuCategory { get; set; }
+
+        // Navigation property
+        public Business? Business { get; set; }
     }
 }
