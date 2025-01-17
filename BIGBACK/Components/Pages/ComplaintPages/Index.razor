@@ -15,12 +15,18 @@
 </p>
 
 <QuickGrid Class="table" Items="context.Complaint">
-    <PropertyColumn Property="complaint => complaint.OrderId" />
+    @* <PropertyColumn Property="complaint => complaint.OrderId" />
     <PropertyColumn Property="complaint => complaint.StaffId" />
-    <PropertyColumn Property="complaint => complaint.RiderId" />
+    <PropertyColumn Property="complaint => complaint.RiderId" /> *@
     <PropertyColumn Property="complaint => complaint.ComplaintDesc" />
     <PropertyColumn Property="complaint => complaint.ComplaintStatus" />
     <PropertyColumn Property="complaint => complaint.ComplaintDateTime" />
+
+    <PropertyColumn Property="complaint => complaint.Order.OrderTotal" Title="OrderTotal" />
+    <PropertyColumn Property="complaint => complaint.Order.OrderDateTime" Title="OrderDateTime" />
+    <PropertyColumn Property="complaint => complaint.Staff.StaffName" Title="StaffName" />
+    <PropertyColumn Property="complaint => complaint.Rider.RiderName" Title="RiderName" />
+    <PropertyColumn Property="complaint => complaint.Order.Customer.CustomerName" Title="CustomerName" />
 
     <TemplateColumn Context="complaint">
         <a href="@($"complaints/edit?id={complaint.Id}")">Edit</a> |
@@ -31,10 +37,19 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<Complaint> complaints = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Eagerly load related entities
+        complaints = context.Complaint
+            .Include(c => c.Order) // Load Order to access Customer
+                .ThenInclude(o => o.Customer) // Load Customer from Order
+            .Include(c => c.Staff) // Load Staff to access StaffName
+            .Include(c => c.Rider) // Load Rider to access RiderName
+            .ToList();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

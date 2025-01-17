@@ -20,7 +20,7 @@
     <PropertyColumn Property="business => business.BusinessContact" Title="Contact" />
     <PropertyColumn Property="business => business.BusinessRating" Title="Rating" />
     <PropertyColumn Property="business => business.BusinessStatus" Title="Status" />
-    <PropertyColumn Property="business => business.BusinessOwnerId" Title="BusinessOwnerId" />
+    @* <PropertyColumn Property="business => business.BusinessOwnerId" Title="BusinessOwnerId" /> *@
     <PropertyColumn Property="business => business.BusinessOwner.BusinessOwnerName" Title="BusinessOwnerName" />
 
     <TemplateColumn Context="business">
@@ -43,6 +43,6 @@
             .Include(b => b.BusinessOwner) // Eagerly load the navigation property
             .ToList();
     }
-
+    
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

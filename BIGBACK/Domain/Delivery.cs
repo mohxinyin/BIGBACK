@@ -9,5 +9,11 @@
         public int BusinessID { get; set; }
         public decimal DeliveryFee { get; set; }
         public string? DeliveryStatus { get; set; }
+
+
+        // Navigation properties
+        public Customer? Customer { get; set; }
+        public Order? Order { get; set; }
+        public Business? Business { get; set; }
     }
 }

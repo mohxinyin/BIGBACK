@@ -8,5 +8,8 @@
         public string? PaymentStatus { get; set; }
         public int OrderId { get; set; }
 
+        // Navigation property
+        public Order? Order { get; set; }
+
     }
 }

@@ -11,7 +11,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>Menu List</h1>
 
 <p>
     <a href="menus/create">Create New</a>
@@ -19,8 +19,11 @@
 
 <QuickGrid Class="table" Items="context.Menu">
     <PropertyColumn Property="menu => menu.MenuName" />
-    <PropertyColumn Property="menu => menu.BusinessId" />
+    @* <PropertyColumn Property="menu => menu.BusinessId" /> *@
     <PropertyColumn Property="menu => menu.MenuCategory" />
+
+    <PropertyColumn Property="menu => menu.Business.BusinessName" Title="BusinessName" />
+    <PropertyColumn Property="menu => menu.Business.BusinessRating" Title="BusinessRating" />
 
     <TemplateColumn Context="menu">
         <a href="@($"menus/edit?id={menu.Id}")">Edit</a> |
@@ -33,10 +36,16 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<Menu> menus = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Eagerly load related Business entity
+        menus = context.Menu
+            .Include(m => m.Business) // Load Business to access BusinessName and BusinessRating
+            .ToList();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();

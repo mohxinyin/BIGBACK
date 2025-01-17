@@ -8,7 +8,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Index</h1>
+<h1>DeliveryRider List</h1>
 
 <p>
     <a href="deliveryriders/create">Create New</a>
@@ -17,8 +17,12 @@
 <QuickGrid Class="table" Items="context.DeliveryRider">
     <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryRiderTaskType" />
     <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryRiderStatus" />
-    <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryId" />
-    <PropertyColumn Property="deliveryrider => deliveryrider.RiderId" />
+    @* <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryId" />
+    <PropertyColumn Property="deliveryrider => deliveryrider.RiderId" /> *@
+
+    <PropertyColumn Property="deliveryRider => deliveryRider.Delivery.DeliveryStatus" Title="Delivery Status" />
+    <PropertyColumn Property="deliveryRider => deliveryRider.Rider.RiderName" Title="Rider Name" />
+
 
     <TemplateColumn Context="deliveryrider">
         <a href="@($"deliveryriders/edit?id={deliveryrider.Id}")">Edit</a> |
@@ -29,10 +33,17 @@
 
 @code {
     private BIGBACKContext context = default!;
+    private List<DeliveryRider> deliveryRiders = new();
 
     protected override void OnInitialized()
     {
         context = DbFactory.CreateDbContext();
+
+        // Eagerly load related entities
+        deliveryRiders = context.DeliveryRider
+            .Include(dr => dr.Delivery) // Include Delivery to access DeliveryStatus
+            .Include(dr => dr.Rider)   // Include Rider to access RiderName
+            .ToList();
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
