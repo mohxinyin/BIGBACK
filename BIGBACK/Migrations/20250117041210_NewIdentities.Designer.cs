@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    [Migration("20250117034736_NewIdentities")]
+    [Migration("20250117041210_NewIdentities")]
     partial class NewIdentities
     {
         /// <inheritdoc />
@@ -100,7 +100,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "24d7b3ad-c6fe-4694-a28c-ec0382d0b981",
+                            ConcurrencyStamp = "45578559-851d-49bf-b1f0-e49f4265606a",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -108,9 +108,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEBhJYqCPHLdwR+79EJ/kkxwlvDMyyHi25nxy1SukooaMq3dNeNO/xI/l82n2cVgXHA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEPmVT1YQeuf0U5tbMbsm1WgDnO0S4ipaXqXvF84+22jrVGnpHHF87tcW/l/gW9bsTQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "9dde12cb-b6fd-489c-9397-3436e75cfd52",
+                            SecurityStamp = "6b89edae-2848-4efe-846c-bfaa6382ff81",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -118,7 +118,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "4781efa7-68dc-47f2-850f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a37995b1-8e4e-480e-9f37-9bc33a3d78a5",
+                            ConcurrencyStamp = "34606b06-12c1-42ae-9b1c-90bc60f295c3",
                             Email = "business_annaBakery@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Anna",
@@ -126,9 +126,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "BUSINESS_ANNABAKERY@LOCALHOST.COM",
                             NormalizedUserName = "BUSINESS_ANNABAKERY@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKIIy6CDhLV8rbXuVHQIh25NhQsL6Vnh2FXyzdyr469h5OzdobrTHHixvqyFVfh99Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDvgFz+lKqCxqNEAHaJHgoYBZ41yAg9GASwqp10y2fqc8gG3+s4PdQfKZsKpp5hH7g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ca619504-78e5-4201-9635-18bc846dcf10",
+                            SecurityStamp = "19981144-efa7-4828-b947-850059a2d1c3",
                             TwoFactorEnabled = false,
                             UserName = "business_annaBakery@localhost.com"
                         },
@@ -136,7 +136,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "5781efa7-63dc-49f0-760f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "81c0c536-5632-446a-924b-5cb54372093d",
+                            ConcurrencyStamp = "99d7e995-3c73-417d-a428-3a4a4fbd43f3",
                             Email = "rider_charlie@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Charlie",
@@ -144,9 +144,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RIDER_CHARLIE@LOCALHOST.COM",
                             NormalizedUserName = "RIDER_CHARLIE@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAENgdpMHSbs1AhoQekmCc5PwX7HbiNtSUTeIH3MfCdDu6WEdqMccA3wVIFHwimYY3Dg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAECdiaZFzRp2xB1FCz5hvJaiyV2K19vVx54ym6mQl7VOX5r4YyiIkvfj8+cElt/b+2g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "8f414f24-2e21-4764-a8aa-0ee9d093d68e",
+                            SecurityStamp = "894b44a3-a3e3-483c-9f18-71fcfd793ccb",
                             TwoFactorEnabled = false,
                             UserName = "rider_charlie@localhost.com"
                         });
@@ -290,7 +290,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
-                            ComplaintDateTime = new DateTime(2025, 1, 17, 11, 47, 33, 548, DateTimeKind.Local).AddTicks(1837),
+                            ComplaintDateTime = new DateTime(2025, 1, 17, 12, 12, 7, 461, DateTimeKind.Local).AddTicks(892),
                             ComplaintDesc = "Late delivery",
                             ComplaintStatus = "Open",
                             OrderId = 1,
@@ -300,7 +300,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 2,
-                            ComplaintDateTime = new DateTime(2025, 1, 17, 11, 47, 33, 548, DateTimeKind.Local).AddTicks(1841),
+                            ComplaintDateTime = new DateTime(2025, 1, 17, 12, 12, 7, 461, DateTimeKind.Local).AddTicks(897),
                             ComplaintDesc = "Damaged item",
                             ComplaintStatus = "Resolved",
                             OrderId = 2,
@@ -584,7 +584,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            OrderDateTime = new DateTime(2025, 1, 17, 11, 47, 33, 548, DateTimeKind.Local).AddTicks(183),
+                            OrderDateTime = new DateTime(2025, 1, 17, 12, 12, 7, 460, DateTimeKind.Local).AddTicks(8947),
                             OrderStatus = "Pending",
                             OrderTotal = 64.50m
                         },
@@ -592,7 +592,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            OrderDateTime = new DateTime(2025, 1, 17, 11, 47, 33, 548, DateTimeKind.Local).AddTicks(214),
+                            OrderDateTime = new DateTime(2025, 1, 17, 12, 12, 7, 460, DateTimeKind.Local).AddTicks(8995),
                             OrderStatus = "Pending",
                             OrderTotal = 55.70m
                         });
@@ -679,7 +679,7 @@ namespace BIGBACK.Migrations
                             Id = 1,
                             OrderId = 1,
                             PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2025, 1, 17, 11, 47, 33, 548, DateTimeKind.Local).AddTicks(648),
+                            PaymentDateTime = new DateTime(2025, 1, 17, 12, 12, 7, 460, DateTimeKind.Local).AddTicks(9777),
                             PaymentMethod = "VISA Debit",
                             PaymentStatus = "Completed"
                         },
@@ -688,7 +688,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             OrderId = 2,
                             PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2025, 1, 17, 11, 47, 33, 548, DateTimeKind.Local).AddTicks(655),
+                            PaymentDateTime = new DateTime(2025, 1, 17, 12, 12, 7, 460, DateTimeKind.Local).AddTicks(9786),
                             PaymentMethod = "PayNow",
                             PaymentStatus = "Completed"
                         });
