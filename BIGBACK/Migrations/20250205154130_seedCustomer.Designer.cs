@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    [Migration("20250102043050_SeedUserRoles")]
-    partial class SeedUserRoles
+    [Migration("20250205154130_seedCustomer")]
+    partial class seedCustomer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -100,7 +100,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "94ea59b7-7f2f-4e50-bccd-9ff994b523a5",
+                            ConcurrencyStamp = "8e966fd5-81d3-4f02-ab56-0cb8b646b779",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -108,11 +108,119 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOnhgtWHXxx2Cj4+sUdUSlg+IyAjIw75J9d5I/NAbOzk+g4musNJ67y2MRd8Mrc93Q==",
+                            PasswordHash = "AQAAAAIAAYagAAAAELmoeTZNptbP1KpfVOVZlKsmCOpLvjkC/rCrPkquxzGMUnEFRAXcD0RBI05DSkSwcg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f5ec4cd8-e8d9-47af-855e-6ee96efe5500",
+                            SecurityStamp = "2480f685-efa6-4e1d-9937-2e1f297c09ca",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
+                        },
+                        new
+                        {
+                            Id = "4781efa7-68dc-47f2-850f-e506d04102e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "0251905b-54d5-428d-8c5c-7bb325a35d30",
+                            Email = "business_annaBakery@localhost.com",
+                            EmailConfirmed = true,
+                            FirstName = "Anna",
+                            LastName = "Businessowner",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "BUSINESS_ANNABAKERY@LOCALHOST.COM",
+                            NormalizedUserName = "BUSINESS_ANNABAKERY@LOCALHOST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDEjFPfQjGLg3gGX9Thl1k3FAPFTTNVqWHlMrfSLtpTDKt8J1YzSL24iOX4jhH8XDw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "b383c76b-ff79-43aa-b5fa-15135e158ff0",
+                            TwoFactorEnabled = false,
+                            UserName = "business_annaBakery@localhost.com"
+                        },
+                        new
+                        {
+                            Id = "5781efa7-63dc-49f0-760f-e506d04102e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2244f61e-a5c9-4b1a-b4a8-3ddb2301c6f1",
+                            Email = "rider_charlie@localhost.com",
+                            EmailConfirmed = true,
+                            FirstName = "Charlie",
+                            LastName = "Brown",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "RIDER_CHARLIE@LOCALHOST.COM",
+                            NormalizedUserName = "RIDER_CHARLIE@LOCALHOST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAED8EOPepgYwY9Ub04c48bWFrpjxzBAyzl6pbCsTCM1Oj+l0RQoRHdzxCYbhYVFqemw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "323c5563-fbdd-4d22-827a-a888eca767d5",
+                            TwoFactorEnabled = false,
+                            UserName = "rider_charlie@localhost.com"
+                        },
+                        new
+                        {
+                            Id = "7651efa7-68dc-47f2-850f-e506d04102e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "b729a205-bf5d-4e8d-8671-cbeab66f1d52",
+                            Email = "business_jimmyChicken@localhost.com",
+                            EmailConfirmed = true,
+                            FirstName = "Jimmy",
+                            LastName = "Businessowner",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "BUSINESS_JIMMYCHICKEN@LOCALHOST.COM",
+                            NormalizedUserName = "BUSINESS_JIMMYCHICKEN@LOCALHOST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJiZ51E5Cesq4tiS0RTKMVJ7yAn47HA+3KtwMtbn5zeRGlL5THQPQzfeSwh7MFYT9A==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "73751b24-a35f-4f65-b98d-383c7d53a4fc",
+                            TwoFactorEnabled = false,
+                            UserName = "business_jimmyChicken@localhost.com"
+                        },
+                        new
+                        {
+                            Id = "7851efa7-69dc-47f2-890f-e507d04107e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d1b5f76a-d4a3-464d-88fa-efbccf131d54",
+                            Email = "johndoe1@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "John",
+                            LastName = "Doe",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "JOHNDOE1@GMAIL.COM",
+                            NormalizedUserName = "JOHNDOE1@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ67srvp3a0jcvMhZMefGbEeQkGWPqdWKqsfHGQcJljiW4nJ5PchHleZszXkgtiLLw==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a65f88e3-8160-4b6d-a9c4-fe359a08dab5",
+                            TwoFactorEnabled = false,
+                            UserName = "johndoe1@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "8851efa7-69dc-49f2-790f-e506d04197e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "89c20ecf-e314-4647-88e9-a868fb0f2998",
+                            Email = "maryjane2@gmail.com",
+                            EmailConfirmed = true,
+                            FirstName = "Mary",
+                            LastName = "Jane",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "MARYJANE2@GMAIL.COM",
+                            NormalizedUserName = "MARYJANE2@GMAIL.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGQG+QwPOyBoNjaGbT0IT3wq8ooBfyqn/cum+pz4wf08q9xOy2UyXas93FurCy0mWg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "93769ae6-24d3-44e1-bdf2-b3b484fed5e5",
+                            TwoFactorEnabled = false,
+                            UserName = "maryjane2@gmail.com"
+                        },
+                        new
+                        {
+                            Id = "9781ifa7-63hc-48f0-700f-e506d04102e4",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "c3eb569b-372e-427f-9352-a276cc96207c",
+                            Email = "rider_daisylee@localhost.com",
+                            EmailConfirmed = true,
+                            FirstName = "Daisy",
+                            LastName = "Lee",
+                            LockoutEnabled = false,
+                            NormalizedEmail = "RIDER_DAISYLEE@LOCALHOST.COM",
+                            NormalizedUserName = "RIDER_DAISYLEE@LOCALHOST.COM",
+                            PasswordHash = "AQAAAAIAAYagAAAAEIp2owF/s6ZL4GFcXZvHfigsgfET4S1HlWa6382Kjc0TDD7Z9ekqlygpBqVAHmfxkA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "63f20adf-c840-4535-af19-b01171968c76",
+                            TwoFactorEnabled = false,
+                            UserName = "rider_daisylee@localhost.com"
                         });
                 });
 
@@ -143,6 +251,8 @@ namespace BIGBACK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BusinessOwnerId");
 
                     b.ToTable("Business");
 
@@ -189,6 +299,18 @@ namespace BIGBACK.Migrations
                     b.Property<string>("BusinessOwnerrContact")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("BusinessOwner");
@@ -197,18 +319,26 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
-                            BusinessOwnerEmail = "annatan@gmail.com",
+                            BusinessOwnerEmail = "business_annaBakery@localhost.com",
                             BusinessOwnerGender = "Female",
                             BusinessOwnerName = "Anna",
-                            BusinessOwnerrContact = "97564437"
+                            BusinessOwnerrContact = "97564437",
+                            CreatedBy = "4781efa7-68dc-47f2-850f-e506d04102e4",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "4781efa7-68dc-47f2-850f-e506d04102e4"
                         },
                         new
                         {
                             Id = 2,
-                            BusinessOwnerEmail = "JimmyLeong@gmail.com",
+                            BusinessOwnerEmail = "business_jimmyChicken@localhost.com",
                             BusinessOwnerGender = "Male",
                             BusinessOwnerName = "Jimmy",
-                            BusinessOwnerrContact = "97524338"
+                            BusinessOwnerrContact = "97524338",
+                            CreatedBy = "7651efa7-68dc-47f2-850f-e506d04102e4",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "7651efa7-68dc-47f2-850f-e506d04102e4"
                         });
                 });
 
@@ -240,13 +370,19 @@ namespace BIGBACK.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("RiderId");
+
+                    b.HasIndex("StaffId");
+
                     b.ToTable("Complaint");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            ComplaintDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(3116),
+                            ComplaintDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(7397),
                             ComplaintDesc = "Late delivery",
                             ComplaintStatus = "Open",
                             OrderId = 1,
@@ -256,7 +392,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 2,
-                            ComplaintDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(3118),
+                            ComplaintDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(7399),
                             ComplaintDesc = "Damaged item",
                             ComplaintStatus = "Resolved",
                             OrderId = 2,
@@ -273,6 +409,9 @@ namespace BIGBACK.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CustomerAddress")
                         .HasColumnType("nvarchar(max)");
 
@@ -288,6 +427,15 @@ namespace BIGBACK.Migrations
                     b.Property<string>("CustomerName")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Customer");
@@ -296,20 +444,28 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
+                            CreatedBy = "7851efa7-69dc-47f2-890f-e507d04107e4",
                             CustomerAddress = "3 AngMoKio Ave",
                             CustomerEmail = "johndoe1@gmail.com",
                             CustomerGender = "Male",
                             CustomerMobileNumber = "91062378",
-                            CustomerName = "John Doe"
+                            CustomerName = "John Doe",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "7851efa7-69dc-47f2-890f-e507d04107e4"
                         },
                         new
                         {
                             Id = 2,
+                            CreatedBy = "8851efa7-69dc-49f2-790f-e506d04197e4",
                             CustomerAddress = "3 Yishun Ave",
                             CustomerEmail = "maryjane2@gmail.com",
                             CustomerGender = "Female",
                             CustomerMobileNumber = "91054379",
-                            CustomerName = "Mary Jane"
+                            CustomerName = "Mary Jane",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            UpdatedBy = "8851efa7-69dc-49f2-790f-e506d04197e4"
                         });
                 });
 
@@ -343,6 +499,12 @@ namespace BIGBACK.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BusinessID");
+
+                    b.HasIndex("CustomerID");
+
+                    b.HasIndex("OrderID");
 
                     b.ToTable("Delivery");
 
@@ -393,6 +555,10 @@ namespace BIGBACK.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DeliveryId");
+
+                    b.HasIndex("RiderId");
+
                     b.ToTable("DeliveryRider");
 
                     b.HasData(
@@ -432,6 +598,8 @@ namespace BIGBACK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("BusinessId");
 
                     b.ToTable("Menu");
 
@@ -473,6 +641,8 @@ namespace BIGBACK.Migrations
                         .HasColumnType("real");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MenuId");
 
                     b.ToTable("MenuItem");
 
@@ -517,6 +687,8 @@ namespace BIGBACK.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CustomerId");
+
                     b.ToTable("Order");
 
                     b.HasData(
@@ -524,7 +696,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            OrderDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2305),
+                            OrderDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6716),
                             OrderStatus = "Pending",
                             OrderTotal = 64.50m
                         },
@@ -532,7 +704,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            OrderDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2329),
+                            OrderDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6735),
                             OrderStatus = "Pending",
                             OrderTotal = 55.70m
                         });
@@ -559,6 +731,10 @@ namespace BIGBACK.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MenuItemId");
+
+                    b.HasIndex("OrderId");
 
                     b.ToTable("OrderItem");
 
@@ -605,6 +781,8 @@ namespace BIGBACK.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderId");
+
                     b.ToTable("Payment");
 
                     b.HasData(
@@ -613,7 +791,7 @@ namespace BIGBACK.Migrations
                             Id = 1,
                             OrderId = 1,
                             PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2556),
+                            PaymentDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6936),
                             PaymentMethod = "VISA Debit",
                             PaymentStatus = "Completed"
                         },
@@ -622,7 +800,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             OrderId = 2,
                             PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2025, 1, 2, 12, 30, 49, 713, DateTimeKind.Local).AddTicks(2558),
+                            PaymentDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6940),
                             PaymentMethod = "PayNow",
                             PaymentStatus = "Completed"
                         });
@@ -636,6 +814,15 @@ namespace BIGBACK.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("RiderContact")
                         .HasColumnType("nvarchar(max)");
 
@@ -645,6 +832,9 @@ namespace BIGBACK.Migrations
                     b.Property<double>("RiderRating")
                         .HasColumnType("float");
 
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Rider");
@@ -653,16 +843,24 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
+                            CreatedBy = "5781efa7-63dc-49f0-760f-e506d04102e4",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RiderContact = "+1122334455",
                             RiderName = "Charlie Brown",
-                            RiderRating = 4.7999999999999998
+                            RiderRating = 4.7999999999999998,
+                            UpdatedBy = "5781efa7-63dc-49f0-760f-e506d04102e4"
                         },
                         new
                         {
                             Id = 2,
+                            CreatedBy = "9781ifa7-63hc-48f0-700f-e506d04102e4",
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             RiderContact = "+2233445566",
                             RiderName = "Daisy Lee",
-                            RiderRating = 4.5
+                            RiderRating = 4.5,
+                            UpdatedBy = "9781ifa7-63hc-48f0-700f-e506d04102e4"
                         });
                 });
 
@@ -674,6 +872,15 @@ namespace BIGBACK.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("DateCreated")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("DateUpdated")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("StaffContact")
                         .HasColumnType("nvarchar(max)");
 
@@ -681,6 +888,9 @@ namespace BIGBACK.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StaffName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UpdatedBy")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -691,6 +901,8 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StaffContact = "+1234567890",
                             StaffEmail = "alice.johnson@example.com",
                             StaffName = "Alice Johnson"
@@ -698,6 +910,8 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 2,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DateUpdated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             StaffContact = "+0987654321",
                             StaffEmail = "bob.smith@example.com",
                             StaffName = "Bob Smith"
@@ -742,6 +956,18 @@ namespace BIGBACK.Migrations
                             Id = "bd2bcf0c-20db-474f-8407-5a6b159518bb",
                             Name = "User",
                             NormalizedName = "USER"
+                        },
+                        new
+                        {
+                            Id = "cd2bcf0c-20db-474f-8407-5a6b159518ba",
+                            Name = "BusinessOwner",
+                            NormalizedName = "BUSINESSOWNER"
+                        },
+                        new
+                        {
+                            Id = "dd2bcf0c-20db-474f-8407-5a6b159518bb",
+                            Name = "Rider",
+                            NormalizedName = "RIDER"
                         });
                 });
 
@@ -836,6 +1062,36 @@ namespace BIGBACK.Migrations
                         {
                             UserId = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             RoleId = "ad2bcf0c-20db-474f-8407-5a6b159518ba"
+                        },
+                        new
+                        {
+                            UserId = "4781efa7-68dc-47f2-850f-e506d04102e4",
+                            RoleId = "cd2bcf0c-20db-474f-8407-5a6b159518ba"
+                        },
+                        new
+                        {
+                            UserId = "7651efa7-68dc-47f2-850f-e506d04102e4",
+                            RoleId = "cd2bcf0c-20db-474f-8407-5a6b159518ba"
+                        },
+                        new
+                        {
+                            UserId = "5781efa7-63dc-49f0-760f-e506d04102e4",
+                            RoleId = "dd2bcf0c-20db-474f-8407-5a6b159518bb"
+                        },
+                        new
+                        {
+                            UserId = "9781ifa7-63hc-48f0-700f-e506d04102e4",
+                            RoleId = "dd2bcf0c-20db-474f-8407-5a6b159518bb"
+                        },
+                        new
+                        {
+                            UserId = "7851efa7-69dc-47f2-890f-e507d04107e4",
+                            RoleId = "bd2bcf0c-20db-474f-8407-5a6b159518bb"
+                        },
+                        new
+                        {
+                            UserId = "8851efa7-69dc-49f2-790f-e506d04197e4",
+                            RoleId = "bd2bcf0c-20db-474f-8407-5a6b159518bb"
                         });
                 });
 
@@ -856,6 +1112,153 @@ namespace BIGBACK.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.Business", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.BusinessOwner", "BusinessOwner")
+                        .WithMany()
+                        .HasForeignKey("BusinessOwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BusinessOwner");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.Complaint", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BIGBACK.Domain.Rider", "Rider")
+                        .WithMany()
+                        .HasForeignKey("RiderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BIGBACK.Domain.Staff", "Staff")
+                        .WithMany()
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Rider");
+
+                    b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.Delivery", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.Business", "Business")
+                        .WithMany()
+                        .HasForeignKey("BusinessID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BIGBACK.Domain.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BIGBACK.Domain.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Business");
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.DeliveryRider", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.Delivery", "Delivery")
+                        .WithMany()
+                        .HasForeignKey("DeliveryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BIGBACK.Domain.Rider", "Rider")
+                        .WithMany()
+                        .HasForeignKey("RiderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Delivery");
+
+                    b.Navigation("Rider");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.Menu", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.Business", "Business")
+                        .WithMany()
+                        .HasForeignKey("BusinessId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Business");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.MenuItem", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.Menu", "Menu")
+                        .WithMany()
+                        .HasForeignKey("MenuId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Menu");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.Order", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.OrderItem", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.MenuItem", "MenuItem")
+                        .WithMany()
+                        .HasForeignKey("MenuItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BIGBACK.Domain.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MenuItem");
+
+                    b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("BIGBACK.Domain.Payment", b =>
+                {
+                    b.HasOne("BIGBACK.Domain.Order", "Order")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

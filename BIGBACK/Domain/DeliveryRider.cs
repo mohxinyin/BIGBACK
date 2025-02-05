@@ -10,5 +10,6 @@
         // Navigation properties
         public Delivery? Delivery { get; set; }
         public Rider? Rider { get; set; }
+
     }
 }

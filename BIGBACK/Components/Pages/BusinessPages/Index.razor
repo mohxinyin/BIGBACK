@@ -6,7 +6,7 @@
 
 <PageTitle>Business List</PageTitle>
 
-<h1>Business List</h1>
+<h1>Index</h1>
 
 <div class="container">
     <div class="row">
@@ -62,6 +62,7 @@
         businesses = context.Business
             .Include(b => b.BusinessOwner) // Eagerly load the navigation property
             .ToList();
+
     }
 
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
