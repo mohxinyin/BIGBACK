@@ -1,4 +1,4 @@
-﻿@page "/menuitems"
+﻿@page "/menuitems/{menuId:int}"  
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using BIGBACK.Domain
@@ -6,42 +6,52 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Menu Item List</PageTitle>
 
-<h1>MenuItem List</h1>
+<h1>Menu Items for @menu?.MenuName</h1>
 
 <p>
-    <a href="menuitems/create">Create New</a>
+    <AuthorizeView Roles="Administrator,BusinessOwner">
+        <a href="menuitems/create" class="btn btn-primary">Create New MenuItem</a>
+    </AuthorizeView>
 </p>
 
-<QuickGrid Class="table" Items="context.MenuItem">
-    <PropertyColumn Property="menuitem => menuitem.MenuItemPrice" />
-    <PropertyColumn Property="menuitem => menuitem.MenuItemName" />
-    <PropertyColumn Property="menuitem => menuitem.MenuItemDesc" />
-    @* <PropertyColumn Property="menuitem => menuitem.MenuId" /> *@
-    <PropertyColumn Property="menuitem => menuitem.Menu.MenuName" Title="MenuName" />
+<QuickGrid Class="table" Items="menuItems.AsQueryable()">
+    <PropertyColumn Property="item => item.MenuItemName" Title="Item Name" />
+    <PropertyColumn Property="item => item.MenuItemDesc" Title="Description" />
+    <PropertyColumn Property="item => item.MenuItemPrice" Title="Price" />
+    <PropertyColumn Property="item => item.Menu.MenuName" Title="Menu Name" />
 
     <TemplateColumn Context="menuitem">
-        <a href="@($"menuitems/edit?id={menuitem.Id}")">Edit</a> |
         <a href="@($"menuitems/details?id={menuitem.Id}")">Details</a> |
-        <a href="@($"menuitems/delete?id={menuitem.Id}")">Delete</a>
+        <AuthorizeView Roles="Administrator,BusinessOwner">
+            <a href="@($"menuitems/edit?id={menuitem.Id}")">Edit</a> |
+            <a href="@($"menuitems/delete?id={menuitem.Id}")">Delete</a>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 
 @code {
-    private BIGBACKContext context = default!;
+    [Parameter] public int menuId { get; set; }
     private List<MenuItem> menuItems = new();
+    private Menu? menu;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        await using var context = await DbFactory.CreateDbContextAsync();
 
-        // Eagerly load related Menu entity
-        menuItems = context.MenuItem
-            .Include(mi => mi.Menu) // Load Menu to access MenuName
-            .ToList();
+        // Load the menu to display its name
+        menu = await context.Menu
+            .FirstOrDefaultAsync(m => m.Id == menuId);
+
+        // If the menu is found, load its items
+        if (menu != null)
+        {
+            menuItems = await context.MenuItem
+                .Where(m => m.MenuId == menuId)  // Filter by MenuId
+                .ToListAsync();
+        }
     }
 
-
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync() => await Task.CompletedTask;
 }

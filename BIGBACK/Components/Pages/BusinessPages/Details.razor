@@ -28,10 +28,13 @@
             <dt class="col-sm-2">BusinessStatus</dt>
             <dd class="col-sm-10">@business.BusinessStatus</dd>
             <dt class="col-sm-2">BusinessOwnerId</dt>
-            <dd class="col-sm-10">@business.BusinessOwnerId</dd>
+            <dd class="col-sm-10">@business.BusinessOwnerId</dd> 
         </dl>
         <div>
-            <a href="@($"/businesses/edit?id={business.Id}")">Edit</a> |
+            <AuthorizeView Roles="Administrator,BusinessOwner">
+				<a href="@($"/businesses/edit?id={business.Id}")">Edit</a> |
+            </AuthorizeView>
+            
             <a href="@($"/businesses")">Back to List</a>
         </div>
     }

@@ -1,4 +1,4 @@
-﻿@page "/menus"
+﻿@page "/menus/{businessId:int?}"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -7,46 +7,96 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
+<PageTitle>Menu List</PageTitle>
 
+<h1>@(businessId.HasValue ? $"Menu for {business?.BusinessName}" : "All Menus")</h1>
 
-<PageTitle>Index</PageTitle>
-
-<h1>Menu List</h1>
-
-<p>
-    <a href="menus/create">Create New</a>
-</p>
-
-<QuickGrid Class="table" Items="context.Menu">
-    <PropertyColumn Property="menu => menu.MenuName" />
-    @* <PropertyColumn Property="menu => menu.BusinessId" /> *@
-    <PropertyColumn Property="menu => menu.MenuCategory" />
-
-    <PropertyColumn Property="menu => menu.Business.BusinessName" Title="BusinessName" />
-    <PropertyColumn Property="menu => menu.Business.BusinessRating" Title="BusinessRating" />
-
-    <TemplateColumn Context="menu">
-        <a href="@($"menus/edit?id={menu.Id}")">Edit</a> |
-        <a href="@($"menus/details?id={menu.Id}")">Details</a> 
-        <AuthorizeView Roles="Administrator">
-            | <a href="@($"menus/delete?id={menu.Id}")">Delete</a>
+@if (businessId.HasValue)
+{
+    <p>
+        <AuthorizeView Roles="Administrator,BusinessOwner">
+            <a href="menus/create" class="btn btn-primary">Create New Menu</a>
         </AuthorizeView>
-    </TemplateColumn>
-</QuickGrid>
+    </p>
+}
+
+@if (menus != null && menus.Any())
+{
+    <div class="container">
+        <div class="row">
+            @foreach (var menu in menus)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">@menu.MenuName</h5>
+                            <p class="card-text"><strong>Category:</strong> @menu.MenuCategory</p>
+                            <p class="card-text"><strong>Business:</strong> @menu.Business.BusinessName</p>
+                            <p class="card-text"><strong>Rating:</strong> @menu.Business.BusinessRating</p>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="@($"menus/details?id={menu.Id}")" class="btn btn-info btn-sm">Details</a>
+
+                                <AuthorizeView Roles="Administrator,BusinessOwner">
+                                    <a href="@($"menus/edit?id={menu.Id}")" class="btn btn-warning btn-sm">Edit</a> |
+                                    <a href="@($"menus/delete?id={menu.Id}")" class="btn btn-danger btn-sm">Delete</a>
+                                </AuthorizeView>
+                            </div>
+
+                            <!-- NEW: View Menu Items Button -->
+                            <div class="mt-2">
+                                <a href="@($"/menuitems/{menu.Id}")" class="btn btn-success btn-sm">
+                                    View Menu Items
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+else
+{
+    <p>No menus available for this business.</p>
+}
 
 @code {
-    private BIGBACKContext context = default!;
-    private List<Menu> menus = new();
+    [Parameter] public int? businessId { get; set; }
+      <!-- Make businessId nullable -->
+    private Business? business;
+    private List<Menu>? menus = new();
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        await using var context = await DbFactory.CreateDbContextAsync();
 
-        // Eagerly load related Business entity
-        menus = context.Menu
-            .Include(m => m.Business) // Load Business to access BusinessName and BusinessRating
-            .ToList();
+        if (businessId.HasValue)
+        {
+            // Fetch the business using businessId
+            business = await context.Business
+                .FirstOrDefaultAsync(b => b.Id == businessId);
+
+            // If the business is found, load its menus
+            if (business != null)
+            {
+                menus = await context.Menu
+                    .Where(m => m.BusinessId == businessId)  // Filter menus by the businessId
+                    .Include(m => m.Business)  // Eagerly load the related Business entity
+                    .ToListAsync();
+            }
+        }
+        else
+        {
+            // If no businessId is provided, fetch all menus
+            menus = await context.Menu
+                .Include(m => m.Business)  // Eagerly load the related Business entity
+                .ToListAsync();
+        }
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    public async ValueTask DisposeAsync()
+    {
+        await Task.CompletedTask;
+    }
 }

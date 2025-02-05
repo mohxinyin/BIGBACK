@@ -1,59 +1,81 @@
 ﻿@page "/orders/create"
-@using Microsoft.EntityFrameworkCore
-@using BIGBACK.Domain
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Place an Order</PageTitle>
 
-<h1>Create</h1>
-
-<h2>Order</h2>
+<h1>Place an Order</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <EditForm method="post" Model="Order" OnValidSubmit="AddOrder" FormName="create" Enhance>
+        <EditForm Model="Order" OnValidSubmit="AddOrder">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" />
+
             <div class="mb-3">
-                <label for="orderdatetime" class="form-label">OrderDateTime:</label> 
-                <InputDate id="orderdatetime" @bind-Value="Order.OrderDateTime" class="form-control" /> 
-                <ValidationMessage For="() => Order.OrderDateTime" class="text-danger" /> 
-            </div>        
+                <label for="orderdatetime" class="form-label">Order Date:</label>
+                <InputDate id="orderdatetime" @bind-Value="Order.OrderDateTime" class="form-control" />
+                <ValidationMessage For="() => Order.OrderDateTime" class="text-danger" />
+            </div>
+
             <div class="mb-3">
-                <label for="orderstatus" class="form-label">OrderStatus:</label> 
-                <InputText id="orderstatus" @bind-Value="Order.OrderStatus" class="form-control" /> 
-                <ValidationMessage For="() => Order.OrderStatus" class="text-danger" /> 
-            </div>        
+                <label for="orderstatus" class="form-label">Order Status:</label>
+                <InputText id="orderstatus" @bind-Value="Order.OrderStatus" class="form-control" />
+                <ValidationMessage For="() => Order.OrderStatus" class="text-danger" />
+            </div>
+
             <div class="mb-3">
-                <label for="ordertotal" class="form-label">OrderTotal:</label> 
-                <InputNumber id="ordertotal" @bind-Value="Order.OrderTotal" class="form-control" /> 
-                <ValidationMessage For="() => Order.OrderTotal" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="customerid" class="form-label">CustomerId:</label> 
-                <InputNumber id="customerid" @bind-Value="Order.CustomerId" class="form-control" /> 
-                <ValidationMessage For="() => Order.CustomerId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="ordertotal" class="form-label">Order Total:</label>
+                <InputNumber id="ordertotal" @bind-Value="Order.OrderTotal" class="form-control" />
+                <ValidationMessage For="() => Order.OrderTotal" class="text-danger" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Place Order</button>
         </EditForm>
     </div>
 </div>
 
 <div>
-    <a href="/orders">Back to List</a>
+    <a href="/customer/orders">Back to My Orders</a>
 </div>
 
 @code {
-    [SupplyParameterFromForm]
     private Order Order { get; set; } = new();
+    private int CustomerId;
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userEmail = user.Identity.Name;
+            await using var context = await DbFactory.CreateDbContextAsync();
+
+            var customer = await context.Customer.FirstOrDefaultAsync(c => c.CustomerEmail == userEmail);
+            if (customer is not null)
+            {
+                CustomerId = customer.Id;
+            }
+        }
+    }
+
     private async Task AddOrder()
     {
-        using var context = DbFactory.CreateDbContext();
+        await using var context = await DbFactory.CreateDbContextAsync();
+
+        Order.CustomerId = CustomerId; // 🔹 Assign the logged-in user's ID
+        Order.OrderDateTime = DateTime.UtcNow; // 🔹 Set Order Date
+
         context.Order.Add(Order);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/orders");
+
+        // Redirect to the new order details page
+        NavigationManager.NavigateTo($"/customer/order/{Order.Id}");
     }
 }

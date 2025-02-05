@@ -1,0 +1,74 @@
+﻿@page "/customer/payments"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<BIGBACKContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+
+<h2>Payment History</h2>
+
+@if (payments.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Payment ID</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Method</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var payment in payments)
+            {
+                <tr>
+                    <td>@payment.Id</td>
+                    <td>@payment.PaymentDateTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>$@payment.PaymentAmount</td>
+                    <td>@payment.PaymentMethod</td>
+                    <td>@payment.PaymentStatus</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-danger">No payments found.</p>
+}
+
+@code {
+    private List<Payment> payments = new List<Payment>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userEmail = user.Identity.Name;
+
+            // Fetch Customer's Payments
+            await using var context = await DbFactory.CreateDbContextAsync();
+            var customer = await context.Customer.FirstOrDefaultAsync(c => c.CustomerEmail == userEmail);
+
+            if (customer != null)
+            {
+                payments = await context.Payment
+
+                    .Where(p => p.Order.CustomerId == customer.Id) // Linking Payment to Customer via Order
+                    .Include(p => p.Order) // Ensure Order is included
+                    .OrderByDescending(p => p.PaymentDateTime)
+                    .ToListAsync();
+            }
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await Task.CompletedTask;
+    }
+}

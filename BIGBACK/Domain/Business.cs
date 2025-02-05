@@ -9,6 +9,8 @@
         public string? BusinessStatus { get; set; }
         public int BusinessOwnerId { get; set; }
 
+
+
         public BusinessOwner? BusinessOwner { get; set; }
     }
 }

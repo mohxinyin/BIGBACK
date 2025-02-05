@@ -1,155 +1,166 @@
 ﻿@implements IDisposable
 @inject NavigationManager NavigationManager
-<div class="top-row ps-3 navbar navbar-dark">
+
+<link href="Layout/NavMenu.razor.css" rel="stylesheet" />
+<div class="d-flex navbar navbar-expand-lg" style="overflow-x: auto;">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BIGBACK</a>
-    </div>
-</div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav" style="white-space: nowrap;">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+                        <span class="bi bi-house-door-fill" aria-hidden="true"></span> Home
+                    </NavLink>
+                </li>
 
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
 
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-row-reverse">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
+                <!-- Authorized User Links -->
+                <AuthorizeView>
+                    <Authorized>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Account/Manage">
+                                <span class="bi bi-person-fill" aria-hidden="true"></span> @context.User.Identity?.Name
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="deliveries">
+                                <span class="bi bi-box-arrow-in-down-left" aria-hidden="true"></span> Delivery
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="deliveryriders">
+                                <span class="bi bi-person-lines-fill" aria-hidden="true"></span> DeliveryRider
+                            </NavLink>
+                        </li>
+
+                        <!-- User Role Links (Customer Profile, Orders, Payments) -->
+                        <AuthorizeView Roles="User" Context="userContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="customer/profile">
+                                    <span class="bi bi-person-circle" aria-hidden="true"></span> My Profile
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="customer/orders">
+                                    <span class="bi bi-box" aria-hidden="true"></span> My Orders
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="customer/payments">
+                                    <span class="bi bi-credit-card" aria-hidden="true"></span> My Payments
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="/customers">
+                                    <span class="bi bi-credit-card" aria-hidden="true"></span> Customers
+                                </NavLink>
+                            </li>
+
+                        </AuthorizeView>
+
+
+                        <!-- BusinessOwner Role Links -->
+                        <AuthorizeView Roles="BusinessOwner" Context="businessContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="businesses/businessownerview">
+                                    <span class="bi bi-briefcase-fill" aria-hidden="true"></span> BusinessOwnerView
+                                </NavLink>
+                            </li>
+                        </AuthorizeView>
+
+                        <!-- BusinessOwner, Admin, User Links -->
+                        <AuthorizeView Roles="Administrator,BusinessOwner,User" Context="adminBusinessUserContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="businesses">
+                                    <span class="bi bi-shop-window" aria-hidden="true"></span> Business
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="menus">
+                                    <span class="bi bi-menu-button-wide" aria-hidden="true"></span> Menu
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="orderitems">
+                                    <span class="bi bi-cart" aria-hidden="true"></span> OrderItem
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="payments">
+                                    <span class="bi bi-credit-card" aria-hidden="true"></span> Payment
+                                </NavLink>
+                            </li>
+                        </AuthorizeView>
+
+                        <!-- Admin and User Links -->
+                        <AuthorizeView Roles="Administrator,User" Context="adminUserContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="complaints">
+                                    <span class="bi bi-exclamation-triangle-fill" aria-hidden="true"></span> Complaints
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="orders">
+                                    <span class="bi bi-cart-fill" aria-hidden="true"></span> Orders
+                                </NavLink>
+                            </li>
+                        </AuthorizeView>
+
+                        <!-- Admin and Rider Links -->
+                        <AuthorizeView Roles="Administrator,Rider" Context="riderContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="riders">
+                                    <span class="bi bi-person-fill" aria-hidden="true"></span> Rider
+                                </NavLink>
+                            </li>
+                        </AuthorizeView>
+
+                        <!-- Admin Only Links -->
+                        <AuthorizeView Roles="Administrator" Context="adminContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="staff">
+                                    <span class="bi bi-person-fill" aria-hidden="true"></span> Staff
+                                </NavLink>
+                            </li>
+                        </AuthorizeView>
+
+                        <!-- Logout -->
+                        <li class="nav-item">
+                            <form action="Account/Logout" method="post">
+                                <AntiforgeryToken />
+                                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                                <button type="submit" class="nav-link btn btn-link">
+                                    <span class="bi bi-box-arrow-right" aria-hidden="true"></span> Logout
+                                </button>
+                            </form>
+                        </li>
+                    </Authorized>
+
+                    <NotAuthorized>
+                        <!-- Register and Login Links -->
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Account/Register">
+                                <span class="bi bi-person-plus" aria-hidden="true"></span> Register
+                            </NavLink>
+                        </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="Account/Login">
+                                <span class="bi bi-person-circle" aria-hidden="true"></span> Login
+                            </NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </ul>
         </div>
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-
-
-                 <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="deliveries">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Delivery
-                        </NavLink>
-                    </div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="deliveryriders">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> DeliveryRider
-                        </NavLink>
-                    </div>
-
-                @* Authorization for Admin,BusinessOwner,User--------------------------------------------------------------------- *@
-                <AuthorizeView Roles="Administrator,BusinessOwner,User" Context="innerContext">
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="businesses">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Business
-                        </NavLink>
-                    </div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="businessowners">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> BusinessOwners
-                        </NavLink>
-                    </div>
-
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="menus">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Menu
-                        </NavLink>
-                    </div>
-
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="menuitems">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> MenuItem
-                        </NavLink>
-                    </div>
-
-                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="orderitems">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> OrderItem
-                        </NavLink>
-                    </div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="payments">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Payment
-                        </NavLink>
-                    </div>
-
-                </AuthorizeView>
-                @* ------------------------------------------------------------------------------------------------------------------- *@
-
-
-                @* Authorization for Admin,User-------------------------------------------------------------------------------------- *@
-
-                <AuthorizeView Roles="Administrator,User" Context="innerContext">
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="complaints">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Complaint
-                        </NavLink>
-                    </div>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="customers">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Customer
-                        </NavLink>
-                    </div>
-
-                     <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="orders">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Order
-                        </NavLink>
-                    </div>
-                </AuthorizeView>
-                @* ----------------------------------------------------------------------------------------------------------------- *@
-                
-                   
-
-                @* Authorization for Admin,RIder---------------------------------------------------------------------------------- *@
-                 <AuthorizeView Roles="Administrator,Rider" Context="innerContext">
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="riders">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Rider
-                        </NavLink>
-                    </div>
-                </AuthorizeView>
-
-                @* --------------------------------------------------------------------------------------------------------------- *@
-
-
-                @* Authorization for Admin----------------------------------------------------------------------------------------- *@
-                 <AuthorizeView Roles="Administrator" Context="innerContext">
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="staff">
-                            <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Staff
-                        </NavLink>
-                    </div>
-                </AuthorizeView>
-                @* --------------------------------------------------------------------------------------------------------------- *@
-
-                             
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-    </nav>
+    </div>
 </div>
 
 @code {
     private string? currentUrl;
+
     protected override void OnInitialized()
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);

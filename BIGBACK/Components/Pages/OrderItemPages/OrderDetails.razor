@@ -1,0 +1,70 @@
+﻿@page "/customer/order/{id:int}"
+@inject IDbContextFactory<BIGBACKContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+
+<h2>Order Details</h2>
+
+@if (order is not null)
+{
+    <p><strong>Order ID:</strong> @order.Id</p>
+    <p><strong>Date:</strong> @order.OrderDateTime.ToString("yyyy-MM-dd HH:mm")</p>
+    <p><strong>Status:</strong> @order.OrderStatus</p>
+    <p><strong>Total:</strong> $@order.OrderTotal</p>
+
+    <h3>Items</h3>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Quantity</th>
+                <th>Promo</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in orderItems)
+            {
+                <tr>
+                    <td>@item.MenuItem.MenuItemName</td>
+                    <td>@item.OrderItemQty</td>
+                    <td>@item.OrderItemPromo</td>
+                    <td>$@item.MenuItem.MenuItemPrice</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-danger">Order not found.</p>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    private Order? order;
+    private List<OrderItem> orderItems = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+
+        // 🔹 Ensure the correct DbSet name (Orders, not Order)
+        order = await context.Order.FirstOrDefaultAsync(o => o.Id == Id);
+
+        if (order is not null)
+        {
+            orderItems = await context.OrderItem
+                .Where(oi => oi.OrderId == order.Id)
+                .Include(oi => oi.MenuItem) // 🔹 Ensure MenuItem is loaded
+                .ToListAsync();
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await Task.CompletedTask;
+    }
+}

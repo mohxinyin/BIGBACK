@@ -1,0 +1,51 @@
+﻿@page "/customer/profile"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<BIGBACKContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+
+<h2>My Profile</h2>
+
+@if (customer != null)
+{
+    <table class="table">
+        <tr><th>Name:</th><td>@customer.CustomerName</td></tr>
+        <tr><th>Email:</th><td>@customer.CustomerEmail</td></tr>
+        <tr><th>Phone:</th><td>@customer.CustomerMobileNumber</td></tr>
+        <tr><th>Gender:</th><td>@customer.CustomerGender</td></tr>
+        <tr><th>Address:</th><td>@customer.CustomerAddress</td></tr>
+    </table>
+
+    <NavLink class="btn btn-warning" href="@($"/customer/edit/{customer.Id}")">Edit Profile</NavLink>
+
+}
+else
+{
+    <p class="text-danger">No customer data found.</p>
+}
+
+@code {
+    private Customer? customer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userEmail = user.Identity.Name;
+
+            // Use BIGBACKContext to fetch customer details directly
+            await using var context = await DbFactory.CreateDbContextAsync();
+            customer = await context.Customer.FirstOrDefaultAsync(c => c.CustomerEmail == userEmail);
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await Task.CompletedTask;
+    }
+}
