@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using BIGBACK.Data;
 using BIGBACK.Configurations.Entities;
 using System.Reflection.Emit;
+using BIGBACK.Domain;
 
 namespace BIGBACK.Data
 {
@@ -26,6 +27,7 @@ namespace BIGBACK.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
             builder.ApplyConfiguration(new BusinessOwnerSeed());
             builder.ApplyConfiguration(new BusinessSeed());
             builder.ApplyConfiguration(new MenuItemSeed());

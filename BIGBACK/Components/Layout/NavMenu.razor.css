@@ -1,4 +1,26 @@
-﻿.navbar-toggler {
+﻿.navbar {
+    background-color: white !important; /* White background */
+}
+
+    .navbar .navbar-brand,
+    .navbar .nav-link {
+        color: black !important; /* Black text */
+    }
+
+        .navbar .nav-link:hover {
+            color: gray !important; /* Optional: Change color on hover */
+        }
+
+        .navbar .nav-link:visited {
+            color: black !important; /* Ensure visited links are also black */
+        }
+
+        .navbar .nav-link.active {
+            color: black !important; /* Ensure active link is also black */
+        }
+
+
+/*.navbar-toggler {
     appearance: none;
     cursor: pointer;
     width: 3.5rem;
@@ -149,3 +171,4 @@
         z-index: 999;
     }
 }
+*/

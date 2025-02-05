@@ -1,4 +1,6 @@
-﻿namespace BIGBACK.Domain
+﻿using BIGBACK.Data;
+
+namespace BIGBACK.Domain
 {
     public class Business:BaseDomainModel
     {
@@ -10,5 +12,7 @@
         public int BusinessOwnerId { get; set; }
 
         public BusinessOwner? BusinessOwner { get; set; }
+
+
     }
 }

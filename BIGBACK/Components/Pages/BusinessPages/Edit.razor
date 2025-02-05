@@ -3,6 +3,7 @@
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Administrator,BusinessOwner")]
 
 <PageTitle>Edit</PageTitle>
 

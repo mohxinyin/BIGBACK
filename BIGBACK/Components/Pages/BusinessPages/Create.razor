@@ -4,54 +4,71 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create a New Business</PageTitle>
 
-<h1>Create</h1>
+<h1 class="text-center mb-4">Create Your Restaurant</h1>
 
-<h2>Business</h2>
+<h2 class="text-center mb-3">Business Information</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Business" OnValidSubmit="AddBusiness" FormName="create" Enhance>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <EditForm Method="post" Model="Business" OnValidSubmit="AddBusiness" FormName="create">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger" role="alert" />
+
+            <!-- Business Name -->
             <div class="mb-3">
-                <label for="businessname" class="form-label">BusinessName:</label> 
-                <InputText id="businessname" @bind-Value="Business.BusinessName" class="form-control" /> 
-                <ValidationMessage For="() => Business.BusinessName" class="text-danger" /> 
-            </div>        
+                <label for="businessname" class="form-label">Business Name:</label>
+                <InputText id="businessname" @bind-Value="Business.BusinessName" class="form-control" placeholder="Enter your business name" />
+                <ValidationMessage For="() => Business.BusinessName" class="text-danger" />
+            </div>
+
+            <!-- Business Address -->
             <div class="mb-3">
-                <label for="businessaddress" class="form-label">BusinessAddress:</label> 
-                <InputText id="businessaddress" @bind-Value="Business.BusinessAddress" class="form-control" /> 
-                <ValidationMessage For="() => Business.BusinessAddress" class="text-danger" /> 
-            </div>        
+                <label for="businessaddress" class="form-label">Business Address:</label>
+                <InputText id="businessaddress" @bind-Value="Business.BusinessAddress" class="form-control" placeholder="Enter your business address" />
+                <ValidationMessage For="() => Business.BusinessAddress" class="text-danger" />
+            </div>
+
+            <!-- Business Contact -->
             <div class="mb-3">
-                <label for="businesscontact" class="form-label">BusinessContact:</label> 
-                <InputText id="businesscontact" @bind-Value="Business.BusinessContact" class="form-control" /> 
-                <ValidationMessage For="() => Business.BusinessContact" class="text-danger" /> 
-            </div>        
+                <label for="businesscontact" class="form-label">Business Contact:</label>
+                <InputText id="businesscontact" @bind-Value="Business.BusinessContact" class="form-control" placeholder="Enter your contact number" />
+                <ValidationMessage For="() => Business.BusinessContact" class="text-danger" />
+            </div>
+
+            <!-- Remove Business Rating Field from the Form (hidden from the owner) -->
+            <!-- Business Rating is not editable by the business owner -->
+            <div class="mb-3" style="display:none;">
+                <label for="businessrating" class="form-label">Business Rating:</label>
+                <InputText id="businessrating" @bind-Value="Business.BusinessRating" class="form-control" readonly />
+                <ValidationMessage For="() => Business.BusinessRating" class="text-danger" />
+            </div>
+
+            <!-- Business Status -->
             <div class="mb-3">
-                <label for="businessrating" class="form-label">BusinessRating:</label> 
-                <InputText id="businessrating" @bind-Value="Business.BusinessRating" class="form-control" /> 
-                <ValidationMessage For="() => Business.BusinessRating" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="businessstatus" class="form-label">BusinessStatus:</label> 
-                <InputText id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control" /> 
-                <ValidationMessage For="() => Business.BusinessStatus" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="businessownerid" class="form-label">BusinessOwnerId:</label> 
-                <InputNumber id="businessownerid" @bind-Value="Business.BusinessOwnerId" class="form-control" /> 
-                <ValidationMessage For="() => Business.BusinessOwnerId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="businessstatus" class="form-label">Business Status:</label>
+                <InputText id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control" placeholder="Enter business status (e.g., Open, Closed)" />
+                <ValidationMessage For="() => Business.BusinessStatus" class="text-danger" />
+            </div>
+
+            <!-- Remove Business Owner ID Field (it will be assigned automatically) -->
+            <div class="mb-3" style="display:none;">
+                <label for="businessownerid" class="form-label">Business Owner ID:</label>
+                <InputNumber id="businessownerid" @bind-Value="Business.BusinessOwnerId" class="form-control" readonly />
+                <ValidationMessage For="() => Business.BusinessOwnerId" class="text-danger" />
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-success btn-lg">Create Business</button>
+            </div>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/businesses">Back to List</a>
+<div class="mt-3 text-center">
+    <a href="/businesses" class="btn btn-link">Back to Business List</a>
 </div>
 
 @code {

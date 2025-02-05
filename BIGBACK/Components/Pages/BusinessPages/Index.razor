@@ -8,7 +8,7 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Business List</h1>
+<h1>Index</h1>
 
 <p>
     <a href="businesses/create">Create New</a>
@@ -24,9 +24,15 @@
     <PropertyColumn Property="business => business.BusinessOwner.BusinessOwnerName" Title="BusinessOwnerName" />
 
     <TemplateColumn Context="business">
-        <a href="@($"businesses/edit?id={business.Id}")">Edit</a> |
-        <a href="@($"businesses/details?id={business.Id}")">Details</a> |
-        <a href="@($"businesses/delete?id={business.Id}")">Delete</a>
+        <AuthorizeView Roles="Administrator,BusinessOwner">
+            <a href="@($"businesses/edit?id={business.Id}")">Edit</a> |
+        </AuthorizeView>
+
+        <a href="@($"businesses/details?id={business.Id}")">Details</a> 
+
+        <AuthorizeView Roles="Administrator,BusinessOwner">|
+            <a href="@($"businesses/delete?id={business.Id}")">Delete</a>
+        </AuthorizeView>
     </TemplateColumn>
 </QuickGrid>
 
@@ -45,6 +51,6 @@
 
     }
 
-    
+
     public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

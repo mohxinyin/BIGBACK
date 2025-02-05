@@ -4,6 +4,7 @@ using BIGBACK.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BIGBACK.Migrations
 {
     [DbContext(typeof(BIGBACKContext))]
-    partial class BIGBACKContextModelSnapshot : ModelSnapshot
+    [Migration("20250205152359_updateuserclaimseed")]
+    partial class updateuserclaimseed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -97,7 +100,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "3781efa7-66dc-47f0-860f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8e966fd5-81d3-4f02-ab56-0cb8b646b779",
+                            ConcurrencyStamp = "3a6af288-da7a-4690-9a00-f8df5e2e65cf",
                             Email = "admin@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -105,9 +108,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@LOCALHOST.COM",
                             NormalizedUserName = "ADMIN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAELmoeTZNptbP1KpfVOVZlKsmCOpLvjkC/rCrPkquxzGMUnEFRAXcD0RBI05DSkSwcg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEN0UN2r3iGM5JX+q0YJg67qn27wEnVs4dmR9vDOVUmoI37eOF7myJyh2pGIQnpVv4g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "2480f685-efa6-4e1d-9937-2e1f297c09ca",
+                            SecurityStamp = "b9dd4dcc-5867-4654-ba81-148daeeac263",
                             TwoFactorEnabled = false,
                             UserName = "admin@localhost.com"
                         },
@@ -115,7 +118,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "4781efa7-68dc-47f2-850f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0251905b-54d5-428d-8c5c-7bb325a35d30",
+                            ConcurrencyStamp = "7d3610ae-c143-42c4-bfdd-75627c335965",
                             Email = "business_annaBakery@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Anna",
@@ -123,9 +126,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "BUSINESS_ANNABAKERY@LOCALHOST.COM",
                             NormalizedUserName = "BUSINESS_ANNABAKERY@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDEjFPfQjGLg3gGX9Thl1k3FAPFTTNVqWHlMrfSLtpTDKt8J1YzSL24iOX4jhH8XDw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEGg9YzVX0x8rFvW2PrxwHppDj8tkgXt8vMAO+DM/bMG/XBF8Q25tTKn2KXVFSpenuw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b383c76b-ff79-43aa-b5fa-15135e158ff0",
+                            SecurityStamp = "60aaf4fe-b0ca-4181-a671-7b3d92948fd2",
                             TwoFactorEnabled = false,
                             UserName = "business_annaBakery@localhost.com"
                         },
@@ -133,7 +136,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "5781efa7-63dc-49f0-760f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2244f61e-a5c9-4b1a-b4a8-3ddb2301c6f1",
+                            ConcurrencyStamp = "b64d0a81-386e-467b-980b-34795135bc90",
                             Email = "rider_charlie@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Charlie",
@@ -141,9 +144,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RIDER_CHARLIE@LOCALHOST.COM",
                             NormalizedUserName = "RIDER_CHARLIE@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAED8EOPepgYwY9Ub04c48bWFrpjxzBAyzl6pbCsTCM1Oj+l0RQoRHdzxCYbhYVFqemw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBsZjhBWEpZV5OorC8CrSaLiSXXQ0PD4baJTlBEn4fUKJaKyzBShkjX3/ybBgeoT/g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "323c5563-fbdd-4d22-827a-a888eca767d5",
+                            SecurityStamp = "f143bf4c-868f-4bfb-a146-205e193ff59e",
                             TwoFactorEnabled = false,
                             UserName = "rider_charlie@localhost.com"
                         },
@@ -151,7 +154,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "7651efa7-68dc-47f2-850f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "b729a205-bf5d-4e8d-8671-cbeab66f1d52",
+                            ConcurrencyStamp = "bcd90d49-9db2-41bc-a267-b78d28577d23",
                             Email = "business_jimmyChicken@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Jimmy",
@@ -159,9 +162,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "BUSINESS_JIMMYCHICKEN@LOCALHOST.COM",
                             NormalizedUserName = "BUSINESS_JIMMYCHICKEN@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJiZ51E5Cesq4tiS0RTKMVJ7yAn47HA+3KtwMtbn5zeRGlL5THQPQzfeSwh7MFYT9A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEE+ikCd3hz50QZI1e0OfOcETfxduUNJsrdYN010xa0axl+gE7Kquglr0oiNzU+jG9A==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "73751b24-a35f-4f65-b98d-383c7d53a4fc",
+                            SecurityStamp = "0c618186-f89e-4ebf-a994-2a3f835d327f",
                             TwoFactorEnabled = false,
                             UserName = "business_jimmyChicken@localhost.com"
                         },
@@ -169,7 +172,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "7851efa7-69dc-47f2-890f-e507d04107e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d1b5f76a-d4a3-464d-88fa-efbccf131d54",
+                            ConcurrencyStamp = "1fac6e7b-44c5-4623-9a17-f22f42c4c535",
                             Email = "johndoe1@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "John",
@@ -177,9 +180,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "JOHNDOE1@GMAIL.COM",
                             NormalizedUserName = "JOHNDOE1@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJ67srvp3a0jcvMhZMefGbEeQkGWPqdWKqsfHGQcJljiW4nJ5PchHleZszXkgtiLLw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ8AZ3UBh8XPMTQODcpexA8CFeLk2u2EUpJNwaMKVjBI2GKHL6fbSkYlil5OkAvIkQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "a65f88e3-8160-4b6d-a9c4-fe359a08dab5",
+                            SecurityStamp = "6cefd663-985d-4e4b-b76a-7c30c393ffb4",
                             TwoFactorEnabled = false,
                             UserName = "johndoe1@gmail.com"
                         },
@@ -187,7 +190,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "8851efa7-69dc-49f2-790f-e506d04197e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "89c20ecf-e314-4647-88e9-a868fb0f2998",
+                            ConcurrencyStamp = "a20709cf-a2be-4f96-a7e3-be0c039da063",
                             Email = "maryjane2@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Mary",
@@ -195,9 +198,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "MARYJANE2@GMAIL.COM",
                             NormalizedUserName = "MARYJANE2@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGQG+QwPOyBoNjaGbT0IT3wq8ooBfyqn/cum+pz4wf08q9xOy2UyXas93FurCy0mWg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFj2PpUEiqI6y60A9ql+Q3TWi72j4+PTPDL30AjShxZrkO4qXw4MEWOG5jkuch0WsA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "93769ae6-24d3-44e1-bdf2-b3b484fed5e5",
+                            SecurityStamp = "586889ff-6017-43b7-8925-55e5d4280434",
                             TwoFactorEnabled = false,
                             UserName = "maryjane2@gmail.com"
                         },
@@ -205,7 +208,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = "9781ifa7-63hc-48f0-700f-e506d04102e4",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c3eb569b-372e-427f-9352-a276cc96207c",
+                            ConcurrencyStamp = "1619d5cf-5d8d-4306-b052-9cdc2228b2b7",
                             Email = "rider_daisylee@localhost.com",
                             EmailConfirmed = true,
                             FirstName = "Daisy",
@@ -213,9 +216,9 @@ namespace BIGBACK.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RIDER_DAISYLEE@LOCALHOST.COM",
                             NormalizedUserName = "RIDER_DAISYLEE@LOCALHOST.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIp2owF/s6ZL4GFcXZvHfigsgfET4S1HlWa6382Kjc0TDD7Z9ekqlygpBqVAHmfxkA==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBa+8Fsay9EHW1T08Kc6lPWtzEwb3bCZQ/xZXOMkWQfmqRkvPxnFEeS/ga8QQJ0UWQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "63f20adf-c840-4535-af19-b01171968c76",
+                            SecurityStamp = "ff282727-42bc-4730-85c0-769435b61fe9",
                             TwoFactorEnabled = false,
                             UserName = "rider_daisylee@localhost.com"
                         });
@@ -379,7 +382,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 1,
-                            ComplaintDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(7397),
+                            ComplaintDateTime = new DateTime(2025, 2, 5, 23, 23, 58, 343, DateTimeKind.Local).AddTicks(746),
                             ComplaintDesc = "Late delivery",
                             ComplaintStatus = "Open",
                             OrderId = 1,
@@ -389,7 +392,7 @@ namespace BIGBACK.Migrations
                         new
                         {
                             Id = 2,
-                            ComplaintDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(7399),
+                            ComplaintDateTime = new DateTime(2025, 2, 5, 23, 23, 58, 343, DateTimeKind.Local).AddTicks(748),
                             ComplaintDesc = "Damaged item",
                             ComplaintStatus = "Resolved",
                             OrderId = 2,
@@ -693,7 +696,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 1,
                             CustomerId = 1,
-                            OrderDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6716),
+                            OrderDateTime = new DateTime(2025, 2, 5, 23, 23, 58, 342, DateTimeKind.Local).AddTicks(9981),
                             OrderStatus = "Pending",
                             OrderTotal = 64.50m
                         },
@@ -701,7 +704,7 @@ namespace BIGBACK.Migrations
                         {
                             Id = 2,
                             CustomerId = 2,
-                            OrderDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6735),
+                            OrderDateTime = new DateTime(2025, 2, 5, 23, 23, 58, 343, DateTimeKind.Local).AddTicks(2),
                             OrderStatus = "Pending",
                             OrderTotal = 55.70m
                         });
@@ -788,7 +791,7 @@ namespace BIGBACK.Migrations
                             Id = 1,
                             OrderId = 1,
                             PaymentAmount = 64.50m,
-                            PaymentDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6936),
+                            PaymentDateTime = new DateTime(2025, 2, 5, 23, 23, 58, 343, DateTimeKind.Local).AddTicks(213),
                             PaymentMethod = "VISA Debit",
                             PaymentStatus = "Completed"
                         },
@@ -797,7 +800,7 @@ namespace BIGBACK.Migrations
                             Id = 2,
                             OrderId = 2,
                             PaymentAmount = 55.70m,
-                            PaymentDateTime = new DateTime(2025, 2, 5, 23, 41, 28, 991, DateTimeKind.Local).AddTicks(6940),
+                            PaymentDateTime = new DateTime(2025, 2, 5, 23, 23, 58, 343, DateTimeKind.Local).AddTicks(216),
                             PaymentMethod = "PayNow",
                             PaymentStatus = "Completed"
                         });
