@@ -4,29 +4,51 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Details</PageTitle>
+<PageTitle>Staff Details</PageTitle>
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary"><i class="fas fa-user-circle"></i>👔 Staff Details</h2>
+    </div>
 
-<div>
-    <h2>Staff</h2>
-    <hr />
+    <hr class="mb-4" />
+
     @if (staff is null)
     {
-        <p><em>Loading...</em></p>
+        <div class="alert alert-info text-center">
+            <i class="fas fa-spinner fa-spin"></i> Loading staff details...
+        </div>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">StaffName</dt>
-            <dd class="col-sm-10">@staff.StaffName</dd>
-            <dt class="col-sm-2">StaffEmail</dt>
-            <dd class="col-sm-10">@staff.StaffEmail</dd>
-            <dt class="col-sm-2">StaffContact</dt>
-            <dd class="col-sm-10">@staff.StaffContact</dd>
-        </dl>
-        <div>
-            <a href="@($"/staff/edit?id={staff.Id}")">Edit</a> |
-            <a href="@($"/staff")">Back to List</a>
+    else
+    {
+        <div class="card shadow-lg">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <i class="fas fa-user-tie fa-7x text-secondary"></i>
+                        <h4 class="mt-3 text-dark">@staff.StaffName</h4>
+                        <span class="badge bg-primary">Active Staff</span>
+                    </div>
+                    <div class="col-md-9">
+                        <dl class="row">
+                            <dt class="col-sm-3 fw-bold">📧 Email:</dt>
+                            <dd class="col-sm-9">@staff.StaffEmail</dd>
+
+                            <dt class="col-sm-3 fw-bold">📞 Contact:</dt>
+                            <dd class="col-sm-9">@staff.StaffContact</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-4">
+            <a href="@($"/staff/edit?id={staff.Id}")" class="btn btn-warning me-2">
+                <i class="fas fa-edit"></i> Edit Staff
+            </a>
+            <a href="/staff" class="btn btn-secondary">
+                <i class="fas fa-arrow-left"></i> Back to List
+            </a>
         </div>
     }
 </div>

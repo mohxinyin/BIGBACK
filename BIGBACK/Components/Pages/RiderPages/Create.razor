@@ -1,54 +1,69 @@
 ﻿@page "/riders/create"
 @using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.Forms
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>🚴 Create Rider</PageTitle>
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-success">🚴 Add a New Rider</h1>
+        <a class="btn btn-secondary" href="/riders">⬅ Back to List</a>
+    </div>
 
-<h2>Rider</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Rider" OnValidSubmit="AddRider" FormName="create" Enhance>
+    <div class="card shadow-sm p-4 border-info">
+        <EditForm method="post" Model="Rider" OnValidSubmit="AddRider" FormName="create">
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger fw-bold" />
+
             <div class="mb-3">
-                <label for="ridername" class="form-label">RiderName:</label> 
-                <InputText id="ridername" @bind-Value="Rider.RiderName" class="form-control" /> 
-                <ValidationMessage For="() => Rider.RiderName" class="text-danger" /> 
-            </div>        
+                <label for="ridername" class="form-label">👤 Rider Name:</label>
+                <InputText id="ridername" @bind-Value="Rider.RiderName" class="form-control border-success" />
+                <ValidationMessage For="() => Rider.RiderName" class="text-danger fw-bold" />
+            </div>
+
             <div class="mb-3">
-                <label for="ridercontact" class="form-label">RiderContact:</label> 
-                <InputText id="ridercontact" @bind-Value="Rider.RiderContact" class="form-control" /> 
-                <ValidationMessage For="() => Rider.RiderContact" class="text-danger" /> 
-            </div>        
+                <label for="ridercontact" class="form-label">📞 Rider Contact:</label>
+                <InputText id="ridercontact" @bind-Value="Rider.RiderContact" class="form-control border-primary" />
+                <ValidationMessage For="() => Rider.RiderContact" class="text-danger fw-bold" />
+            </div>
+
             <div class="mb-3">
-                <label for="riderrating" class="form-label">RiderRating:</label> 
-                <InputNumber id="riderrating" @bind-Value="Rider.RiderRating" class="form-control" /> 
-                <ValidationMessage For="() => Rider.RiderRating" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="riderrating" class="form-label">⭐ Rider Rating:</label>
+                <InputNumber id="riderrating" @bind-Value="Rider.RiderRating" class="form-control border-warning" />
+                <ValidationMessage For="() => Rider.RiderRating" class="text-danger fw-bold" />
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-lg">🚀 Create Rider</button>
+            </div>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/riders">Back to List</a>
 </div>
 
 @code {
     [SupplyParameterFromForm]
     private Rider Rider { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRider()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Rider.Add(Rider);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/riders");
+        try
+        {
+            using var context = DbFactory.CreateDbContext();
+            context.Rider.Add(Rider);
+            await context.SaveChangesAsync();
+
+            // Debugging: Ensure the method completes successfully
+            Console.WriteLine("✅ Rider added successfully!");
+
+            // Navigate to the riders list
+            NavigationManager.NavigateTo("/riders", forceLoad: true);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error saving rider: {ex.Message}");
+        }
     }
 }

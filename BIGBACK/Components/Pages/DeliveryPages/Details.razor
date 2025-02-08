@@ -4,37 +4,47 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Details</PageTitle>
+<PageTitle>📦 Delivery Details 🚚</PageTitle>
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-info">Delivery Details 📦 </h1>
+        <a class="btn btn-secondary" href="/deliveries">⬅ 🔙 Back to List</a>
+    </div>
 
-<div>
-    <h2>Delivery</h2>
-    <hr />
     @if (delivery is null)
     {
-        <p><em>Loading...</em></p>
+        <p class="text-center fs-4">⏳ <em>Loading... Please wait</em> ⏳</p>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">DeliveryTime</dt>
-            <dd class="col-sm-10">@delivery.DeliveryTime</dd>
-            <dt class="col-sm-2">DeliveryDate</dt>
-            <dd class="col-sm-10">@delivery.DeliveryDate</dd>
-            <dt class="col-sm-2">CustomerID</dt>
-            <dd class="col-sm-10">@delivery.CustomerID</dd>
-            <dt class="col-sm-2">OrderID</dt>
-            <dd class="col-sm-10">@delivery.OrderID</dd>
-            <dt class="col-sm-2">BusinessID</dt>
-            <dd class="col-sm-10">@delivery.BusinessID</dd>
-            <dt class="col-sm-2">DeliveryFee</dt>
-            <dd class="col-sm-10">@delivery.DeliveryFee</dd>
-            <dt class="col-sm-2">DeliveryStatus</dt>
-            <dd class="col-sm-10">@delivery.DeliveryStatus</dd>
-        </dl>
-        <div>
-            <a href="@($"/deliveries/edit?id={delivery.Id}")">Edit</a> |
-            <a href="@($"/deliveries")">Back to List</a>
+    else
+    {
+        <div class="card shadow-lg p-4 border-primary">
+            <dl class="row">
+                <dt class="col-sm-3">⏰ Delivery Time:</dt>
+                <dd class="col-sm-9">📅 @delivery.DeliveryTime</dd>
+
+                <dt class="col-sm-3">📆 Delivery Date:</dt>
+                <dd class="col-sm-9">📅 @delivery.DeliveryDate</dd>
+
+                <dt class="col-sm-3">👤 Customer:</dt>
+                <dd class="col-sm-9">👥 @delivery.Customer.CustomerName</dd>
+
+                <dt class="col-sm-3">📜 Order:</dt>
+                <dd class="col-sm-9">📦 Order #@delivery.Order.Id</dd>
+
+                <dt class="col-sm-3">🏢 Business:</dt>
+                <dd class="col-sm-9">🏬 @delivery.Business.BusinessName</dd>
+
+                <dt class="col-sm-3">💰 Delivery Fee:</dt>
+                <dd class="col-sm-9">💲 @delivery.DeliveryFee</dd>
+
+                <dt class="col-sm-3">🚦 Delivery Status:</dt>
+                <dd class="col-sm-9">📦 @delivery.DeliveryStatus</dd>
+            </dl>
+        </div>
+        <div class="mt-3 d-flex justify-content-end">
+            <a class="btn btn-warning" href="@($"/deliveries/edit?id={delivery.Id}")">✏️ Edit</a>
+            <a class="btn btn-danger ms-2" href="/deliveries">🚀 Back to List</a>
         </div>
     }
 </div>
@@ -48,7 +58,11 @@
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
-        delivery = await context.Delivery.FirstOrDefaultAsync(m => m.Id == Id);
+        delivery = await context.Delivery
+            .Include(d => d.Customer)
+            .Include(d => d.Order)
+            .Include(d => d.Business)
+            .FirstOrDefaultAsync(m => m.Id == Id);
 
         if (delivery is null)
         {

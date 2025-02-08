@@ -6,35 +6,36 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
-<PageTitle>Delivery List</PageTitle>
+<PageTitle>🚚 Delivery List 📦</PageTitle>
 
-<h1>Index</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-primary">Delivery List 📦 </h1>
+        <a class="btn btn-success" href="deliveries/create">➕ Create New Delivery</a>
+    </div>
 
-<p>
-    <a href="deliveries/create">Create New</a>
-</p>
+    <div class="table-responsive">
+        <QuickGrid Class="table table-striped table-hover shadow-sm" Items="context.Delivery">
+            <PropertyColumn Property="delivery => delivery.DeliveryTime" Title="⏰ Time" />
+            <PropertyColumn Property="delivery => delivery.DeliveryDate" Title="📅 Date" />
+            <PropertyColumn Property="delivery => delivery.DeliveryFee" Title="💰 Fee ($)" />
+            <PropertyColumn Property="delivery => delivery.DeliveryStatus" Title="🚦 Status" />
+            <PropertyColumn Property="delivery => delivery.Business.BusinessName" Title="🏢 Business" />
+            <PropertyColumn Property="delivery => delivery.Customer.CustomerName" Title="👤 Customer" />
+            <PropertyColumn Property="delivery => delivery.Customer.CustomerAddress" Title="📍 Address" />
+            <PropertyColumn Property="delivery => delivery.Order.OrderTotal" Title="💲 Total ($)" />
+            <PropertyColumn Property="delivery => delivery.Order.OrderStatus" Title="📦 Order Status" />
 
-<QuickGrid Class="table" Items="context.Delivery">
-    <PropertyColumn Property="delivery => delivery.DeliveryTime" />
-    <PropertyColumn Property="delivery => delivery.DeliveryDate" />
-    @* <PropertyColumn Property="delivery => delivery.CustomerID" />
-    <PropertyColumn Property="delivery => delivery.OrderID" />
-    <PropertyColumn Property="delivery => delivery.BusinessID" /> *@
-    <PropertyColumn Property="delivery => delivery.DeliveryFee" />
-    <PropertyColumn Property="delivery => delivery.DeliveryStatus" />
-
-    <PropertyColumn Property="delivery => delivery.Business.BusinessName" Title="BusinessName" />
-    <PropertyColumn Property="delivery => delivery.Customer.CustomerName" Title="CustomerName" />
-    <PropertyColumn Property="delivery => delivery.Customer.CustomerAddress" Title="CustomerAddress" />
-    <PropertyColumn Property="delivery => delivery.Order.OrderTotal" Title="OrderTotal" />
-    <PropertyColumn Property="delivery => delivery.Order.OrderStatus" Title="OrderStatus" />
-
-    <TemplateColumn Context="delivery">
-        <a href="@($"deliveries/edit?id={delivery.Id}")">Edit</a> |
-        <a href="@($"deliveries/details?id={delivery.Id}")">Details</a> |
-        <a href="@($"deliveries/delete?id={delivery.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+            <TemplateColumn Context="delivery">
+                <div class="btn-group" role="group">
+                    <a class="btn btn-primary btn-sm" href="@($"deliveries/edit?id={delivery.Id}")">✏️ Edit</a>
+                    <a class="btn btn-info btn-sm" href="@($"deliveries/details?id={delivery.Id}")">📄 Details</a>
+                    <a class="btn btn-danger btn-sm" href="@($"deliveries/delete?id={delivery.Id}")">🗑️ Delete</a>
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+</div>
 
 @code {
     private BIGBACKContext context = default!;
