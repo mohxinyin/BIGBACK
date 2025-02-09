@@ -5,6 +5,7 @@
 @using BIGBACK.Domain
 @using BIGBACK.Data
 @implements IAsyncDisposable
+@using System.Security.Claims;
 
 <h2>Payment History</h2>
 
@@ -37,6 +38,7 @@
 else
 {
     <p class="text-danger">No payments found.</p>
+    <NavLink class="btn btn-warning" href="@($"/businesses")">Start Ordering Now!</NavLink>
 }
 
 @code {
@@ -49,20 +51,29 @@ else
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            var userEmail = user.Identity.Name;
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the UserId from claims
 
-            // Fetch Customer's Payments
-            await using var context = await DbFactory.CreateDbContextAsync();
-            var customer = await context.Customer.FirstOrDefaultAsync(c => c.CustomerEmail == userEmail);
-
-            if (customer != null)
+            if (userId is not null)
             {
-                payments = await context.Payment
+                // Fetch Customer by matching the CreatedBy field with the logged-in user's UserId
+                await using var context = await DbFactory.CreateDbContextAsync();
+                var customer = await context.Customer.FirstOrDefaultAsync(c => c.CreatedBy == userId);
 
-                    .Where(p => p.Order.CustomerId == customer.Id) // Linking Payment to Customer via Order
-                    .Include(p => p.Order) // Ensure Order is included
-                    .OrderByDescending(p => p.PaymentDateTime)
-                    .ToListAsync();
+                if (customer is not null)
+                {
+                    // Fetch all OrderIds belonging to this customer
+                    var orderIds = await context.Order
+                        .Where(o => o.CustomerId == customer.Id)
+                        .Select(o => o.Id)
+                        .ToListAsync(); // Get list of Order IDs
+
+                    // Fetch payments that are linked to those orders
+                    payments = await context.Payment
+                        .Where(p => orderIds.Contains(p.OrderId)) // Filter payments using OrderId
+                        .Include(p => p.Order) // Ensure Order is included
+                        .OrderByDescending(p => p.PaymentDateTime)
+                        .ToListAsync();
+                }
             }
         }
     }

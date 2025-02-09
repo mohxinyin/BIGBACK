@@ -70,6 +70,8 @@
 
 body {
     margin: 0;
+    padding: 0;
+    overflow-x: hidden;
     font-family: var(--bs-body-font-family);
     font-size: var(--bs-body-font-size);
     font-weight: var(--bs-body-font-weight);
@@ -3973,7 +3975,11 @@ textarea.form-control-lg {
     flex-wrap: wrap;
     padding-left: 0;
     margin-bottom: 0;
-    list-style: none
+    list-style: none;
+    overflow: hidden;
+    white-space: nowrap;
+    max-height: 100vh;
+    overflow-y: hidden;
 }
 
 .nav-link {
@@ -4076,7 +4082,9 @@ textarea.form-control-lg {
     align-items: center;
     justify-content: space-between;
     padding-top: .5rem;
-    padding-bottom: .5rem
+    padding-bottom: .5rem;
+    z-index: 1050;
+    overflow: visible;
 }
 
     .navbar > .container, .navbar > .container-fluid, .navbar > .container-lg, .navbar > .container-md, .navbar > .container-sm, .navbar > .container-xl, .navbar > .container-xxl {
@@ -4109,7 +4117,8 @@ textarea.form-control-lg {
     }
 
     .navbar-nav .dropdown-menu {
-        position: static
+        position: absolute
+
     }
 
 .navbar-text {

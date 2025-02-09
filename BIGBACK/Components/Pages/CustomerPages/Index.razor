@@ -20,8 +20,14 @@
     <PropertyColumn Property="customer => customer.CustomerGender" />
     <PropertyColumn Property="customer => customer.CustomerAddress" />
     <PropertyColumn Property="customer => customer.CustomerEmail" />
-
-    <TemplateColumn Context="customer">
+    <PropertyColumn Property="customer => customer.CreatedBy" />
+    <PropertyColumn Property="customer => customer.UpdatedBy" />
+    <PropertyColumn Property="customer => customer.DateCreated" />
+    <PropertyColumn Property="customer => customer.DateUpdated" />
+    
+        
+        
+        <TemplateColumn Context="customer">
         <AuthorizeView Roles="Administrator,User">
             <a href="@($"customers/edit?id={customer.Id}")">Edit</a> |
             <a href="@($"customers/details?id={customer.Id}")">Details</a>

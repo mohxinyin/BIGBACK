@@ -21,7 +21,8 @@
                 <th>Item Name</th>
                 <th>Quantity</th>
                 <th>Promo</th>
-                <th>Price</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
             </tr>
         </thead>
         <tbody>
@@ -32,34 +33,52 @@
                     <td>@item.OrderItemQty</td>
                     <td>@item.OrderItemPromo</td>
                     <td>$@item.MenuItem.MenuItemPrice</td>
+                    <td>$@((item.MenuItem?.MenuItemPrice ?? 0) * item.OrderItemQty)</td>
                 </tr>
             }
         </tbody>
     </table>
+
+
+    <div>
+        <NavLink class="btn btn-warning" href="@($"/customer/orders")">Back</NavLink>
+    </div>
 }
 else
 {
     <p class="text-danger">Order not found.</p>
+    <NavLink class="btn btn-warning" href="@($"/businesses")">Start Ordering Now!</NavLink>
 }
 
 @code {
     [Parameter] public int Id { get; set; }
     private Order? order;
-    private List<OrderItem> orderItems = new();
+    private List<OrderItem> orderItems = new List<OrderItem>();
 
     protected override async Task OnInitializedAsync()
     {
         await using var context = await DbFactory.CreateDbContextAsync();
 
-        // 🔹 Ensure the correct DbSet name (Orders, not Order)
-        order = await context.Order.FirstOrDefaultAsync(o => o.Id == Id);
+        // Load the specific order using the OrderId from the URL
+        order = await context.Order
+            .FirstOrDefaultAsync(o => o.Id == Id); // Get order by Id
 
         if (order is not null)
         {
+            // Load only OrderItems related to the specific OrderId
             orderItems = await context.OrderItem
-                .Where(oi => oi.OrderId == order.Id)
-                .Include(oi => oi.MenuItem) // 🔹 Ensure MenuItem is loaded
-                .ToListAsync();
+                .Where(oi => oi.OrderId == order.Id)  // Filter OrderItems by OrderId
+                .Include(oi => oi.MenuItem)           // Ensure MenuItem is loaded
+                .ToListAsync();                       // Retrieve the items
+
+            if (orderItems.Count == 0)
+            {
+                Console.WriteLine("No items found for this order.");
+            }
+        }
+        else
+        {
+            Console.WriteLine($"Order with ID {Id} not found.");
         }
     }
 

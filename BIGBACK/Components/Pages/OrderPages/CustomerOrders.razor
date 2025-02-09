@@ -5,6 +5,7 @@
 @using BIGBACK.Domain
 @using BIGBACK.Data
 @implements IAsyncDisposable
+@using System.Security.Claims;
 
 <h2>My Orders</h2>
 
@@ -21,7 +22,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var order in orders)
+            @foreach (var order in orders.Where(o => o.OrderTotal > 0)) 
             {
                 <tr>
                     <td>@order.Id</td>
@@ -30,7 +31,6 @@
                     <td>$@order.OrderTotal</td>
                     <td>
                         <NavLink class="btn btn-primary btn-sm" href="@($"/customer/order/{order.Id}")">View Details</NavLink>
-
                     </td>
                 </tr>
             }
@@ -40,6 +40,7 @@
 else
 {
     <p class="text-danger">No orders found.</p>
+    <NavLink class="btn btn-warning" href="@($"/businesses")">Start Ordering Now!</NavLink>
 }
 
 @code {
@@ -52,24 +53,27 @@ else
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            var userEmail = user.Identity.Name;
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the UserId from claims
 
-            // Fetch Customer's Orders
-            await using var context = await DbFactory.CreateDbContextAsync();
-            var customer = await context.Customer.FirstOrDefaultAsync(c => c.CustomerEmail == userEmail);
-
-            if (customer is not null)
+            if (userId is not null)
             {
-                orders = await context.Order
-                    .Where(o => o.CustomerId == customer.Id)
-                    .OrderByDescending(o => o.OrderDateTime)
-                    .ToListAsync();
-            }
-            else
-            {
-                orders = new List<Order>(); // Prevents null reference errors
-            }
+                // Fetch Customer by matching the CreatedBy field with the logged-in user's UserId
+                await using var context = await DbFactory.CreateDbContextAsync();
+                var customer = await context.Customer.FirstOrDefaultAsync(c => c.CreatedBy == userId);
 
+                if (customer is not null)
+                {
+                    // Fetch only orders for this customer using CustomerId (FK)
+                    orders = await context.Order
+                        .Where(o => o.CustomerId == customer.Id) // Use FK to filter orders
+                        .OrderByDescending(o => o.OrderDateTime)
+                        .ToListAsync();
+                }
+                else
+                {
+                    orders = new List<Order>(); // Prevents null reference errors
+                }
+            }
         }
     }
 

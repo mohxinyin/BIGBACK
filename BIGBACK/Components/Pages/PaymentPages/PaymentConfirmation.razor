@@ -1,0 +1,37 @@
+﻿@page "/payments/confirmation/{orderId:int}"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>Payment Confirmation</PageTitle>
+
+<h1>✅ Payment Successful</h1>
+
+@if (payment != null)
+{
+    <table class="table">
+        <tr><th>Order ID:</th><td>@payment.OrderId</td></tr>
+        <tr><th>Payment Amount:</th><td>@payment.PaymentAmount</td></tr>
+        <tr><th>Payment Method:</th><td>@payment.PaymentMethod</td></tr>
+        <tr><th>Payment Date:</th><td>@payment.PaymentDateTime.ToString("g")</td></tr>
+        <tr><th>Status:</th><td><span class="text-success fw-bold">✅ Paid</span></td></tr>
+    </table>
+
+    <a href="/customer/orders" class="btn btn-primary">View My Orders</a>
+}
+else
+{
+    <p class="text-danger">⚠ Payment details not found.</p>
+}
+
+@code {
+    [Parameter] public int orderId { get; set; }
+    private Payment? payment;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+        payment = await context.Payment.AsNoTracking().FirstOrDefaultAsync(p => p.OrderId == orderId);
+    }
+}

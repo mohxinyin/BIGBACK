@@ -4,51 +4,72 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>🚀 Create Delivery Rider 🚀</PageTitle>
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-success">🏍️ Create a New Delivery Rider 📦</h1>
+        <a class="btn btn-secondary" href="/deliveryriders">⬅ 🔙 Back to List</a>
+    </div>
 
-<h2>DeliveryRider</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="card shadow-lg p-4 border-info">
         <EditForm method="post" Model="DeliveryRider" OnValidSubmit="AddDeliveryRider" FormName="create" Enhance>
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger fw-bold" role="alert" />
+
             <div class="mb-3">
-                <label for="deliveryridertasktype" class="form-label">DeliveryRiderTaskType:</label> 
-                <InputText id="deliveryridertasktype" @bind-Value="DeliveryRider.DeliveryRiderTaskType" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.DeliveryRiderTaskType" class="text-danger" /> 
-            </div>        
+                <label for="deliveryridertasktype" class="form-label">📝 Task Type:</label>
+                <InputText id="deliveryridertasktype" @bind-Value="DeliveryRider.DeliveryRiderTaskType" class="form-control border-success" />
+                <ValidationMessage For="() => DeliveryRider.DeliveryRiderTaskType" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="deliveryriderstatus" class="form-label">DeliveryRiderStatus:</label> 
-                <InputText id="deliveryriderstatus" @bind-Value="DeliveryRider.DeliveryRiderStatus" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.DeliveryRiderStatus" class="text-danger" /> 
-            </div>        
+                <label for="deliveryriderstatus" class="form-label">📌 Status:</label>
+                <InputText id="deliveryriderstatus" @bind-Value="DeliveryRider.DeliveryRiderStatus" class="form-control border-success" />
+                <ValidationMessage For="() => DeliveryRider.DeliveryRiderStatus" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="deliveryid" class="form-label">DeliveryId:</label> 
-                <InputNumber id="deliveryid" @bind-Value="DeliveryRider.DeliveryId" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.DeliveryId" class="text-danger" /> 
-            </div>        
+                <label for="deliveryname" class="form-label">📦 Delivery:</label>
+                <InputSelect id="deliveryname" @bind-Value="DeliveryRider.DeliveryId" class="form-control border-primary">
+                    <option value="">🚛 Select Delivery</option>
+                    @foreach (var delivery in Deliveries)
+                    {
+                        <option value="@delivery.Id">📦 Order @delivery.OrderID</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => DeliveryRider.DeliveryId" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="riderid" class="form-label">RiderId:</label> 
-                <InputNumber id="riderid" @bind-Value="DeliveryRider.RiderId" class="form-control" /> 
-                <ValidationMessage For="() => DeliveryRider.RiderId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="ridername" class="form-label">🏍️ Rider:</label>
+                <InputSelect id="ridername" @bind-Value="DeliveryRider.RiderId" class="form-control border-primary">
+                    <option value="">🧑‍✈️ Select Rider</option>
+                    @foreach (var rider in Riders)
+                    {
+                        <option value="@rider.Id">🏍️ @rider.RiderName</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => DeliveryRider.RiderId" class="text-danger fw-bold" />
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-lg">🚀 Create Rider!</button>
+            </div>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/deliveryriders">Back to List</a>
 </div>
 
 @code {
     [SupplyParameterFromForm]
     private DeliveryRider DeliveryRider { get; set; } = new();
+    private List<Rider> Riders = new();
+    private List<Delivery> Deliveries = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Riders = await context.Rider.ToListAsync();
+        Deliveries = await context.Delivery.ToListAsync();
+    }
+
     private async Task AddDeliveryRider()
     {
         using var context = DbFactory.CreateDbContext();

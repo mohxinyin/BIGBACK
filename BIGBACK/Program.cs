@@ -6,6 +6,7 @@ using BIGBACK.Components.Account;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContextFactory<BIGBACKContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("BIGBACKContext") ?? throw new InvalidOperationException("Connection string 'BIGBACKContext' not found.")));

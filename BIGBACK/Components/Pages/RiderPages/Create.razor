@@ -6,7 +6,7 @@
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
+<h1>Set Up Your Profile</h1>
 
 <h2>Rider</h2>
 <hr />
@@ -29,7 +29,31 @@
                 <label for="riderrating" class="form-label">RiderRating:</label> 
                 <InputNumber id="riderrating" @bind-Value="Rider.RiderRating" class="form-control" /> 
                 <ValidationMessage For="() => Rider.RiderRating" class="text-danger" /> 
-            </div>        
+            </div>
+
+            <div class="mb-3" style="display:none;">
+                <label for="createdby" class="form-label">CreatedBy:</label>
+                <InputText id="createdby" @bind-Value="Rider.CreatedBy" class="form-control" />
+                <ValidationMessage For="() => Rider.CreatedBy" class="text-danger" />
+            </div>
+            <div class="mb-3" style="display:none;">
+                <label for="updatedby" class="form-label">UpdatedBy:</label>
+                <InputText id="updatedby" @bind-Value="Rider.UpdatedBy" class="form-control" />
+                <ValidationMessage For="() => Rider.UpdatedBy" class="text-danger" />
+            </div>
+            <div class="mb-3" style="display:none;">
+                <label for="datecreated" class="form-label">DateCreated:</label>
+                <InputDate id="datecreated" @bind-Value="Rider.DateCreated" class="form-control" />
+                <ValidationMessage For="() => Rider.DateCreated" class="text-danger" />
+            </div>
+            <div class="mb-3" style="display:none;">
+                <label for="dateupdated" class="form-label">DateUpdated:</label>
+                <InputDate id="dateupdated" @bind-Value="Rider.DateUpdated" class="form-control" />
+                <ValidationMessage For="() => Rider.DateUpdated" class="text-danger" />
+            </div>
+
+
+
             <button type="submit" class="btn btn-primary">Create</button>
         </EditForm>
     </div>
@@ -40,13 +64,23 @@
 </div>
 
 @code {
-    [SupplyParameterFromForm]
+    [SupplyParameterFromQuery]
+    private string? UserId { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string? email { get; set; }
+
     private Rider Rider { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddRider()
     {
         using var context = DbFactory.CreateDbContext();
+
+        Rider.CreatedBy = UserId;
+        Rider.UpdatedBy = UserId;
+        Rider.DateCreated = DateTime.Now;
+        Rider.DateUpdated = DateTime.Now;
+
         context.Rider.Add(Rider);
         await context.SaveChangesAsync();
         NavigationManager.NavigateTo("/riders");

@@ -1,59 +1,125 @@
-﻿@page "/orderitems/create"
+﻿@page "/orderitems/create/{orderId:int}/{menuItemId:int}"
 @using Microsoft.EntityFrameworkCore
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Order Item</PageTitle>
 
-<h1>Create</h1>
-
-<h2>OrderItem</h2>
+<h1 class="text-center mb-4">Create Order Item</h1>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="OrderItem" OnValidSubmit="AddOrderItem" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="orderitemqty" class="form-label">OrderItemQty:</label> 
-                <InputNumber id="orderitemqty" @bind-Value="OrderItem.OrderItemQty" class="form-control" /> 
-                <ValidationMessage For="() => OrderItem.OrderItemQty" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="orderitempromo" class="form-label">OrderItemPromo:</label> 
-                <InputText id="orderitempromo" @bind-Value="OrderItem.OrderItemPromo" class="form-control" /> 
-                <ValidationMessage For="() => OrderItem.OrderItemPromo" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="orderid" class="form-label">OrderId:</label> 
-                <InputNumber id="orderid" @bind-Value="OrderItem.OrderId" class="form-control" /> 
-                <ValidationMessage For="() => OrderItem.OrderId" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="menuitemid" class="form-label">MenuItemId:</label> 
-                <InputNumber id="menuitemid" @bind-Value="OrderItem.MenuItemId" class="form-control" /> 
-                <ValidationMessage For="() => OrderItem.MenuItemId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
-    </div>
-</div>
 
-<div>
-    <a href="/orderitems">Back to List</a>
+@if (menuItem != null)
+{
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <EditForm Model="OrderItem" OnValidSubmit="AddOrderItem" FormName="createOrderItemForm">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <!-- Order Item Quantity -->
+                <div class="mb-3">
+                    <label for="orderitemqty" class="form-label">Quantity:</label>
+                    <InputNumber id="orderitemqty" @bind-Value="OrderItem.OrderItemQty" class="form-control" />
+                    <ValidationMessage For="() => OrderItem.OrderItemQty" class="text-danger" />
+                </div>
+
+                <!-- Order Item Promo -->
+                <div class="mb-3">
+                    <label for="orderitempromo" class="form-label">Promo Code:</label>
+                    <InputText id="orderitempromo" @bind-Value="OrderItem.OrderItemPromo" class="form-control" />
+                    <ValidationMessage For="() => OrderItem.OrderItemPromo" class="text-danger" />
+                </div>
+
+                <!-- Hidden OrderId -->
+                <input type="hidden" @bind="OrderItem.OrderId" />
+
+                <!-- Hidden MenuItemId -->
+                <input type="hidden" @bind="OrderItem.MenuItemId" />
+
+                <button type="submit" class="btn btn-primary">Add to Cart</button>
+            </EditForm>
+        </div>
+    </div>
+}
+else
+{
+    <p class="text-danger text-center">Invalid menu item.</p>
+}
+
+<div class="text-center mt-3">
+    <a href="/orderitems" class="btn btn-secondary">Back to Cart</a>
 </div>
 
 @code {
-    [SupplyParameterFromForm]
-    private OrderItem OrderItem { get; set; } = new();
+    [Parameter] public int orderId { get; set; }
+    [Parameter] public int menuItemId { get; set; }
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    [SupplyParameterFromForm] private OrderItem OrderItem { get; set; } = new();
+    private MenuItem? menuItem;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+
+        // Fetch the menu item based on the menuItemId
+        menuItem = await context.MenuItem.FirstOrDefaultAsync(m => m.Id == menuItemId);
+
+        if (menuItem != null)
+        {
+            // Initialize OrderItem with required values
+            OrderItem = new OrderItem
+                {
+                    OrderId = orderId,
+                    MenuItemId = menuItemId,
+                    OrderItemQty = 1, // Default quantity
+                    OrderItemPromo = string.Empty // Prevent null
+                };
+        }
+    }
+
     private async Task AddOrderItem()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.OrderItem.Add(OrderItem);
+        using var context = await DbFactory.CreateDbContextAsync();
+
+        // Check if the OrderItem already exists for the same OrderId and MenuItemId
+        var existingOrderItem = await context.OrderItem
+            .FirstOrDefaultAsync(oi => oi.OrderId == OrderItem.OrderId && oi.MenuItemId == OrderItem.MenuItemId);
+
+        if (existingOrderItem != null)
+        {
+            // ✅ If the order item exists, update the quantity and promo
+            existingOrderItem.OrderItemQty += OrderItem.OrderItemQty; // Increase quantity
+            existingOrderItem.OrderItemPromo = OrderItem.OrderItemPromo;
+
+            // ✅ Ensure changes are tracked
+            context.Attach(existingOrderItem).State = EntityState.Modified;
+        }
+        else
+        {
+            // ✅ If it's a new OrderItem, add it normally
+            OrderItem.Id = 0; // Prevents temporary ID issues
+            context.OrderItem.Add(OrderItem);
+        }
+
         await context.SaveChangesAsync();
+
+        // Fetch the updated order total
+        var order = await context.Order
+            .Include(o => o.OrderItems)
+            .FirstOrDefaultAsync(o => o.Id == OrderItem.OrderId);
+
+        if (order != null)
+        {
+            order.OrderTotal = await context.OrderItem
+                .Where(oi => oi.OrderId == order.Id)
+                .SumAsync(oi => (decimal)oi.MenuItem.MenuItemPrice * oi.OrderItemQty);
+
+            context.Order.Update(order);
+            await context.SaveChangesAsync();
+        }
+
+        // Redirect back to order items page
         NavigationManager.NavigateTo("/orderitems");
     }
 }

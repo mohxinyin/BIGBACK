@@ -1,0 +1,117 @@
+﻿@page "/customer/deliveries"
+@using Microsoft.EntityFrameworkCore
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@using BIGBACK.Domain
+@using BIGBACK.Data
+@implements IAsyncDisposable
+@inject NavigationManager NavigationManager
+
+<PageTitle>My Deliveries</PageTitle>
+
+<h1>My Deliveries</h1>
+
+@if (deliveries.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Delivery Time</th>
+                <th>Delivery Date</th>
+                <th>Delivery Fee $</th>
+                <th>Delivery Status</th>
+                <th>Business Name</th>
+                <th>Customer Name</th>
+                <th>Customer Address</th>
+                <th>Order Total $</th>
+                <th>Order Status</th>
+                <th>Rider Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var delivery in deliveries)
+            {
+                <tr>
+                    <td>@delivery.DeliveryTime.ToString("g")</td>
+                    <td>@delivery.DeliveryDate.ToString("d")</td>
+                    <td>@delivery.DeliveryFee</td>
+                    <td>@delivery.DeliveryStatus</td>
+                    <td>@delivery.Business?.BusinessName</td>
+                    <td>@delivery.Customer?.CustomerName</td>
+                    <td>@delivery.Customer?.CustomerAddress</td>
+                    <td>@delivery.Order?.OrderTotal</td>
+                    <td>@delivery.Order?.OrderStatus</td>
+                    <td>@delivery.DeliveryRider?.Rider?.RiderName</td>
+                    <td>
+                        <a href="@($"deliveries/details?id={delivery.Id}")" class="btn btn-info btn-sm">Details</a>
+                        <NavLink class="btn btn-secondary btn-sm" href="@($"/customer/deliveryrider/{delivery.Id}")">
+                            View DeliveryRider Details
+                        </NavLink>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No deliveries found.</p>
+    <NavLink class="btn btn-warning" href="@($"/businesses")">Start Ordering Now!</NavLink>
+}
+
+@code {
+    private List<Delivery> deliveries = new();
+    private BIGBACKContext? context;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is { IsAuthenticated: true })
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                context = await DbFactory.CreateDbContextAsync();
+
+                // Retrieve the Customer associated with the logged-in UserId
+                var customer = await context.Customer
+                    .FirstOrDefaultAsync(c => c.CreatedBy == userId);
+
+                if (customer != null)
+                {
+                    // Fetch Deliveries directly associated with this CustomerID
+                    deliveries = await context.Delivery
+                        .Where(d => d.CustomerID == customer.Id)
+                        .Include(d => d.Customer)
+                        .Include(d => d.Order)
+                        .Include(d => d.Business)
+                        .Include(d => d.DeliveryRider)
+                            .ThenInclude(dr => dr.Rider)
+                        .ToListAsync();
+                }
+            }
+        }
+    }
+
+    private void ViewDeliveryRiderDetails(int deliveryId)
+    {
+        NavigationManager.NavigateTo($"/customer/deliveryrider/{deliveryId}");
+    }
+
+
+
+    public async ValueTask DisposeAsync()
+    {
+        if (context is not null)
+        {
+            await context.DisposeAsync();
+        }
+    }
+}
+

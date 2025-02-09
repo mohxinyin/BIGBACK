@@ -4,66 +4,95 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>🚚 Create New Delivery 📦</PageTitle>
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-success">Create a New Delivery 📦</h1>
+        <a class="btn btn-secondary" href="/deliveries">⬅ 🔙 Back to List</a>
+    </div>
 
-<h2>Delivery</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
+    <div class="card shadow-lg p-4 border-info">
         <EditForm method="post" Model="Delivery" OnValidSubmit="AddDelivery" FormName="create" Enhance>
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
+            <ValidationSummary class="text-danger fw-bold" role="alert" />
+
             <div class="mb-3">
-                <label for="deliverytime" class="form-label">DeliveryTime:</label> 
-                <InputDate id="deliverytime" @bind-Value="Delivery.DeliveryTime" class="form-control" /> 
-                <ValidationMessage For="() => Delivery.DeliveryTime" class="text-danger" /> 
-            </div>        
+                <label for="deliverytime" class="form-label">⏰ Delivery Time:</label>
+                <InputDate id="deliverytime" @bind-Value="Delivery.DeliveryTime" class="form-control border-success" />
+                <ValidationMessage For="() => Delivery.DeliveryTime" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="deliverydate" class="form-label">DeliveryDate:</label> 
-                <InputDate id="deliverydate" @bind-Value="Delivery.DeliveryDate" class="form-control" /> 
-                <ValidationMessage For="() => Delivery.DeliveryDate" class="text-danger" /> 
-            </div>        
+                <label for="deliverydate" class="form-label">📅 Delivery Date:</label>
+                <InputDate id="deliverydate" @bind-Value="Delivery.DeliveryDate" class="form-control border-success" />
+                <ValidationMessage For="() => Delivery.DeliveryDate" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="customerid" class="form-label">CustomerID:</label> 
-                <InputNumber id="customerid" @bind-Value="Delivery.CustomerID" class="form-control" /> 
-                <ValidationMessage For="() => Delivery.CustomerID" class="text-danger" /> 
-            </div>        
+                <label for="customername" class="form-label">👤 Customer:</label>
+                <InputSelect id="customername" @bind-Value="Delivery.CustomerID" class="form-control border-primary">
+                    <option value="">👥 Select Customer</option>
+                    @foreach (var customer in Customers)
+                    {
+                        <option value="@customer.Id">👤 @customer.CustomerName</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Delivery.CustomerID" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="orderid" class="form-label">OrderID:</label> 
-                <InputNumber id="orderid" @bind-Value="Delivery.OrderID" class="form-control" /> 
-                <ValidationMessage For="() => Delivery.OrderID" class="text-danger" /> 
-            </div>        
+                <label for="orderid" class="form-label">📜 Order:</label>
+                <InputSelect id="orderid" @bind-Value="Delivery.OrderID" class="form-control border-primary">
+                    <option value="">📦 Select Order</option>
+                    @foreach (var order in Orders)
+                    {
+                        <option value="@order.Id">📜 Order #@order.Id</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Delivery.OrderID" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="businessid" class="form-label">BusinessID:</label> 
-                <InputNumber id="businessid" @bind-Value="Delivery.BusinessID" class="form-control" /> 
-                <ValidationMessage For="() => Delivery.BusinessID" class="text-danger" /> 
-            </div>        
+                <label for="businessid" class="form-label">🏢 Business:</label>
+                <InputSelect id="businessid" @bind-Value="Delivery.BusinessID" class="form-control border-primary">
+                    <option value="">🏬 Select Business</option>
+                    @foreach (var business in Businesses)
+                    {
+                        <option value="@business.Id">🏢 @business.BusinessName</option>
+                    }
+                </InputSelect>
+                <ValidationMessage For="() => Delivery.BusinessID" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="deliveryfee" class="form-label">DeliveryFee:</label> 
-                <InputNumber id="deliveryfee" @bind-Value="Delivery.DeliveryFee" class="form-control" /> 
-                <ValidationMessage For="() => Delivery.DeliveryFee" class="text-danger" /> 
-            </div>        
+                <label for="deliveryfee" class="form-label">💰 Delivery Fee:</label>
+                <InputNumber id="deliveryfee" @bind-Value="Delivery.DeliveryFee" class="form-control border-warning" />
+                <ValidationMessage For="() => Delivery.DeliveryFee" class="text-danger fw-bold" />
+            </div>
             <div class="mb-3">
-                <label for="deliverystatus" class="form-label">DeliveryStatus:</label> 
-                <InputText id="deliverystatus" @bind-Value="Delivery.DeliveryStatus" class="form-control" /> 
-                <ValidationMessage For="() => Delivery.DeliveryStatus" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="deliverystatus" class="form-label">🚦 Delivery Status:</label>
+                <InputText id="deliverystatus" @bind-Value="Delivery.DeliveryStatus" class="form-control border-warning" />
+                <ValidationMessage For="() => Delivery.DeliveryStatus" class="text-danger fw-bold" />
+            </div>
+
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary btn-lg">🚀 Create Delivery!</button>
+            </div>
         </EditForm>
     </div>
-</div>
-
-<div>
-    <a href="/deliveries">Back to List</a>
 </div>
 
 @code {
     [SupplyParameterFromForm]
     private Delivery Delivery { get; set; } = new();
+    private List<Customer> Customers = new();
+    private List<Order> Orders = new();
+    private List<Business> Businesses = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+        Customers = await context.Customer.ToListAsync();
+        Orders = await context.Order.ToListAsync();
+        Businesses = await context.Business.ToListAsync();
+    }
+
     private async Task AddDelivery()
     {
         using var context = DbFactory.CreateDbContext();

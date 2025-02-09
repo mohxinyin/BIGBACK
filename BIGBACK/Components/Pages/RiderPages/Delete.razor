@@ -4,36 +4,42 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Delete</PageTitle>
+<PageTitle>🗑️ Delete Rider</PageTitle>
 
-<h1>Delete</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-danger">🗑️ Delete Rider</h1>
+        <a class="btn btn-secondary" href="/riders">⬅ Back to List</a>
+    </div>
 
-<p>Are you sure you want to delete this?</p>
-<div>
-    <h2>Rider</h2>
-    <hr />
-    @if (rider is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">RiderName</dt>
-            <dd class="col-sm-10">@rider.RiderName</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">RiderContact</dt>
-            <dd class="col-sm-10">@rider.RiderContact</dd>
-        </dl>
-        <dl class="row">
-            <dt class="col-sm-2">RiderRating</dt>
-            <dd class="col-sm-10">@rider.RiderRating</dd>
-        </dl>
-        <EditForm method="post" Model="rider" OnValidSubmit="DeleteRider" FormName="delete" Enhance>
-            <button type="submit" class="btn btn-danger" disabled="@(rider is null)">Delete</button> |
-            <a href="/riders">Back to List</a>
-        </EditForm>
-    }
+    <div class="card shadow-lg p-4 border-danger">
+        @if (rider is null)
+        {
+            <p class="text-center fs-4">⏳ <em>Loading... Please wait</em> ⏳</p>
+        }
+        else
+        {
+            <p class="fs-5 text-center text-danger fw-bold">⚠️ Are you sure you want to delete this rider?</p>
+
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">👤 Rider Name:</dt>
+                <dd class="col-sm-9">@rider.RiderName</dd>
+
+                <dt class="col-sm-3 fw-bold">📞 Contact:</dt>
+                <dd class="col-sm-9">@rider.RiderContact</dd>
+
+                <dt class="col-sm-3 fw-bold">⭐ Rating:</dt>
+                <dd class="col-sm-9">@rider.RiderRating</dd>
+            </dl>
+
+            <EditForm method="post" Model="rider" OnValidSubmit="DeleteRider" FormName="delete">
+                <div class="d-flex justify-content-center mt-4">
+                    <button type="submit" class="btn btn-danger btn-lg me-3" disabled="@(rider is null)">🗑️ Confirm Delete</button>
+                    <a href="/riders" class="btn btn-secondary btn-lg">❌ Cancel</a>
+                </div>
+            </EditForm>
+        }
+    </div>
 </div>
 
 @code {

@@ -1,0 +1,41 @@
+﻿@page "/customer/deliveryrider/{DeliveryId:int}"
+@using Microsoft.EntityFrameworkCore
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@using BIGBACK.Domain
+@using BIGBACK.Data
+
+<h2>Delivery Rider Details</h2>
+
+@if (deliveryRider != null)
+{
+    <table class="table">
+        <tr><th>Task Type:</th><td>@deliveryRider.DeliveryRiderTaskType</td></tr>
+        <tr><th>Status:</th><td>@deliveryRider.DeliveryRiderStatus</td></tr>
+        <tr><th>Rider Name:</th><td>@deliveryRider.Rider?.RiderName</td></tr>
+        <tr><th>Rider Contact:</th><td>@deliveryRider.Rider?.RiderContact</td></tr>
+        <tr><th>Rider Rating:</th><td>@deliveryRider.Rider?.RiderRating</td></tr>
+    </table>
+}
+else
+{
+    <p class="text-danger">No DeliveryRider details found for this delivery.</p>
+    <NavLink class="btn btn-warning" href="@($"/businesses")">Start Ordering Now!</NavLink>
+}
+
+@code {
+    [Parameter]
+    public int DeliveryId { get; set; }
+
+    private DeliveryRider? deliveryRider;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+
+        // Fetch the DeliveryRider details based on the DeliveryId
+        deliveryRider = await context.DeliveryRider
+            .Include(dr => dr.Rider)
+            .FirstOrDefaultAsync(dr => dr.DeliveryId == DeliveryId);
+    }
+
+}

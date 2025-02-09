@@ -33,8 +33,11 @@
             <dd class="col-sm-10">@delivery.DeliveryStatus</dd>
         </dl>
         <div>
-            <a href="@($"/deliveries/edit?id={delivery.Id}")">Edit</a> |
-            <a href="@($"/deliveries")">Back to List</a>
+            <AuthorizeView Roles="Administrator,BusinessOwner">
+                <a href="@($"/deliveries/edit?id={delivery.Id}")">Edit</a> |
+            </AuthorizeView>
+
+            <a href="@($"/customer/deliveries")">Back to List</a>
         </div>
     }
 </div>

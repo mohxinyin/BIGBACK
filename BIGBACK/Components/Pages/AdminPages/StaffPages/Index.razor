@@ -6,25 +6,47 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Staff Management</PageTitle>
 
-<h1>Index</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary">👔 Staff Management</h2>
+        <div>
+            <a href="staff/create" class="btn btn-success me-2">
+                <i class="fas fa-plus"></i> Add Staff
+            </a>
+            <a href="staff/staffassign" class="btn btn-warning">
+                <i class="fas fa-user-check"></i> Assign Staff
+            </a>
+        </div>
+    </div>
 
-<p>
-    <a href="staff/create">Create New</a>
-</p>
+    <div class="table-responsive shadow-sm p-3 bg-white rounded">
+        <QuickGrid Class="table table-hover table-striped" Items="context.Staff">
+            <PropertyColumn Property="staff => staff.StaffName" Title="Name" />
+            <PropertyColumn Property="staff => staff.StaffEmail" Title="Email" />
+            <PropertyColumn Property="staff => staff.StaffContact" Title="Contact" />
 
-<QuickGrid Class="table" Items="context.Staff">
-    <PropertyColumn Property="staff => staff.StaffName" />
-    <PropertyColumn Property="staff => staff.StaffEmail" />
-    <PropertyColumn Property="staff => staff.StaffContact" />
+            <TemplateColumn Context="staff" Title="Actions">
+                <div class="btn-group">
+                    <a href="@($"staff/edit?id={staff.Id}")" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <a href="@($"staff/details?id={staff.Id}")" class="btn btn-info btn-sm">
+                        <i class="fas fa-eye"></i> Details
+                    </a>
+                    <a href="@($"staff/delete?id={staff.Id}")" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+                </div>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
 
-    <TemplateColumn Context="staff">
-        <a href="@($"staff/edit?id={staff.Id}")">Edit</a> |
-        <a href="@($"staff/details?id={staff.Id}")">Details</a> |
-        <a href="@($"staff/delete?id={staff.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    <div class="mt-3">
+        <a href="/" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+</div>
 
 @code {
     private BIGBACKContext context = default!;

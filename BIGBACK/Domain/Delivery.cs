@@ -15,5 +15,8 @@
         public Customer? Customer { get; set; }
         public Order? Order { get; set; }
         public Business? Business { get; set; }
+
+        // Navigation property to DeliveryRider (this is the bridge to Rider)
+        public DeliveryRider? DeliveryRider { get; set; }
     }
 }

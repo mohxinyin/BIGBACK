@@ -3,60 +3,109 @@
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider authenticationStateProvider
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
-
-<h2>Customer</h2>
+<h1 class="text-center mb-4">Set Up Your Profile</h1>
 <hr />
-<div class="row">
+<div class="row justify-content-center">
     <div class="col-md-4">
         <EditForm method="post" Model="Customer" OnValidSubmit="AddCustomer" FormName="create" Enhance>
             <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>       
+            <ValidationSummary class="text-danger" role="alert" />
             <div class="mb-3">
-                <label for="customername" class="form-label">CustomerName:</label> 
-                <InputText id="customername" @bind-Value="Customer.CustomerName" class="form-control" /> 
-                <ValidationMessage For="() => Customer.CustomerName" class="text-danger" /> 
-            </div>        
+                <label for="customername" class="form-label">Customer Name:</label>
+                <InputText id="customername" @bind-Value="Customer.CustomerName" class="form-control" />
+                <ValidationMessage For="() => Customer.CustomerName" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="customermobilenumber" class="form-label">CustomerMobileNumber:</label> 
-                <InputText id="customermobilenumber" @bind-Value="Customer.CustomerMobileNumber" class="form-control" /> 
-                <ValidationMessage For="() => Customer.CustomerMobileNumber" class="text-danger" /> 
-            </div>        
+                <label for="customermobilenumber" class="form-label">Customer Mobile Number:</label>
+                <InputText id="customermobilenumber" @bind-Value="Customer.CustomerMobileNumber" class="form-control" />
+                <ValidationMessage For="() => Customer.CustomerMobileNumber" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="customergender" class="form-label">CustomerGender:</label> 
-                <InputText id="customergender" @bind-Value="Customer.CustomerGender" class="form-control" /> 
-                <ValidationMessage For="() => Customer.CustomerGender" class="text-danger" /> 
-            </div>        
+                <label for="customeremail" class="form-label">Customer Email:</label>
+                <InputText id="customeremail" @bind-Value="Customer.CustomerEmail" class="form-control" />
+                <ValidationMessage For="() => Customer.CustomerEmail" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="customeraddress" class="form-label">CustomerAddress:</label> 
-                <InputText id="customeraddress" @bind-Value="Customer.CustomerAddress" class="form-control" /> 
-                <ValidationMessage For="() => Customer.CustomerAddress" class="text-danger" /> 
-            </div>        
+                <label for="customergender" class="form-label">Gender:</label>
+                <InputSelect id="customergender" @bind-Value="Customer.CustomerGender" class="form-control">
+                    <option value="Female">Female</option>
+                    <option value="Male">Male</option>
+                </InputSelect>
+                <ValidationMessage For="() => Customer.CustomerGender" class="text-danger" />
+            </div>
             <div class="mb-3">
-                <label for="customeremail" class="form-label">CustomerEmail:</label> 
-                <InputText id="customeremail" @bind-Value="Customer.CustomerEmail" class="form-control" /> 
-                <ValidationMessage For="() => Customer.CustomerEmail" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
+                <label for="customeraddress" class="form-label">Customer Address:</label>
+                <InputText id="customeraddress" @bind-Value="Customer.CustomerAddress" class="form-control" />
+                <ValidationMessage For="() => Customer.CustomerAddress" class="text-danger" />
+            </div>
+
+            @*  CreatedBy,UpdatedBy,DateCreated,DateUpdated fields  *@
+            <div class="mb-3" style="display:none;">
+                <label for="createdby" class="form-label">CreatedBy:</label>
+                <InputText id="createdby" @bind-Value="Customer.CreatedBy" class="form-control" />
+                <ValidationMessage For="() => Customer.CreatedBy" class="text-danger" />
+            </div>
+            <div class="mb-3" style="display:none;">
+                <label for="updatedby" class="form-label">UpdatedBy:</label>
+                <InputText id="updatedby" @bind-Value="Customer.UpdatedBy" class="form-control" />
+                <ValidationMessage For="() => Customer.UpdatedBy" class="text-danger" />
+            </div>
+            <div class="mb-3" style="display:none;">
+                <label for="datecreated" class="form-label">DateCreated:</label>
+                <InputDate id="datecreated" @bind-Value="Customer.DateCreated" class="form-control" />
+                <ValidationMessage For="() => Customer.DateCreated" class="text-danger" />
+            </div>
+            <div class="mb-3" style="display:none;">
+                <label for="dateupdated" class="form-label">DateUpdated:</label>
+                <InputDate id="dateupdated" @bind-Value="Customer.DateUpdated" class="form-control" />
+                <ValidationMessage For="() => Customer.DateUpdated" class="text-danger" />
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
         </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/customers">Back to List</a>
+<div class="mt-3 text-center">
+    <a href="/customer/profile">Back to My Profile</a>
 </div>
 
 @code {
+    // Store userId and email
+    private string userId = "System";
     [SupplyParameterFromForm]
     private Customer Customer { get; set; } = new();
+
+    // Override OnInitializedAsync to auto-fill email
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Get userId from authentication
+        var userIdClaim = user.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier);
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+
+        // Get email from authentication
+        var emailClaim = user.FindFirst(System.Security.Claims.ClaimTypes.Email);
+        if (emailClaim != null)
+        {
+            Customer.CustomerEmail = emailClaim.Value; // Auto-fill email
+        }
+    }
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task AddCustomer()
     {
-        using var context = DbFactory.CreateDbContext();
+        await using var context = DbFactory.CreateDbContext();
 
         //Set the userId to the CreatedBy and UpdatedBy fields.
         Customer.CreatedBy = userId;
@@ -68,25 +117,6 @@
 
         context.Customer.Add(Customer);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/customers");
-    }
-
-    //Create userId string to store the user id, default value is "System".
-    private string userId = "System";
-    
-    //Inject the AuthenticationStateProvider to get the user id.
-    @inject AuthenticationStateProvider authenticationStateProvider
-
-    //Override the OnInitialized method to get the user id.
-    protected override async void OnInitialized()
-    {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
-        var user = authState.User;
-        // Get the userId claim
-        var userIdClaim = user.FindFirst("userId");
-        if (userIdClaim != null)
-        {
-            userId = userIdClaim.Value;
-        }
+        NavigationManager.NavigateTo("/customer/profile");
     }
 }

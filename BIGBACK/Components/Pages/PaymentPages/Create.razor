@@ -1,64 +1,139 @@
-﻿@page "/payments/create"
+﻿@page "/payments/create/{OrderId:int}"
 @using Microsoft.EntityFrameworkCore
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Checkout</PageTitle>
 
-<h1>Create</h1>
+<h1>Checkout</h1>
 
-<h2>Payment</h2>
+<h2>Payment Details</h2>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Payment" OnValidSubmit="AddPayment" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="paymentdatetime" class="form-label">PaymentDateTime:</label> 
-                <InputDate id="paymentdatetime" @bind-Value="Payment.PaymentDateTime" class="form-control" /> 
-                <ValidationMessage For="() => Payment.PaymentDateTime" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="paymentamount" class="form-label">PaymentAmount:</label> 
-                <InputNumber id="paymentamount" @bind-Value="Payment.PaymentAmount" class="form-control" /> 
-                <ValidationMessage For="() => Payment.PaymentAmount" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="paymentmethod" class="form-label">PaymentMethod:</label> 
-                <InputText id="paymentmethod" @bind-Value="Payment.PaymentMethod" class="form-control" /> 
-                <ValidationMessage For="() => Payment.PaymentMethod" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="paymentstatus" class="form-label">PaymentStatus:</label> 
-                <InputText id="paymentstatus" @bind-Value="Payment.PaymentStatus" class="form-control" /> 
-                <ValidationMessage For="() => Payment.PaymentStatus" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="orderid" class="form-label">OrderId:</label> 
-                <InputNumber id="orderid" @bind-Value="Payment.OrderId" class="form-control" /> 
-                <ValidationMessage For="() => Payment.OrderId" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
+@if (Payment is null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div class="row">
+        <div class="col-md-4">
+            <EditForm Model="Payment" OnValidSubmit="AddPayment" FormName="paymentForm">
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger" role="alert" />
+
+                <!-- Hidden Payment ID (Auto-Generated) -->
+                <input type="hidden" name="Payment.Id" value="@Payment.Id" />
+
+                <!-- Hidden Order ID (Set from URL) -->
+                <input type="hidden" name="Payment.OrderId" value="@OrderId" />
+
+                <div class="mb-3">
+                    <label for="paymentdatetime" class="form-label">Payment Date & Time:</label>
+                    <InputDate id="paymentdatetime" @bind-Value="Payment.PaymentDateTime" class="form-control" disabled />
+                </div>
+
+                <div class="mb-3">
+                    <label for="paymentamount" class="form-label">Amount:</label>
+                    <InputNumber id="paymentamount" @bind-Value="Payment.PaymentAmount" class="form-control" disabled />
+                </div>
+
+                <!-- Payment Method Dropdown (Dropdown now correctly binds and saves selection) -->
+                <div class="mb-3">
+                    <label for="paymentmethod" class="form-label">Payment Method:</label>
+                    <InputSelect id="paymentmethod" @bind-Value="Payment.PaymentMethod" class="form-control">
+                        <option value="">-- Select Payment Method --</option>
+                        <option value="VISA">VISA</option>
+                        <option value="MasterCard">MasterCard</option>
+                        <option value="PayNow">PayNow</option>
+                        <option value="PayLah">PayLah</option>
+                    </InputSelect>
+                    <ValidationMessage For="() => Payment.PaymentMethod" class="text-danger" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="paymentstatus" class="form-label">Payment Status:</label>
+                    <InputText id="paymentstatus" @bind-Value="Payment.PaymentStatus" class="form-control" disabled />
+                </div>
+
+                <button type="submit" class="btn btn-primary">Order Now</button>
+            </EditForm>
+        </div>
     </div>
-</div>
+}
 
 <div>
-    <a href="/payments">Back to List</a>
+    <a href="/orderitems">Back to Cart</a>
 </div>
 
 @code {
+    [Parameter] public int OrderId { get; set; } // ✅ Fixed: OrderId should be a URL parameter, not a form parameter.
+
     [SupplyParameterFromForm]
     private Payment Payment { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
-    private async Task AddPayment()
+    protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
+        Payment ??= new Payment();
+
+        var order = await context.Order.FirstOrDefaultAsync(o => o.Id == OrderId);
+
+        if (order != null)
+        {
+            Payment.OrderId = OrderId; // ✅ Ensure OrderId is set correctly
+            Payment.PaymentAmount = order.OrderTotal ?? 0; // ✅ Use order total
+            Payment.PaymentDateTime = DateTime.Now;
+            Payment.PaymentStatus = "Pending";
+        }
+        else
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
+    private async Task AddPayment()
+    {
+        using var context = await DbFactory.CreateDbContextAsync();
+
+        Payment.PaymentDateTime = DateTime.Now;
+        Payment.PaymentStatus = "Paid"; // Set as Paid on checkout
+
+        // Ensure PaymentMethod is not empty before saving
+        if (string.IsNullOrEmpty(Payment.PaymentMethod))
+        {
+            Console.WriteLine("⚠️ Error: Payment method is required!");
+            return;
+        }
+
         context.Payment.Add(Payment);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/payments");
+
+        // Update Order Status to "Completed"
+        var order = await context.Order.FindAsync(Payment.OrderId);
+        if (order != null)
+        {
+            order.OrderStatus = "Completed"; // Mark the current order as completed
+            await context.SaveChangesAsync();
+
+            // After payment, create a new empty order for the user to continue shopping
+            var newOrder = new Order
+                {
+                    OrderDateTime = DateTime.Now,
+                    OrderStatus = "Pending", // New order is pending
+                    CustomerId = order.CustomerId,
+                    OrderTotal = 0 // Reset total for new order
+                };
+
+            context.Order.Add(newOrder);
+            await context.SaveChangesAsync();
+
+            // Optionally, you can assign this new order ID to the user’s session, so they can add more items.
+        }
+
+        // Redirect to the Payment Confirmation Page
+        NavigationManager.NavigateTo($"/payments/confirmation/{Payment.OrderId}", forceLoad: true);
     }
+
+
 }

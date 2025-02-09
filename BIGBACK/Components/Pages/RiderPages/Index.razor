@@ -6,25 +6,36 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Riders Management</PageTitle>
 
-<h1>Index</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="text-primary">🚴 Rider Management</h2>
+        <a href="riders/create" class="btn btn-success"><i class="fas fa-plus"></i> Add New Rider</a>
+    </div>
 
-<p>
-    <a href="riders/create">Create New</a>
-</p>
+    <div class="table-responsive shadow-sm p-3 bg-white rounded">
+        <QuickGrid Class="table" Items="context.Rider">
 
-<QuickGrid Class="table" Items="context.Rider">
-    <PropertyColumn Property="rider => rider.RiderName" />
-    <PropertyColumn Property="rider => rider.RiderContact" />
-    <PropertyColumn Property="rider => rider.RiderRating" />
+            <PropertyColumn Property="rider => rider.RiderName" Title="Name" />
+            <PropertyColumn Property="rider => rider.RiderContact" Title="Contact" />
+            <PropertyColumn Property="rider => rider.RiderRating" Title="Rating (⭐)" />
+           
 
-    <TemplateColumn Context="rider">
-        <a href="@($"riders/edit?id={rider.Id}")">Edit</a> |
-        <a href="@($"riders/details?id={rider.Id}")">Details</a> |
-        <a href="@($"riders/delete?id={rider.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+            <TemplateColumn Context="rider" Title="Actions">
+                <a href="@($"riders/edit?id={rider.Id}")" class="btn btn-primary btn-sm me-1">
+                    <i class="fas fa-edit"></i> Edit
+                </a>
+                <a href="@($"riders/details?id={rider.Id}")" class="btn btn-info btn-sm me-1">
+                    <i class="fas fa-eye"></i> Details
+                </a>
+                <a href="@($"riders/delete?id={rider.Id}")" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i> Delete
+                </a>
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+</div>
 
 @code {
     private BIGBACKContext context = default!;

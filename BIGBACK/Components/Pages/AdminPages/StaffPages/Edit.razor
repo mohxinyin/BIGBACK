@@ -4,47 +4,65 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>Edit Staff</PageTitle>
 
-<h1>Edit</h1>
-
-<h2>Staff</h2>
-<hr />
-@if (Staff is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
+<div class="container mt-4">
     <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="Staff" OnValidSubmit="UpdateStaff" FormName="edit" Enhance>
-                <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
-                <input type="hidden" name="Staff.Id" value="@Staff.Id" />
-                <div class="mb-3">
-                    <label for="staffname" class="form-label">StaffName:</label>
-                    <InputText id="staffname" @bind-Value="Staff.StaffName" class="form-control" />
-                    <ValidationMessage For="() => Staff.StaffName" class="text-danger" />
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-lg">
+                <div class="card-header bg-warning text-dark">
+                    <h2 class="text-center m-0"><i class="fas fa-user-edit"></i> Edit Staff Member</h2>
                 </div>
-                <div class="mb-3">
-                    <label for="staffemail" class="form-label">StaffEmail:</label>
-                    <InputText id="staffemail" @bind-Value="Staff.StaffEmail" class="form-control" />
-                    <ValidationMessage For="() => Staff.StaffEmail" class="text-danger" />
+                <div class="card-body">
+                    @if (Staff is null)
+                    {
+                        <p class="text-center text-danger"><em>Loading staff details...</em></p>
+                    }
+                    else
+                    {
+                        <EditForm method="post" Model="Staff" OnValidSubmit="UpdateStaff" FormName="edit" Enhance>
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="text-danger" role="alert" />
+
+                            <!-- Hidden Input for Staff ID -->
+                            <input type="hidden" name="Staff.Id" value="@Staff.Id" />
+
+                            <!-- Staff Name -->
+                            <div class="mb-3">
+                                <label class="form-label">👤 Staff Name:</label>
+                                <InputText @bind-Value="Staff.StaffName" class="form-control" placeholder="Enter full name" />
+                                <ValidationMessage For="() => Staff.StaffName" class="text-danger" />
+                            </div>
+
+                            <!-- Staff Email -->
+                            <div class="mb-3">
+                                <label class="form-label">📧 Staff Email:</label>
+                                <InputText @bind-Value="Staff.StaffEmail" class="form-control" placeholder="Enter email address" />
+                                <ValidationMessage For="() => Staff.StaffEmail" class="text-danger" />
+                            </div>
+
+                            <!-- Staff Contact -->
+                            <div class="mb-3">
+                                <label class="form-label">📞 Staff Contact:</label>
+                                <InputText @bind-Value="Staff.StaffContact" class="form-control" placeholder="Enter phone number" />
+                                <ValidationMessage For="() => Staff.StaffContact" class="text-danger" />
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div class="d-flex justify-content-center">
+                                <button type="submit" class="btn btn-warning btn-lg">
+                                    <i class="fas fa-save"></i> Save Changes
+                                </button>
+                            </div>
+                        </EditForm>
+                    }
                 </div>
-                <div class="mb-3">
-                    <label for="staffcontact" class="form-label">StaffContact:</label>
-                    <InputText id="staffcontact" @bind-Value="Staff.StaffContact" class="form-control" />
-                    <ValidationMessage For="() => Staff.StaffContact" class="text-danger" />
+                <div class="card-footer text-center">
+                    <a href="/staff" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
+            </div>
         </div>
     </div>
-}
-
-<div>
-    <a href="/staff">Back to List</a>
 </div>
 
 @code {
@@ -54,6 +72,7 @@ else
     [SupplyParameterFromForm]
     private Staff? Staff { get; set; }
 
+    /// Loads the selected staff details for editing
     protected override async Task OnInitializedAsync()
     {
         using var context = DbFactory.CreateDbContext();
@@ -65,8 +84,7 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    /// Saves the edited staff details
     private async Task UpdateStaff()
     {
         using var context = DbFactory.CreateDbContext();
@@ -91,6 +109,7 @@ else
         NavigationManager.NavigateTo("/staff");
     }
 
+    /// Checks if the staff exists in the database
     private bool StaffExists(int id)
     {
         using var context = DbFactory.CreateDbContext();
