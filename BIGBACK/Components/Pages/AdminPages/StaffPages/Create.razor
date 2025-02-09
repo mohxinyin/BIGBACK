@@ -1,54 +1,71 @@
-﻿@page "/staff/create"
+﻿@page "/staff/create/"
 @using Microsoft.EntityFrameworkCore
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
+<PageTitle>Create Staff</PageTitle>
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="text-center m-0"><i class="fas fa-user-plus"></i> Add New Staff Member</h2>
+                </div>
+                <div class="card-body">
+                    <!-- Form to Create Staff -->
+                    <EditForm method="post" Model="Staff" OnValidSubmit="AddStaff" FormName="create" Enhance>
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger" role="alert" />
 
-<h2>Staff</h2>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <EditForm method="post" Model="Staff" OnValidSubmit="AddStaff" FormName="create" Enhance>
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="mb-3">
-                <label for="staffname" class="form-label">StaffName:</label> 
-                <InputText id="staffname" @bind-Value="Staff.StaffName" class="form-control" /> 
-                <ValidationMessage For="() => Staff.StaffName" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="staffemail" class="form-label">StaffEmail:</label> 
-                <InputText id="staffemail" @bind-Value="Staff.StaffEmail" class="form-control" /> 
-                <ValidationMessage For="() => Staff.StaffEmail" class="text-danger" /> 
-            </div>        
-            <div class="mb-3">
-                <label for="staffcontact" class="form-label">StaffContact:</label> 
-                <InputText id="staffcontact" @bind-Value="Staff.StaffContact" class="form-control" /> 
-                <ValidationMessage For="() => Staff.StaffContact" class="text-danger" /> 
-            </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
+                        <!-- Staff Name -->
+                        <div class="mb-3">
+                            <label for="staffname" class="form-label">👤 Staff Name:</label>
+                            <InputText id="staffname" @bind-Value="Staff.StaffName" class="form-control" placeholder="Enter full name" />
+                            <ValidationMessage For="() => Staff.StaffName" class="text-danger" />
+                        </div>
+
+                        <!-- Staff Email -->
+                        <div class="mb-3">
+                            <label for="staffemail" class="form-label">📧 Staff Email:</label>
+                            <InputText id="staffemail" @bind-Value="Staff.StaffEmail" class="form-control" placeholder="Enter email address" />
+                            <ValidationMessage For="() => Staff.StaffEmail" class="text-danger" />
+                        </div>
+
+                        <!-- Staff Contact -->
+                        <div class="mb-3">
+                            <label for="staffcontact" class="form-label">📞 Staff Contact:</label>
+                            <InputText id="staffcontact" @bind-Value="Staff.StaffContact" class="form-control" placeholder="Enter phone number" />
+                            <ValidationMessage For="() => Staff.StaffContact" class="text-danger" />
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="submit" class="btn btn-success btn-lg d-flex align-items-center">
+                                <i class="fas fa-save me-2"></i> Save Staff
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+                <div class="card-footer text-center">
+                    <a href="/staff" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to List</a>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
-<div>
-    <a href="/staff">Back to List</a>
 </div>
 
 @code {
     [SupplyParameterFromForm]
     private Staff Staff { get; set; } = new();
 
-    // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+    /// 📝 This method saves the new staff member to the database
     private async Task AddStaff()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Staff.Add(Staff);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/staff");
+        using var context = DbFactory.CreateDbContext(); // Create a new database context
+        context.Staff.Add(Staff); // Add new staff record
+        await context.SaveChangesAsync(); // Save changes to the database
+        NavigationManager.NavigateTo("/staff"); // Redirect back to the staff list
     }
 }

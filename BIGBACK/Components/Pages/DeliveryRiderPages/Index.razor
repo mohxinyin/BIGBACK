@@ -6,30 +6,81 @@
 @implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Delivery Riders</PageTitle>
 
-<h1>DeliveryRider List</h1>
+<!-- Page Header -->
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2 class="text-primary">🚴 Delivery Riders Management</h2>
+        <a href="deliveryriders/create" class="btn btn-success">
+            <i class="fas fa-plus"></i> Add Delivery
+        </a>
+    </div>
 
-<p>
-    <a href="deliveryriders/create">Create New</a>
-</p>
+    <hr />
 
-<QuickGrid Class="table" Items="context.DeliveryRider">
-    <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryRiderTaskType" />
-    <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryRiderStatus" />
-    @* <PropertyColumn Property="deliveryrider => deliveryrider.DeliveryId" />
-    <PropertyColumn Property="deliveryrider => deliveryrider.RiderId" /> *@
+    <!-- Check if Data is Available -->
+    @if (deliveryRiders == null || !deliveryRiders.Any())
+    {
+        <div class="alert alert-warning text-center mt-4">
+            <i class="fas fa-exclamation-circle"></i> No delivery riders found.
+        </div>
+    }
+    else
+    {
+        <!-- Table Container -->
+        <div class="table-responsive shadow-lg p-4 bg-white rounded">
+            <table class="table table-hover border rounded">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>🚲 Task Type</th>
+                        <th>📌 Status</th>
+                        <th>🚦 Delivery Status</th>
+                        <th>👤 Rider Name</th>
+                        <th>⚙️ Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="bg-light">
+                    @foreach (var deliveryRider in deliveryRiders)
+                    {
+                        <tr>
+                            <td>@deliveryRider.DeliveryRiderTaskType</td>
+                            <td>
+                                <span class="badge @(deliveryRider.DeliveryRiderStatus == "Assigned" ? "bg-success" : "bg-secondary")">
+                                    @deliveryRider.DeliveryRiderStatus
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(deliveryRider.Delivery.DeliveryStatus == "Delivered" ? "bg-success" : "bg-warning text-dark")">
+                                    @deliveryRider.Delivery.DeliveryStatus
+                                </span>
+                            </td>
+                            <td>@deliveryRider.Rider.RiderName</td>
+                            <td>
+                                <a href="@($"deliveryriders/edit?id={deliveryRider.Id}")" class="btn btn-warning btn-sm">
+                                    ✏️ Edit
+                                </a>
+                                <a href="@($"deliveryriders/details?id={deliveryRider.Id}")" class="btn btn-info btn-sm">
+                                    👁️ Details
+                                </a>
+                                <a href="@($"deliveryriders/delete?id={deliveryRider.Id}")" class="btn btn-danger btn-sm">
+                                    🗑️ Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
-    <PropertyColumn Property="deliveryRider => deliveryRider.Delivery.DeliveryStatus" Title="Delivery Status" />
-    <PropertyColumn Property="deliveryRider => deliveryRider.Rider.RiderName" Title="Rider Name" />
-
-
-    <TemplateColumn Context="deliveryrider">
-        <a href="@($"deliveryriders/edit?id={deliveryrider.Id}")">Edit</a> |
-        <a href="@($"deliveryriders/details?id={deliveryrider.Id}")">Details</a> |
-        <a href="@($"deliveryriders/delete?id={deliveryrider.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+    <!-- Back Button -->
+    <div class="mt-3">
+        <a href="/" class="btn btn-secondary">
+            ⬅ Back to Dashboard
+        </a>
+    </div>
+</div>
 
 @code {
     private BIGBACKContext context = default!;
@@ -39,7 +90,7 @@
     {
         context = DbFactory.CreateDbContext();
 
-        // Eagerly load related entities
+        // Load related entities
         deliveryRiders = context.DeliveryRider
             .Include(dr => dr.Delivery) // Include Delivery to access DeliveryStatus
             .Include(dr => dr.Rider)   // Include Rider to access RiderName

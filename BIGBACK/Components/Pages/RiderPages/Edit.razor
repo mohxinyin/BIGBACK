@@ -4,47 +4,51 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Edit</PageTitle>
+<PageTitle>✏️ Edit Rider</PageTitle>
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-warning">✏️ Edit Rider</h1>
+        <a class="btn btn-secondary" href="/riders">⬅ Back to List</a>
+    </div>
 
-<h2>Rider</h2>
-<hr />
-@if (Rider is null)
-{
-    <p><em>Loading...</em></p>
-}
-else
-{
-    <div class="row">
-        <div class="col-md-4">
-            <EditForm method="post" Model="Rider" OnValidSubmit="UpdateRider" FormName="edit" Enhance>
+    @if (Rider is null)
+    {
+        <p class="text-center fs-4">⏳ <em>Loading... Please wait</em> ⏳</p>
+    }
+    else
+    {
+        <div class="card shadow-lg p-4 border-info">
+            <EditForm method="post" Model="Rider" OnValidSubmit="UpdateRider" FormName="edit">
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
+                <ValidationSummary class="text-danger fw-bold" role="alert" />
+
                 <input type="hidden" name="Rider.Id" value="@Rider.Id" />
+
                 <div class="mb-3">
-                    <label for="ridername" class="form-label">RiderName:</label>
-                    <InputText id="ridername" @bind-Value="Rider.RiderName" class="form-control" />
-                    <ValidationMessage For="() => Rider.RiderName" class="text-danger" />
+                    <label for="ridername" class="form-label">👤 Rider Name:</label>
+                    <InputText id="ridername" @bind-Value="Rider.RiderName" class="form-control border-success" />
+                    <ValidationMessage For="() => Rider.RiderName" class="text-danger fw-bold" />
                 </div>
+
                 <div class="mb-3">
-                    <label for="ridercontact" class="form-label">RiderContact:</label>
-                    <InputText id="ridercontact" @bind-Value="Rider.RiderContact" class="form-control" />
-                    <ValidationMessage For="() => Rider.RiderContact" class="text-danger" />
+                    <label for="ridercontact" class="form-label">📞 Rider Contact:</label>
+                    <InputText id="ridercontact" @bind-Value="Rider.RiderContact" class="form-control border-primary" />
+                    <ValidationMessage For="() => Rider.RiderContact" class="text-danger fw-bold" />
                 </div>
+
                 <div class="mb-3">
-                    <label for="riderrating" class="form-label">RiderRating:</label>
-                    <InputNumber id="riderrating" @bind-Value="Rider.RiderRating" class="form-control" />
-                    <ValidationMessage For="() => Rider.RiderRating" class="text-danger" />
+                    <label for="riderrating" class="form-label">⭐ Rider Rating:</label>
+                    <InputNumber id="riderrating" @bind-Value="Rider.RiderRating" class="form-control border-warning" />
+                    <ValidationMessage For="() => Rider.RiderRating" class="text-danger fw-bold" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+
+                <div class="d-flex justify-content-end">
+                    <button type="submit" class="btn btn-primary btn-lg">💾 Save Changes</button>
+                </div>
             </EditForm>
         </div>
-    </div>
-}
-
-<div>
-    <a href="/riders">Back to List</a>
+    }
 </div>
 
 @code {
@@ -65,8 +69,6 @@ else
         }
     }
 
-    // To protect from overposting attacks, enable the specific properties you want to bind to.
-    // For more information, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
     private async Task UpdateRider()
     {
         using var context = DbFactory.CreateDbContext();

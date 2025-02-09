@@ -4,31 +4,38 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-<PageTitle>Details</PageTitle>
+<PageTitle>👤 Rider Details</PageTitle>
 
-<h1>Details</h1>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-info">📄 Rider Details</h1>
+        <a class="btn btn-secondary" href="/riders">⬅ Back to List</a>
+    </div>
 
-<div>
-    <h2>Rider</h2>
-    <hr />
-    @if (rider is null)
-    {
-        <p><em>Loading...</em></p>
-    }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">RiderName</dt>
-            <dd class="col-sm-10">@rider.RiderName</dd>
-            <dt class="col-sm-2">RiderContact</dt>
-            <dd class="col-sm-10">@rider.RiderContact</dd>
-            <dt class="col-sm-2">RiderRating</dt>
-            <dd class="col-sm-10">@rider.RiderRating</dd>
-        </dl>
-        <div>
-            <a href="@($"/riders/edit?id={rider.Id}")">Edit</a> |
-            <a href="@($"/riders")">Back to List</a>
-        </div>
-    }
+    <div class="card shadow-lg p-4 border-primary">
+        @if (rider is null)
+        {
+            <p class="text-center fs-4">⏳ <em>Loading... Please wait</em> ⏳</p>
+        }
+        else
+        {
+            <dl class="row">
+                <dt class="col-sm-3 fw-bold">👤 Rider Name:</dt>
+                <dd class="col-sm-9">@rider.RiderName</dd>
+
+                <dt class="col-sm-3 fw-bold">📞 Contact:</dt>
+                <dd class="col-sm-9">@rider.RiderContact</dd>
+
+                <dt class="col-sm-3 fw-bold">⭐ Rating:</dt>
+                <dd class="col-sm-9">@rider.RiderRating</dd>
+            </dl>
+
+            <div class="d-flex justify-content-end mt-3">
+                <a href="@($"/riders/edit?id={rider.Id}")" class="btn btn-warning me-2">✏️ Edit</a>
+                <a href="/riders" class="btn btn-secondary">📋 Back to List</a>
+            </div>
+        }
+    </div>
 </div>
 
 @code {
