@@ -1,52 +1,90 @@
 ﻿@page "/businessowners/details"
 @using Microsoft.EntityFrameworkCore
 @using BIGBACK.Domain
-@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@using BIGBACK.Data
+@inject IDbContextFactory<BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims;
 
 <PageTitle>Details</PageTitle>
 
-<h1>Details</h1>
-
 <div>
-    <h2>BusinessOwner</h2>
+    <h1>Account Details</h1>
     <hr />
-    @if (businessowner is null)
+    <h3>BusinessOwner</h3>
+    @if (businessowners is null)
     {
         <p><em>Loading...</em></p>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">BusinessOwnerName</dt>
-            <dd class="col-sm-10">@businessowner.BusinessOwnerName</dd>
-            <dt class="col-sm-2">BusinessOwnerrContact</dt>
-            <dd class="col-sm-10">@businessowner.BusinessOwnerrContact</dd>
-            <dt class="col-sm-2">BusinessOwnerEmail</dt>
-            <dd class="col-sm-10">@businessowner.BusinessOwnerEmail</dd>
-            <dt class="col-sm-2">BusinessOwnerGender</dt>
-            <dd class="col-sm-10">@businessowner.BusinessOwnerGender</dd>
-        </dl>
+    else if (!businessowners.Any())
+    {
+        <p>No business owners found.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Contact</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date Created</th>
+                    <th>Date Updated</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var owner in businessowners)
+                {
+                    <tr>
+                        <td>@owner.BusinessOwnerName</td>
+                        <td>@owner.BusinessOwnerrContact</td>
+                        <td>@owner.BusinessOwnerEmail</td>
+                        <td>@owner.BusinessOwnerGender</td>
+                        <td>@owner.DateCreated</td>
+                        <td>@owner.DateUpdated</td>
+                        <td>
+                            <a href="@($"/businessowners/edit?id={owner.Id}")">Edit</a> |
+                            <a href="@($"/businessowners/delete?id={owner.Id}")">Delete</a>
+
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
         <div>
-            <a href="@($"/businessowners/edit?id={businessowner.Id}")">Edit</a> |
-            <a href="@($"/businessowners")">Back to List</a>
+            <a href="businessowners/create">Create New</a>
         </div>
+
+
     }
 </div>
 
 @code {
-    private BusinessOwner? businessowner;
+    private List<BusinessOwner>? businessowners;
 
-    [SupplyParameterFromQuery]
-    private int Id { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        businessowner = await context.BusinessOwner.FirstOrDefaultAsync(m => m.Id == Id);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        if (businessowner is null)
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            NavigationManager.NavigateTo("notfound");
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Only apply the filter if we're not on the "create" page
+            if (userId is not null && !NavigationManager.Uri.Contains("/businessowners/create"))
+            {
+                await using var context = await DbFactory.CreateDbContextAsync();
+                businessowners = await context.BusinessOwner
+                    .Where(b => b.CreatedBy == userId)
+                    .OrderByDescending(b => b.DateCreated)
+                    .ToListAsync();
+            }
         }
     }
 }

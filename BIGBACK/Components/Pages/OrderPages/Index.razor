@@ -1,48 +1,111 @@
-﻿@page "/orders"
+﻿@page "/orders/{businessId:int}"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using BIGBACK.Domain
 @using BIGBACK.Data
-@implements IAsyncDisposable
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
-<PageTitle>Index</PageTitle>
+<PageTitle>Order List</PageTitle>
 
 <h1>Order List</h1>
 
 <p>
-    <a href="orders/create">Create New</a>
+@*     <a href="orders/create" class="btn btn-primary">Create New Order</a> *@
 </p>
 
-<QuickGrid Class="table" Items="context.Order">
-    <PropertyColumn Property="order => order.OrderDateTime" />
-    <PropertyColumn Property="order => order.OrderStatus" />
-    <PropertyColumn Property="order => order.OrderTotal" />
-    @* <PropertyColumn Property="order => order.CustomerId" /> *@
+@if (orders.Any())
+{
+    <QuickGrid TGridItem="Order" Class="table" Items="orders.AsQueryable()">
+        <PropertyColumn Property="order => order.OrderDateTime" />
+        <PropertyColumn Property="order => order.OrderStatus" />
+        <PropertyColumn Property="order => order.OrderTotal" />
+        <PropertyColumn Property="order => order.Customer.CustomerName" Title="Customer Name" />
+        <PropertyColumn Property="order => order.Customer.CustomerMobileNumber" Title="Customer Mobile" />
 
-    <PropertyColumn Property="order => order.Customer.CustomerName" Title="CustomerName" />
-    <PropertyColumn Property="order => order.Customer.CustomerMobileNumber" Title="CustomerMobileNumber" />
-
-    <TemplateColumn Context="order">
-        <a href="@($"orders/edit?id={order.Id}")">Edit</a> |
-        <a href="@($"orders/details?id={order.Id}")">Details</a> |
-        <a href="@($"orders/delete?id={order.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+        <TemplateColumn Context="order">
+            <a href="@($"orders/edit?id={order.Id}&businessId={businessId}")" class="btn btn-secondary btn-sm">Edit</a>
+            <a href="@($"orderitems/{order.Id}&businessId={businessId}")" class="btn btn-info btn-sm">View Details</a>
+            @*             <a href="@($"orders/delete?id={order.Id}")" class="btn btn-danger btn-sm">Delete</a> *@
+        </TemplateColumn>
+    </QuickGrid>
+    <a href="@($"/businesses/details")">Back to Businesses</a>
+}
+else
+{
+    <p>No orders found.</p>
+    <a href="@($"/businesses/details")">Back to Businesses</a>
+}
 
 @code {
-    private BIGBACKContext context = default!;
     private List<Order> orders = new();
+    private string userId = "";
+    [Parameter] public int businessId { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        // Eagerly load related Customer entity
-        orders = context.Order
-            .Include(o => o.Customer) // Load Customer to access CustomerName and CustomerMobileNumber
-            .ToList();
+        // Get the logged-in user's ID
+        userId = user.FindFirst("userId")?.Value;
+
+        if (!string.IsNullOrEmpty(userId))
+        {
+            await LoadOrders();
+        }
     }
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    private async Task LoadOrders()
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+
+        // Find the BusinessOwner linked to the logged-in user
+        var businessOwner = await context.BusinessOwner
+            .FirstOrDefaultAsync(b => b.CreatedBy == userId);
+
+        if (businessOwner != null)
+        {
+            // Get the Businesses owned by the BusinessOwner
+            var business = await context.Business
+                .FirstOrDefaultAsync(b => b.Id == businessId && b.BusinessOwnerId == businessOwner.Id);
+
+            if (business != null)
+            {
+                // Get all Menus linked to this Business
+                var menuIds = await context.Menu
+                    .Where(m => m.BusinessId == businessId)
+                    .Select(m => m.Id)
+                    .ToListAsync();
+
+                if (menuIds.Any())
+                {
+                    // Get all MenuItems linked to these Menus
+                    var menuItemIds = await context.MenuItem
+                        .Where(mi => menuIds.Contains(mi.MenuId))
+                        .Select(mi => mi.Id)
+                        .ToListAsync();
+
+                    if (menuItemIds.Any())
+                    {
+                        // Get all OrderItems containing these MenuItems
+                        var orderIds = await context.OrderItem
+                            .Where(oi => menuItemIds.Contains(oi.MenuItemId))
+                            .Select(oi => oi.OrderId)
+                            .Distinct()
+                            .ToListAsync();
+
+                        if (orderIds.Any())
+                        {
+                            // Finally, get the Orders linked to those OrderItems
+                            orders = await context.Order
+                                .Include(o => o.Customer)
+                                .Where(o => orderIds.Contains(o.Id)) // Filter orders by orderIds
+                                .ToListAsync();
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

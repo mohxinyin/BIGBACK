@@ -8,10 +8,10 @@
 
 <PageTitle>Delivery List</PageTitle>
 
-<h1>Index</h1>
+<h1>Deliveries</h1>
 
 <p>
-    <a href="deliveries/create">Create New</a>
+@*     <a href="deliveries/create">Create New</a> *@
 </p>
 
 <QuickGrid Class="table" Items="context.Delivery">
@@ -30,9 +30,9 @@
     <PropertyColumn Property="delivery => delivery.Order.OrderStatus" Title="OrderStatus" />
 
     <TemplateColumn Context="delivery">
-        <a href="@($"deliveries/edit?id={delivery.Id}")">Edit</a> |
+@*         <a href="@($"deliveries/edit?id={delivery.Id}")">Edit</a> |
         <a href="@($"deliveries/details?id={delivery.Id}")">Details</a> |
-        <a href="@($"deliveries/delete?id={delivery.Id}")">Delete</a>
+        <a href="@($"deliveries/delete?id={delivery.Id}")">Delete</a> *@
     </TemplateColumn>
 </QuickGrid>
 

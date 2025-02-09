@@ -1,14 +1,14 @@
 ﻿@page "/menuitems/edit"
 @using Microsoft.EntityFrameworkCore
 @using BIGBACK.Domain
+@using BIGBACK.Data
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
 
-<h2>MenuItem</h2>
+<h1 class="text-center mb-4">Edit Item</h1>
 <hr />
 @if (MenuItem is null)
 {
@@ -16,7 +16,7 @@
 }
 else
 {
-    <div class="row">
+     <div class="row justify-content-center">
         <div class="col-md-4">
             <EditForm method="post" Model="MenuItem" OnValidSubmit="UpdateMenuItem" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
@@ -37,19 +37,29 @@ else
                     <InputText id="menuitemdesc" @bind-Value="MenuItem.MenuItemDesc" class="form-control" />
                     <ValidationMessage For="() => MenuItem.MenuItemDesc" class="text-danger" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display:none;">
                     <label for="menuid" class="form-label">MenuId:</label>
                     <InputNumber id="menuid" @bind-Value="MenuItem.MenuId" class="form-control" />
                     <ValidationMessage For="() => MenuItem.MenuId" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
             </EditForm>
         </div>
     </div>
-}
 
-<div>
-    <a href="/menuitems">Back to List</a>
+}
+<div class="mt-3 text-center">
+    @* <a href="/menuitems">Back to List</a> *@
+    @if (MenuItem != null)
+    {
+        <a href="@($"/menuitems/details?menuId={MenuItem.MenuId}&businessId={BusinessId}")">Back</a>
+    }
+    else
+    {
+        <p>Menu item not found.</p>
+    }
 </div>
 
 @code {
@@ -58,6 +68,9 @@ else
 
     [SupplyParameterFromForm]
     private MenuItem? MenuItem { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int BusinessId { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -93,7 +106,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/menuitems");
+        NavigationManager.NavigateTo($"/menuitems/details?menuId={MenuItem.MenuId}&businessId={BusinessId}");
     }
 
     private bool MenuItemExists(int id)

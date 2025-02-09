@@ -35,7 +35,7 @@
         </dl>
         <EditForm method="post" Model="businessowner" OnValidSubmit="DeleteBusinessOwner" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(businessowner is null)">Delete</button> |
-            <a href="/businessowners">Back to List</a>
+            <a href="/businessowners/details">Back</a>
         </EditForm>
     }
 </div>
@@ -62,6 +62,6 @@
         using var context = DbFactory.CreateDbContext();
         context.BusinessOwner.Remove(businessowner!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/businessowners");
+        NavigationManager.NavigateTo("/businessowners/details");
     }
 }

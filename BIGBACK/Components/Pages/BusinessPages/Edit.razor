@@ -1,17 +1,13 @@
-﻿    @page "/businesses/edit"
+﻿@page "/businesses/edit"
 @using Microsoft.EntityFrameworkCore
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Administrator,BusinessOwner")]
 
-@attribute [Authorize(Roles = "Administrator,BusinessOwner")]
-
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h2>Business</h2>
+<h1 class="text-center mb-4">Edit Business Details</h1>
 <hr />
 @if (Business is null)
 {
@@ -19,11 +15,11 @@
 }
 else
 {
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
             <EditForm method="post" Model="Business" OnValidSubmit="UpdateBusiness" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
+                <ValidationSummary class="text-danger" role="alert" />
                 <input type="hidden" name="Business.Id" value="@Business.Id" />
                 <div class="mb-3">
                     <label for="businessname" class="form-label">BusinessName:</label>
@@ -40,29 +36,39 @@ else
                     <InputText id="businesscontact" @bind-Value="Business.BusinessContact" class="form-control" />
                     <ValidationMessage For="() => Business.BusinessContact" class="text-danger" />
                 </div>
+
+                <!-- BusinessRating - Read-only -->
                 <div class="mb-3">
-                    <label for="businessrating" class="form-label">BusinessRating:</label>
-                    <InputText id="businessrating" @bind-Value="Business.BusinessRating" class="form-control" />
-                    <ValidationMessage For="() => Business.BusinessRating" class="text-danger" />
+                    <label for="businessrating" class="form-label">Business Rating:</label>
+                    <!-- Use a span or div to display the rating value, making it non-editable -->
+                    <span id="businessrating" class="form-control" readonly>@Business.BusinessRating</span>
                 </div>
+
+                <!-- BusinessStatus - Dropdown -->
                 <div class="mb-3">
                     <label for="businessstatus" class="form-label">BusinessStatus:</label>
-                    <InputText id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control" />
+                    <InputSelect id="businessstatus" @bind-Value="Business.BusinessStatus" class="form-control">
+                        <option value="Open">Open</option>
+                        <option value="Closed">Closed</option>
+                    </InputSelect>
                     <ValidationMessage For="() => Business.BusinessStatus" class="text-danger" />
                 </div>
-                <div class="mb-3">
+
+                <div class="mb-3" style="display:none;">
                     <label for="businessownerid" class="form-label">BusinessOwnerId:</label>
                     <InputNumber id="businessownerid" @bind-Value="Business.BusinessOwnerId" class="form-control" />
                     <ValidationMessage For="() => Business.BusinessOwnerId" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
             </EditForm>
         </div>
     </div>
 }
 
-<div>
-    <a href="/businesses">Back to List</a>
+<div class="mt-3 text-center">
+    <a href="/businesses/details">Back</a>
 </div>
 
 @code {
@@ -77,6 +83,7 @@ else
         using var context = DbFactory.CreateDbContext();
         Business ??= await context.Business.FirstOrDefaultAsync(m => m.Id == Id);
 
+
         if (Business is null)
         {
             NavigationManager.NavigateTo("notfound");
@@ -89,9 +96,11 @@ else
     {
         using var context = DbFactory.CreateDbContext();
         context.Attach(Business!).State = EntityState.Modified;
+        context.Entry(Business).Property("BusinessRating").IsModified = false;
 
         try
         {
+
             await context.SaveChangesAsync();
         }
         catch (DbUpdateConcurrencyException)
@@ -106,7 +115,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/businesses");
+        NavigationManager.NavigateTo("/businesses/details");
     }
 
     private bool BusinessExists(int id)

@@ -2,22 +2,59 @@
     background-color: white !important; /* White background */
 }
 
-    .navbar .navbar-brand,
-    .navbar .nav-link {
-        color: black !important; /* Black text */
-    }
+.navbar .nav-link {
+    color: black !important;  Black text 
+}
+.navbar-brand {
+    background: linear-gradient(to right, #ffafcc, #c9a0dc); /* Pastel pink and lavender */
+    -webkit-background-clip: text; /* Clip the gradient to the text */
+    color: transparent; /* Make the text color transparent so the gradient shows */
+    font-weight: bold; /* Optional: Makes the text bold */
+}
 
-        .navbar .nav-link:hover {
-            color: gray !important; /* Optional: Change color on hover */
-        }
 
-        .navbar .nav-link:visited {
-            color: black !important; /* Ensure visited links are also black */
-        }
+.navbar .nav-link:visited {
+    color: black !important;  Ensure visited links are also black 
+}
 
-        .navbar .nav-link.active {
-            color: black !important; /* Ensure active link is also black */
-        }
+.navbar .nav-link.active {
+     color: black !important;  Ensure active link is also black 
+}
+
+.navbar .nav {
+    overflow: visible;
+}
+
+/*.navbar-nav .dropdown-menu {
+    white-space: normal;*/ /* Allows dropdown text to wrap properly */
+    /*min-width: 200px;*/ /* Ensures dropdown has enough space */
+    /*z-index: 1050;*/ /* Ensures dropdown is above other elements */
+/*}*/
+
+
+.nav-item ::deep .nav-link {
+    color: #333;
+    background: none;
+    border: none;
+    border-radius: 4px;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    line-height: 3rem;
+    width: 100%;
+    text-decoration: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-item ::deep a.active {
+    background-color: rgba(255, 255, 255, 0.37);
+    color: black;
+}
+
+.nav-item ::deep .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: gray;
+}
 
 
 /*.navbar-toggler {
@@ -39,13 +76,13 @@
 
         .navbar .nav-link:hover {
             color: gray !important; /* Optional: Change color on hover */
-        }
+        /*}
 
         .navbar .nav-link:visited {
-            color: black !important; /* Ensure visited links are also black */
-        }
+            color: black !important;*/ /* Ensure visited links are also black */
+        /*}*/
 
-.bi {
+/*.bi {
     display: inline-block;
     position: relative;
     width: 1.25rem;
@@ -69,7 +106,7 @@
     }
 
     .nav-item ::deep .nav-link {
-        color: #d7d7d7;
+        color: #333;
         background: none;
         border: none;
         border-radius: 4px;
@@ -84,7 +121,7 @@
 
     .nav-item ::deep a.active {
         background-color: rgba(255, 255, 255, 0.37);
-        color: white;
+        color: black;
     }
 
     .nav-item ::deep .nav-link:hover {
@@ -169,3 +206,4 @@
     }
 }
 */
+

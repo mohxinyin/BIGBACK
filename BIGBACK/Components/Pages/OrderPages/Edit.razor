@@ -6,9 +6,7 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h2>Order</h2>
+<h1 class="text-center mb-4">Edit Order Status</h1>
 <hr />
 @if (Order is null)
 {
@@ -16,45 +14,55 @@
 }
 else
 {
-    <div class="row">
-        <div class="col-md-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
             <EditForm method="post" Model="Order" OnValidSubmit="UpdateOrder" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="Order.Id" value="@Order.Id" />
                 <div class="mb-3">
                     <label for="orderdatetime" class="form-label">OrderDateTime:</label>
-                    <InputDate id="orderdatetime" @bind-Value="Order.OrderDateTime" class="form-control" />
+                    <span id="orderdatetime" class="form-control" readonly>@Order.OrderDateTime</span>
                     <ValidationMessage For="() => Order.OrderDateTime" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="orderstatus" class="form-label">OrderStatus:</label>
-                    <InputText id="orderstatus" @bind-Value="Order.OrderStatus" class="form-control" />
+                    <InputSelect id="orderstatus" @bind-Value="Order.OrderStatus" class="form-control" >
+                        <option value="Preparing">Preparing</option>
+                        <option value="Ready for pick up">Ready</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </InputSelect>
                     <ValidationMessage For="() => Order.OrderStatus" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="ordertotal" class="form-label">OrderTotal:</label>
-                    <InputNumber id="ordertotal" @bind-Value="Order.OrderTotal" class="form-control" />
+                    <span id="ordertotal" class="form-control" readonly>@Order.OrderTotal</span>
                     <ValidationMessage For="() => Order.OrderTotal" class="text-danger" />
                 </div>
                 <div class="mb-3">
                     <label for="customerid" class="form-label">CustomerId:</label>
-                    <InputNumber id="customerid" @bind-Value="Order.CustomerId" class="form-control" />
+                    <span id="customerid" class="form-control" readonly>@Order.CustomerId</span>
                     <ValidationMessage For="() => Order.CustomerId" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </EditForm>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+                </EditForm>
         </div>
     </div>
 }
 
-<div>
-    <a href="/orders">Back to List</a>
+
+<div class="mt-3 text-center">
+    <a href="@($"/orders/{businessId}")">Back to List</a>
 </div>
 
 @code {
     [SupplyParameterFromQuery]
     private int Id { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int businessId { get; set; }
 
     [SupplyParameterFromForm]
     private Order? Order { get; set; }
@@ -76,6 +84,9 @@ else
     {
         using var context = DbFactory.CreateDbContext();
         context.Attach(Order!).State = EntityState.Modified;
+        context.Entry(Order).Property(o => o.CustomerId).IsModified = false;
+        context.Entry(Order).Property(o => o.OrderTotal).IsModified = false;
+        context.Entry(Order).Property(o => o.OrderDateTime).IsModified = false;
 
         try
         {
@@ -93,7 +104,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/orders");
+        NavigationManager.NavigateTo($"/orders/{businessId}");
     }
 
     private bool OrderExists(int id)

@@ -3,50 +3,102 @@
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims;
 
 <PageTitle>Details</PageTitle>
 
-<h1>Details</h1>
-
 <div>
-    <h2>MenuItem</h2>
+    <h2>Menu Items</h2>
     <hr />
-    @if (menuitem is null)
+    @if (menuItems is null || !menuItems.Any())
     {
-        <p><em>Loading...</em></p>
+        <p><em>No menu items found for this menu.</em></p>
+        <a href="@($"/menuitems/create?menuId={menuId}&businessId={businessId}")" class="btn btn-primary">Add new items</a>
+        <a href="/menus/details?businessId=@businessId" class="btn btn-primary">Back</a>
     }
-    else {
-        <dl class="row">
-            <dt class="col-sm-2">MenuItemPrice</dt>
-            <dd class="col-sm-10">@menuitem.MenuItemPrice</dd>
-            <dt class="col-sm-2">MenuItemName</dt>
-            <dd class="col-sm-10">@menuitem.MenuItemName</dd>
-            <dt class="col-sm-2">MenuItemDesc</dt>
-            <dd class="col-sm-10">@menuitem.MenuItemDesc</dd>
-            <dt class="col-sm-2">MenuId</dt>
-            <dd class="col-sm-10">@menuitem.MenuId</dd>
-        </dl>
-        <div>
-            <a href="@($"/menuitems/edit?id={menuitem.Id}")">Edit</a> |
-            <a href="@($"/menuitems")">Back to List</a>
+    else
+    {
+        <div class="row">
+            @foreach (var item in menuItems)
+            {
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <!-- Menu Item Name and Price -->
+                                <h5 class="card-title">@item.MenuItemName</h5>
+                                <span class="badge bg-success">$@item.MenuItemPrice</span>
+                            </div>
+                            <!-- Menu Item Description -->
+                            <p class="card-text">@item.MenuItemDesc</p>
+                            <a href="/menuitems/edit?Id=@item.Id&businessId=@businessId" class="btn btn-primary">Edit item</a>
+                            <a href="/menuitems/delete?Id=@item.Id&businessId=@businessId" class="btn btn-primary"> Delete item</a>
+                        </div>
+                    </div>
+                </div>
+            }
+            <a href="/menuitems/create?menuId=@menuId&businessId=@businessId">Add new items</a>
+            <a href="/menus/details?businessId=@businessId">Back</a>
+
         </div>
     }
 </div>
 
 @code {
-    private MenuItem? menuitem;
-
-    [SupplyParameterFromQuery]
-    private int Id { get; set; }
+    private List<MenuItem>? menuItems;
+    private int businessId;
+    private int menuId;
 
     protected override async Task OnInitializedAsync()
     {
-        using var context = DbFactory.CreateDbContext();
-        menuitem = await context.MenuItem.FirstOrDefaultAsync(m => m.Id == Id);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        if (menuitem is null)
+        // Get the query parameters from the URL
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var queryParams = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        // Ensure both businessId and menuId are in the query
+        if (!queryParams.TryGetValue("businessId", out var businessIdValue) || string.IsNullOrEmpty(businessIdValue) ||
+            !queryParams.TryGetValue("menuId", out var menuIdValue) || string.IsNullOrEmpty(menuIdValue))
         {
-            NavigationManager.NavigateTo("notfound");
+            NavigationManager.NavigateTo("notfound");  // Redirect if parameters are missing
+            return;
+        }
+
+        // Parse the query parameters to integers
+        businessId = int.Parse(businessIdValue);
+        menuId = int.Parse(menuIdValue);
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await using var context = await DbFactory.CreateDbContextAsync();
+
+                // Get BusinessOwner for the logged-in user
+                var businessOwner = await context.BusinessOwner
+                    .FirstOrDefaultAsync(b => b.CreatedBy == userId);
+
+                if (businessOwner is not null)
+                {
+                    // Get the business linked to the BusinessOwner
+                    var business = await context.Business
+                        .FirstOrDefaultAsync(m => m.BusinessOwnerId == businessOwner.Id);
+
+                    if (business is not null)
+                    {
+                        // Get the MenuItems linked to the MenuId
+                        menuItems = await context.MenuItem
+                            .Where(m => m.MenuId == menuId)  // Filter by MenuId
+                            .ToListAsync();
+                    }
+                }
+            }
         }
     }
 }
+

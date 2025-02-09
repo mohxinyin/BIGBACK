@@ -3,14 +3,15 @@
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using System.Security.Claims;
 
 <PageTitle>Create</PageTitle>
 
-<h1>Create</h1>
-
-<h2>Menu</h2>
+<h1 class="text-center mb-4">Create Menu</h1>
 <hr />
-<div class="row">
+
+<div class="row justify-content-center">
     <div class="col-md-4">
         <EditForm method="post" Model="Menu" OnValidSubmit="AddMenu" FormName="create" Enhance>
             <DataAnnotationsValidator />
@@ -20,7 +21,7 @@
                 <InputText id="menuname" @bind-Value="Menu.MenuName" class="form-control" /> 
                 <ValidationMessage For="() => Menu.MenuName" class="text-danger" /> 
             </div>        
-            <div class="mb-3">
+            <div class="mb-3"style="display:none;">
                 <label for="businessid" class="form-label">BusinessId:</label> 
                 <InputNumber id="businessid" @bind-Value="Menu.BusinessId" class="form-control" /> 
                 <ValidationMessage For="() => Menu.BusinessId" class="text-danger" /> 
@@ -30,25 +31,83 @@
                 <InputText id="menucategory" @bind-Value="Menu.MenuCategory" class="form-control" /> 
                 <ValidationMessage For="() => Menu.MenuCategory" class="text-danger" /> 
             </div>        
-            <button type="submit" class="btn btn-primary">Create</button>
-        </EditForm>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary">Create</button>
+            </div>
+            </EditForm>
     </div>
 </div>
 
-<div>
-    <a href="/menus">Back to List</a>
+<div class="mt-3 text-center">
+    @if (Menu is not null)
+    {
+        <a href="@($"/menus/details?businessId={Menu.BusinessId}")">Back</a>
+    }
 </div>
 
 @code {
     [SupplyParameterFromForm]
     private Menu Menu { get; set; } = new();
+    private string? userId;
+
 
     // To protect from overposting attacks, see https://learn.microsoft.com/aspnet/core/blazor/forms/#mitigate-overposting-attacks.
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            // Redirect if the user is not authenticated
+            if (string.IsNullOrEmpty(userId))
+            {
+                NavigationManager.NavigateTo("notfound");
+            }
+        }
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var queryParams = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+
+        if (queryParams.TryGetValue("businessId", out var businessIdValue) && !string.IsNullOrEmpty(businessIdValue))
+        {
+            Menu.BusinessId = int.Parse(businessIdValue);
+        }
+        else
+        {
+            NavigationManager.NavigateTo("notfound");
+        }
+    }
+
     private async Task AddMenu()
     {
-        using var context = DbFactory.CreateDbContext();
-        context.Menu.Add(Menu);
-        await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/menus");
+        if (!string.IsNullOrEmpty(userId) && Menu.BusinessId > 0)
+        {
+            await using var context = await DbFactory.CreateDbContextAsync();
+
+            var businessOwner = await context.BusinessOwner
+                .FirstOrDefaultAsync(b => b.CreatedBy == userId);
+
+            if (businessOwner != null)
+            {
+                var business = await context.Business
+                    .FirstOrDefaultAsync(b => b.Id == Menu.BusinessId);
+
+                if (business != null)
+                {
+                    context.Menu.Add(Menu);
+                    await context.SaveChangesAsync();
+
+                    NavigationManager.NavigateTo($"/menus/details?id={Menu.Id}&businessId={Menu.BusinessId}");
+                }
+                else
+                {
+                    NavigationManager.NavigateTo("notfound");
+                }
+            }
+        }
     }
+
 }

@@ -5,6 +5,8 @@
 @using BIGBACK.Domain
 @using BIGBACK.Data
 @implements IAsyncDisposable
+@using System.Security.Claims;
+
 
 <h2>My Profile</h2>
 
@@ -36,13 +38,18 @@ else
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            var userEmail = user.Identity.Name;
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the UserId from claims
 
-            // Use BIGBACKContext to fetch customer details directly
-            await using var context = await DbFactory.CreateDbContextAsync();
-            customer = await context.Customer.FirstOrDefaultAsync(c => c.CustomerEmail == userEmail);
+            if (userId is not null)
+            {
+                // Use BIGBACKContext to fetch customer details based on CreatedBy (which stores the UserId)
+                await using var context = await DbFactory.CreateDbContextAsync();
+                customer = await context.Customer
+                    .FirstOrDefaultAsync(c => c.CreatedBy == userId); // Use CreatedBy to find customer
+            }
         }
     }
+
 
     public async ValueTask DisposeAsync()
     {

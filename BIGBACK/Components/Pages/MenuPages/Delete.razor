@@ -4,7 +4,7 @@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Administrator")]
+@attribute [Authorize(Roles = "BusinessOwner")]
 
 <PageTitle>Delete</PageTitle>
 
@@ -33,7 +33,7 @@
         </dl>
         <EditForm method="post" Model="menu" OnValidSubmit="DeleteMenu" FormName="delete" Enhance>
             <button type="submit" class="btn btn-danger" disabled="@(menu is null)">Delete</button> |
-            <a href="/menus">Back to List</a>
+            <a href="@($"/menus/details?id={menu.Id}&businessId={menu.BusinessId}")">Back</a>
         </EditForm>
     }
 </div>
@@ -43,6 +43,9 @@
 
     [SupplyParameterFromQuery]
     private int Id { get; set; }
+
+    [SupplyParameterFromQuery]
+    private int BusinessId { get; set; } // Add this to receive the businessId from the query string
 
     protected override async Task OnInitializedAsync()
     {
@@ -60,6 +63,6 @@
         using var context = DbFactory.CreateDbContext();
         context.Menu.Remove(menu!);
         await context.SaveChangesAsync();
-        NavigationManager.NavigateTo("/menus");
+        NavigationManager.NavigateTo($"/menus/details?id={menu.Id}&businessId={menu.BusinessId}");
     }
 }

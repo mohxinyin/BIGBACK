@@ -1,51 +1,62 @@
-﻿@page "/orderitems"
+﻿@page "/orderitems/{orderId:int}&businessId={businessId:int}"
 @using Microsoft.EntityFrameworkCore
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using BIGBACK.Domain
 @using BIGBACK.Data
-@implements IAsyncDisposable
+@* @implements IAsyncDisposable *@
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Index</PageTitle>
 
-<h1>OrderItem List</h1>
+<h1>OrderItem Details</h1>
 
 <p>
-    <a href="orderitems/create">Create New</a>
+@*     <a href="orderitems/create">Create New</a> *@
 </p>
 
-<QuickGrid Class="table" Items="context.OrderItem">
+<QuickGrid TGridItem="OrderItem" Class="table" Items="orderItems.AsQueryable()">
     <PropertyColumn Property="orderitem => orderitem.OrderItemQty" />
     <PropertyColumn Property="orderitem => orderitem.OrderItemPromo" />
     @* <PropertyColumn Property="orderitem => orderitem.OrderId" />
     <PropertyColumn Property="orderitem => orderitem.MenuItemId" /> *@
 
-    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemName" Title="MenuItemName" />
-    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemPrice" Title="MenuItemPrice" />
+    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemName" Title="ItemName" />
+    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemPrice" Title="ItemPrice" />
     <PropertyColumn Property="orderitem => orderitem.Order.OrderTotal" Title="OrderTotal" />
 
+    <!-- Display BusinessName from the related MenuItem -> Menu -> Business -->
+    <PropertyColumn Property="orderitem => orderitem.MenuItem.Menu.Business.BusinessName" Title="BusinessName" />
+    <PropertyColumn Property="orderitem => orderitem.MenuItem.Menu.MenuName" Title="MenuName" />
+
     <TemplateColumn Context="orderitem">
-        <a href="@($"orderitems/edit?id={orderitem.Id}")">Edit</a> |
+@*         <a href="@($"orderitems/edit?id={orderitem.Id}")">Edit</a> |
         <a href="@($"orderitems/details?id={orderitem.Id}")">Details</a> |
-        <a href="@($"orderitems/delete?id={orderitem.Id}")">Delete</a>
+        <a href="@($"orderitems/delete?id={orderitem.Id}")">Delete</a> *@
     </TemplateColumn>
 </QuickGrid>
+<div>
+    <a href="@($"orders/{businessId}")">Back</a> |
+    <a href="@($"orders/edit?id={orderId}&businessId={businessId}")">Update Order Status</a>
+</div>
 
 @code {
-    private BIGBACKContext context = default!;
+    [Parameter] public int orderId { get; set; }
+    [Parameter] public int businessId { get; set; }
+
     private List<OrderItem> orderItems = new();
 
     protected override void OnInitialized()
     {
-        context = DbFactory.CreateDbContext();
+        using var context = DbFactory.CreateDbContext();
 
-        // Eagerly load related entities
+        // Get all OrderItems for the specified OrderId
         orderItems = context.OrderItem
-            .Include(oi => oi.MenuItem) // Load MenuItem to access MenuItemName and MenuItemPrice
-            .Include(oi => oi.Order)   // Load Order to access OrderTotal
+            .Include(oi => oi.MenuItem) // Load MenuItem
+            .ThenInclude(mi => mi.Menu) // Load Menu
+            .ThenInclude(m => m.Business) // Load Business
+            .Include(oi => oi.Order)   // Load Order
+            .Where(oi => oi.OrderId == orderId) // Filter by OrderId
             .ToList();
     }
-
-
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
 }

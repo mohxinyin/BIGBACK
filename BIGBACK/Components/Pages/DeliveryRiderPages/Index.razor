@@ -8,10 +8,10 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>DeliveryRider List</h1>
+<h1>Assigned DeliveryRiders </h1>
 
 <p>
-    <a href="deliveryriders/create">Create New</a>
+@*     <a href="deliveryriders/create">Create New</a> *@
 </p>
 
 <QuickGrid Class="table" Items="context.DeliveryRider">
@@ -25,9 +25,9 @@
 
 
     <TemplateColumn Context="deliveryrider">
-        <a href="@($"deliveryriders/edit?id={deliveryrider.Id}")">Edit</a> |
+@*         <a href="@($"deliveryriders/edit?id={deliveryrider.Id}")">Edit</a> |
         <a href="@($"deliveryriders/details?id={deliveryrider.Id}")">Details</a> |
-        <a href="@($"deliveryriders/delete?id={deliveryrider.Id}")">Delete</a>
+        <a href="@($"deliveryriders/delete?id={deliveryrider.Id}")">Delete</a> *@
     </TemplateColumn>
 </QuickGrid>
 
