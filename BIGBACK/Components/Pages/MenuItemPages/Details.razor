@@ -18,17 +18,19 @@
     else {
         <dl class="row">
             <dt class="col-sm-2">MenuItemPrice</dt>
-            <dd class="col-sm-10">@menuitem.MenuItemPrice</dd>
+            <dd class="col-sm-10">$@menuitem.MenuItemPrice</dd>
             <dt class="col-sm-2">MenuItemName</dt>
             <dd class="col-sm-10">@menuitem.MenuItemName</dd>
             <dt class="col-sm-2">MenuItemDesc</dt>
             <dd class="col-sm-10">@menuitem.MenuItemDesc</dd>
-            <dt class="col-sm-2">MenuId</dt>
-            <dd class="col-sm-10">@menuitem.MenuId</dd>
+            @* <dt class="col-sm-2">MenuId</dt>
+            <dd class="col-sm-10">@menuitem.MenuId</dd> *@
         </dl>
         <div>
-            <a href="@($"/menuitems/edit?id={menuitem.Id}")">Edit</a> |
-            <a href="@($"/menuitems")">Back to List</a>
+            <AuthorizeView Roles="Administrator,BusinessOwner">
+                <a href="@($"/menuitems/edit?id={menuitem.Id}")">Edit</a> 
+            </AuthorizeView>
+            <a href="@($"/menuitems/{menuitem.MenuId}")">Back to List</a>
         </div>
     }
 </div>

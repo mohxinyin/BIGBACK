@@ -1,10 +1,12 @@
-﻿@page "/menuitems/{menuId:int}"  
+﻿@page "/menuitems/{menuId:int}"
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
 @using BIGBACK.Domain
 @using BIGBACK.Data
-@implements IAsyncDisposable
-@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@using Microsoft.AspNetCore.Components.QuickGrid
 
 <PageTitle>Menu Item List</PageTitle>
 
@@ -28,30 +30,130 @@
             <a href="@($"menuitems/edit?id={menuitem.Id}")">Edit</a> |
             <a href="@($"menuitems/delete?id={menuitem.Id}")">Delete</a>
         </AuthorizeView>
+
+        <!-- 🛒 Add "Add to Order" as a link -->
+        @if (existingOrderId != null)
+        {
+            <NavLink class="btn btn-success btn-sm" href="@($"/orderitems/create/{existingOrderId}/{menuitem.Id}")">
+                🛒 Add to Order
+            </NavLink>
+        }
+        @* else *@
+        @* { *@
+        @*     <NavLink class="btn btn-success btn-sm" href="#" @onclick="() => AddToOrder(menuitem.Id)"> *@
+        @*         🛒 Add to Order *@
+        @*     </NavLink> *@
+        @* } *@
     </TemplateColumn>
+
 </QuickGrid>
 
 @code {
     [Parameter] public int menuId { get; set; }
     private List<MenuItem> menuItems = new();
     private Menu? menu;
+    private string? userId;
+    private int? customerId;
+    private int? existingOrderId;
 
     protected override async Task OnInitializedAsync()
     {
-        await using var context = await DbFactory.CreateDbContextAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        // Load the menu to display its name
-        menu = await context.Menu
-            .FirstOrDefaultAsync(m => m.Id == menuId);
-
-        // If the menu is found, load its items
-        if (menu != null)
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            menuItems = await context.MenuItem
-                .Where(m => m.MenuId == menuId)  // Filter by MenuId
-                .ToListAsync();
+            userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            await using var context = await DbFactory.CreateDbContextAsync();
+
+            // 🔎 Get the Customer ID using CreatedBy (which stores userId)
+            var customer = await context.Customer
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.CreatedBy == userId);
+
+            if (customer != null)
+            {
+                customerId = customer.Id;
+
+                // 🔎 Check if an existing order exists for this CustomerID
+                var existingOrder = await context.Order
+                    .FirstOrDefaultAsync(o => o.CustomerId == customerId && o.OrderStatus == "Pending");
+
+                if (existingOrder != null)
+                {
+                    existingOrderId = existingOrder.Id; // Store the existing OrderID
+                }
+            }
+
+            // Load the menu to display its name
+            menu = await context.Menu.FirstOrDefaultAsync(m => m.Id == menuId);
+
+            // If the menu is found, load its items
+            if (menu != null)
+            {
+                menuItems = await context.MenuItem
+                    .Where(m => m.MenuId == menuId)  // Filter by MenuId
+                    .ToListAsync();
+            }
         }
     }
 
-    public async ValueTask DisposeAsync() => await Task.CompletedTask;
+    private async Task AddToOrder(int menuItemId)
+    {
+        if (customerId == null)
+        {
+            Console.WriteLine("⚠️ Error: Customer ID is null! Cannot add to order.");
+            return;
+        }
+
+        await using var context = await DbFactory.CreateDbContextAsync();
+        int orderIdToUse;
+
+        // 🔍 Check if there's a **Pending** order
+        var existingOrder = await context.Order
+            .FirstOrDefaultAsync(o => o.CustomerId == customerId && o.OrderStatus == "Pending");
+
+        if (existingOrder == null)
+        {
+            // 🆕 **If no existing pending order, create a new one**
+            var newOrder = new Order
+                {
+                    OrderDateTime = DateTime.Now,
+                    OrderStatus = "Pending",
+                    OrderTotal = 0,
+                    CustomerId = customerId.Value
+                };
+
+            context.Order.Add(newOrder);
+            await context.SaveChangesAsync();
+
+            orderIdToUse = newOrder.Id;
+            existingOrderId = orderIdToUse; // ✅ Store for future items
+
+            Console.WriteLine($"🆕 New Order Created: {orderIdToUse}");
+        }
+        else
+        {
+            // ✅ Use existing pending order
+            orderIdToUse = existingOrder.Id;
+            existingOrderId = existingOrder.Id;
+
+            Console.WriteLine($"✔ Existing Order Found: {orderIdToUse}");
+        }
+
+        // 🔄 **Ensure navigation works**
+        if (orderIdToUse > 0)
+        {
+            Console.WriteLine($"➡ Navigating to: /orderitems/create/{orderIdToUse}/{menuItemId}");
+            NavigationManager.NavigateTo($"/orderitems/create/{orderIdToUse}/{menuItemId}", forceLoad: true);
+        }
+        else
+        {
+            Console.WriteLine("❌ Error: Invalid Order ID! Cannot navigate.");
+        }
+    }
+
+
+
 }

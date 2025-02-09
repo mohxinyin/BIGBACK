@@ -1,4 +1,6 @@
-﻿namespace BIGBACK.Domain
+﻿using BIGBACK.Data;
+
+namespace BIGBACK.Domain
 {
     public class Order: BaseDomainModel
     {
@@ -8,5 +10,9 @@
         public int CustomerId { get; set; }
 
         public Customer? Customer { get; set; } // Naviagtion Property
+
+        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+
+
     }
 }

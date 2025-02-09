@@ -1,5 +1,10 @@
 ﻿@implements IDisposable
 @inject NavigationManager NavigationManager
+@inject IDbContextFactory<BIGBACKContext> DbFactory
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@using BIGBACK.Data
+
 
 <link href="Layout/NavMenu.razor.css" rel="stylesheet" />
 <div class="d-flex navbar navbar-expand-lg" style="overflow-x: auto;">
@@ -18,46 +23,30 @@
 
 
                 <!-- Authorized User Links -->
-                <AuthorizeView>
+               <AuthorizeView>
                     <Authorized>
                         <li class="nav-item">
                             <NavLink class="nav-link" href="Account/Manage">
                                 <span class="bi bi-person-fill" aria-hidden="true"></span> @context.User.Identity?.Name
                             </NavLink>
                         </li>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="deliveries">
-                                <span class="bi bi-box-arrow-in-down-left" aria-hidden="true"></span> Delivery
-                            </NavLink>
-                        </li>
-                        <li class="nav-item">
-                            <NavLink class="nav-link" href="deliveryriders">
-                                <span class="bi bi-person-lines-fill" aria-hidden="true"></span> DeliveryRider
-                            </NavLink>
-                        </li>
+                        
+                        
 
                         <!-- User Role Links (Customer Profile, Orders, Payments) -->
                         <AuthorizeView Roles="User" Context="userContext">
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="customer/profile">
-                                    <span class="bi bi-person-circle" aria-hidden="true"></span> My Profile
-                                </NavLink>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="customerMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <span class="bi bi-person-circle" aria-hidden="true"></span> My Account
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="customerMenu">
+                                    <li><NavLink class="dropdown-item" href="customer/profile">My Profile</NavLink></li>
+                                    <li><NavLink class="dropdown-item" href="customer/orders">My Orders</NavLink></li>
+                                    <li><NavLink class="dropdown-item" href="customer/payments">My Payments</NavLink></li>
+                                    <li><NavLink class="dropdown-item" href="/customer/deliveries">My Deliveries</NavLink></li>
+                                </ul>
                             </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="customer/orders">
-                                    <span class="bi bi-box" aria-hidden="true"></span> My Orders
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="customer/payments">
-                                    <span class="bi bi-credit-card" aria-hidden="true"></span> My Payments
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="/customers">
-                                    <span class="bi bi-credit-card" aria-hidden="true"></span> Customers
-                                </NavLink>
-                            </li>
+                           
 
                         </AuthorizeView>
 
@@ -69,23 +58,15 @@
                                     <span class="bi bi-briefcase-fill" aria-hidden="true"></span> BusinessOwnerView
                                 </NavLink>
                             </li>
-                        </AuthorizeView>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="deliveries">
+                                    <span class="bi bi-box-arrow-in-down-left" aria-hidden="true"></span> Delivery
+                                </NavLink>
+                            </li>
 
-                        <!-- BusinessOwner, Admin, User Links -->
-                        <AuthorizeView Roles="Administrator,BusinessOwner,User" Context="adminBusinessUserContext">
                             <li class="nav-item">
-                                <NavLink class="nav-link" href="businesses">
-                                    <span class="bi bi-shop-window" aria-hidden="true"></span> Business
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="menus">
-                                    <span class="bi bi-menu-button-wide" aria-hidden="true"></span> Menu
-                                </NavLink>
-                            </li>
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="orderitems">
-                                    <span class="bi bi-cart" aria-hidden="true"></span> OrderItem
+                                <NavLink class="nav-link" href="deliveryriders">
+                                    <span class="bi bi-person-lines-fill" aria-hidden="true"></span> DeliveryRider
                                 </NavLink>
                             </li>
                             <li class="nav-item">
@@ -95,8 +76,57 @@
                             </li>
                         </AuthorizeView>
 
-                        <!-- Admin and User Links -->
-                        <AuthorizeView Roles="Administrator,User" Context="adminUserContext">
+                        <!-- BusinessOwner, Admin, User Links -->
+                        <AuthorizeView Roles="Administrator,BusinessOwner,User" Context="adminBusinessUserContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="businesses">
+                                    <span class="bi bi-shop-window" aria-hidden="true"></span> Eateries
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="menus">
+                                    <span class="bi bi-menu-button-wide" aria-hidden="true"></span> Menu
+                                </NavLink>
+                            </li>
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="orderitems">
+                                    <span class="bi bi-cart" aria-hidden="true"></span> My Cart
+                                </NavLink>
+                            </li>
+                            
+                        </AuthorizeView>
+
+                        
+
+                        <!-- Admin and Rider Links -->
+                        <AuthorizeView Roles="Administrator,Rider" Context="riderContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="riders">
+                                    <span class="bi bi-person-fill" aria-hidden="true"></span> Rider
+                                </NavLink>
+                            </li>
+
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="deliveries">
+                                    <span class="bi bi-box-arrow-in-down-left" aria-hidden="true"></span> Delivery
+                                </NavLink>
+                            </li>
+
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="deliveryriders">
+                                    <span class="bi bi-person-lines-fill" aria-hidden="true"></span> DeliveryRider
+                                </NavLink>
+                            </li>
+                        </AuthorizeView>
+
+                        <!-- Admin Only Links -->
+                        <AuthorizeView Roles="Administrator" Context="adminContext">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="staff">
+                                    <span class="bi bi-person-fill" aria-hidden="true"></span> Staff
+                                </NavLink>
+                            </li>
+
                             <li class="nav-item">
                                 <NavLink class="nav-link" href="complaints">
                                     <span class="bi bi-exclamation-triangle-fill" aria-hidden="true"></span> Complaints
@@ -107,22 +137,9 @@
                                     <span class="bi bi-cart-fill" aria-hidden="true"></span> Orders
                                 </NavLink>
                             </li>
-                        </AuthorizeView>
-
-                        <!-- Admin and Rider Links -->
-                        <AuthorizeView Roles="Administrator,Rider" Context="riderContext">
                             <li class="nav-item">
-                                <NavLink class="nav-link" href="riders">
-                                    <span class="bi bi-person-fill" aria-hidden="true"></span> Rider
-                                </NavLink>
-                            </li>
-                        </AuthorizeView>
-
-                        <!-- Admin Only Links -->
-                        <AuthorizeView Roles="Administrator" Context="adminContext">
-                            <li class="nav-item">
-                                <NavLink class="nav-link" href="staff">
-                                    <span class="bi bi-person-fill" aria-hidden="true"></span> Staff
+                                <NavLink class="nav-link" href="payments">
+                                    <span class="bi bi-credit-card" aria-hidden="true"></span> Payment
                                 </NavLink>
                             </li>
                         </AuthorizeView>

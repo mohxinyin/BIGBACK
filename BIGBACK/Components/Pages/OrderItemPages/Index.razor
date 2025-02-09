@@ -1,51 +1,203 @@
 ﻿@page "/orderitems"
 @using Microsoft.EntityFrameworkCore
-@using Microsoft.AspNetCore.Components.QuickGrid
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
 @using BIGBACK.Domain
 @using BIGBACK.Data
-@implements IAsyncDisposable
-@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
-<PageTitle>Index</PageTitle>
 
-<h1>OrderItem List</h1>
+<PageTitle>My Order Items</PageTitle>
 
-<p>
-    <a href="orderitems/create">Create New</a>
-</p>
+<h1>My Cart</h1>
 
-<QuickGrid Class="table" Items="context.OrderItem">
-    <PropertyColumn Property="orderitem => orderitem.OrderItemQty" />
-    <PropertyColumn Property="orderitem => orderitem.OrderItemPromo" />
-    @* <PropertyColumn Property="orderitem => orderitem.OrderId" />
-    <PropertyColumn Property="orderitem => orderitem.MenuItemId" /> *@
+<!-- 🟠 ORDER MORE BUTTON (Added this above the form) -->
+<div class="text-center mb-3">
+    <NavLink class="btn btn-warning btn-lg fw-bold" href="@($"/businesses")">ORDER MORE!</NavLink>
+</div>
 
-    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemName" Title="MenuItemName" />
-    <PropertyColumn Property="orderitem => orderitem.MenuItem.MenuItemPrice" Title="MenuItemPrice" />
-    <PropertyColumn Property="orderitem => orderitem.Order.OrderTotal" Title="OrderTotal" />
+@if (orderItems.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Quantity</th>
+                <th>Promo</th>
+                <th>Menu Item Name</th>
+                <th>Menu Item Price</th>
+                <th>Total Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var orderitem in orderItems)
+            {
+                <tr>
+                    <td>@orderitem.OrderItemQty</td>
+                    <td>@orderitem.OrderItemPromo</td>
+                    <td>@orderitem.MenuItem?.MenuItemName</td>
+                    <td>$ @orderitem.MenuItem?.MenuItemPrice</td>
+                    <td>$ @((orderitem.MenuItem?.MenuItemPrice ?? 0) * orderitem.OrderItemQty)</td>
+                    <td>
+                        <a href="@($"orderitems/edit?id={orderitem.Id}")" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="@($"orderitems/details?id={orderitem.Id}")" class="btn btn-info btn-sm">Details</a>
+                        <a href="@($"orderitems/delete?id={orderitem.Id}")" class="btn btn-danger btn-sm">Delete</a>
 
-    <TemplateColumn Context="orderitem">
-        <a href="@($"orderitems/edit?id={orderitem.Id}")">Edit</a> |
-        <a href="@($"orderitems/details?id={orderitem.Id}")">Details</a> |
-        <a href="@($"orderitems/delete?id={orderitem.Id}")">Delete</a>
-    </TemplateColumn>
-</QuickGrid>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- 🔢 Display Order Total Below Table -->
+    <div class="mt-4">
+        <h3>Order Total: <span class="text-primary">$@(orderTotal ?? 0.00m)</span></h3>
+    </div>
+
+    <!-- 🛒 Checkout Button -->
+    <div class="mt-4">
+        @if (currentOrderId.HasValue)
+        {
+            <a href="@($"/payments/create/{currentOrderId}")" class="btn btn-primary btn-lg">Check Out Now</a>
+        }
+        else
+        {
+            <p class="text-danger">No active order to check out.</p>
+            <NavLink class="btn btn-warning" href="@($"/businesses")">Start Ordering Now!</NavLink>
+        }
+    </div>
+}
+else
+{
+    <p class="text-danger">No order items found.</p>
+    <NavLink class="btn btn-warning" href="@($"/businesses")">Start Ordering Now!</NavLink>
+}
 
 @code {
-    private BIGBACKContext context = default!;
     private List<OrderItem> orderItems = new();
+    private int? currentOrderId;
+    private decimal? orderTotal = 0;
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        context = DbFactory.CreateDbContext();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        // Eagerly load related entities
-        orderItems = context.OrderItem
-            .Include(oi => oi.MenuItem) // Load MenuItem to access MenuItemName and MenuItemPrice
-            .Include(oi => oi.Order)   // Load Order to access OrderTotal
-            .ToList();
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await using var context = await DbFactory.CreateDbContextAsync();
+
+                var customer = await context.Customer
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c => c.CreatedBy == userId);
+
+                if (customer != null)
+                {
+                    var existingOrder = await context.Order
+                        .Where(o => o.CustomerId == customer.Id && o.OrderStatus == "Pending")
+                        .OrderByDescending(o => o.OrderDateTime)
+                        .FirstOrDefaultAsync();
+
+                    if (existingOrder == null)
+                    {
+                        // 🆕 **CREATE NEW ORDER**
+                        var newOrder = new Order
+                            {
+                                OrderDateTime = DateTime.Now,
+                                OrderStatus = "Pending",
+                                OrderTotal = 0,
+                                CustomerId = customer.Id
+                            };
+
+                        context.Order.Add(newOrder);
+                        await context.SaveChangesAsync();
+
+                        currentOrderId = newOrder.Id; // ✅ Store the new Order ID
+                        Console.WriteLine($"🆕 New Order Created: {newOrder.Id}");
+                    }
+                    else
+                    {
+                        currentOrderId = existingOrder.Id; // ✅ Use existing Order ID
+                        Console.WriteLine($"✔ Existing Order Found: {existingOrder.Id}");
+                    }
+
+                    // Load Order Items
+                    await LoadOrderItems();
+                }
+            }
+        }
     }
 
 
-    public async ValueTask DisposeAsync() => await context.DisposeAsync();
+    private async Task LoadOrderItems()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity is not null && user.Identity.IsAuthenticated)
+        {
+            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (!string.IsNullOrEmpty(userId))
+            {
+                await using var context = await DbFactory.CreateDbContextAsync();
+
+                var customer = await context.Customer
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c => c.CreatedBy == userId);
+
+                if (customer != null)
+                {
+                    var existingOrder = await context.Order
+                        .Where(o => o.CustomerId == customer.Id && o.OrderStatus == "Pending")
+                        .OrderByDescending(o => o.OrderDateTime)
+                        .FirstOrDefaultAsync();
+
+                    if (existingOrder != null)
+                    {
+                        currentOrderId = existingOrder.Id;
+                        await RecalculateOrderTotal();
+
+                        orderItems = await context.OrderItem
+                            .Where(oi => oi.OrderId == existingOrder.Id)
+                            .Include(oi => oi.MenuItem)
+                            .ToListAsync();
+                    }
+                }
+            }
+        }
+    }
+
+    private async Task RecalculateOrderTotal()
+{
+    if (currentOrderId.HasValue)
+    {
+        await using var context = await DbFactory.CreateDbContextAsync();
+
+        var order = await context.Order
+            .Include(o => o.OrderItems)
+            .ThenInclude(oi => oi.MenuItem)
+            .FirstOrDefaultAsync(o => o.Id == currentOrderId.Value);
+
+        if (order != null)
+        {
+            // 🏷️ Fix Calculation Issue (Ensure Correct Decimal Conversion)
+            order.OrderTotal = order.OrderItems
+                .Sum(oi => (decimal?)oi.MenuItem.MenuItemPrice * oi.OrderItemQty) ?? 0.00m;
+
+            await context.SaveChangesAsync();
+            orderTotal = order.OrderTotal;
+            StateHasChanged();
+        }
+    }
+}
+
+
+
+    
 }

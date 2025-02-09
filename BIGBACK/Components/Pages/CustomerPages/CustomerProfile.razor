@@ -5,6 +5,7 @@
 @using BIGBACK.Domain
 @using BIGBACK.Data
 @implements IAsyncDisposable
+@using System.Security.Claims;
 
 <h2>My Profile</h2>
 
@@ -16,18 +17,28 @@
         <tr><th>Phone:</th><td>@customer.CustomerMobileNumber</td></tr>
         <tr><th>Gender:</th><td>@customer.CustomerGender</td></tr>
         <tr><th>Address:</th><td>@customer.CustomerAddress</td></tr>
+        <tr><th>DateCreated:</th><td>@customer.DateCreated</td></tr>
+        <tr><th>DateUpdated:</th><td>@customer.DateUpdated</td></tr>
     </table>
 
-    <NavLink class="btn btn-warning" href="@($"/customer/edit/{customer.Id}")">Edit Profile</NavLink>
-
+    <NavLink class="btn btn-warning" href="@($"/customer/edit?id={customer.Id}")">Edit Profile</NavLink>
+    <NavLink class="btn btn-warning" href="@($"/customer/delete/{customer.Id}")">Delete Profile</NavLink>
+                            
 }
 else
 {
     <p class="text-danger">No customer data found.</p>
+
+    <!-- ✅ Add "Set Up Your Profile" Button -->
+    <NavLink class="btn btn-primary" href="@($"/customers/create?userId={UserId}&email={UserEmail}")">
+        Set Up Your Profile
+    </NavLink>
 }
 
 @code {
     private Customer? customer;
+    private string? UserId;
+    private string? UserEmail;
 
     protected override async Task OnInitializedAsync()
     {
@@ -36,11 +47,20 @@ else
 
         if (user.Identity is not null && user.Identity.IsAuthenticated)
         {
-            var userEmail = user.Identity.Name;
+            UserId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value; // Get the UserId from claims
+            UserEmail = user.FindFirst(ClaimTypes.Email)?.Value; // Get the Email from claims
 
-            // Use BIGBACKContext to fetch customer details directly
-            await using var context = await DbFactory.CreateDbContextAsync();
-            customer = await context.Customer.FirstOrDefaultAsync(c => c.CustomerEmail == userEmail);
+            if (UserId is not null)
+            {
+                // ✅ Fetch customer details using CreatedBy field (Ensures correct retrieval)
+                await using var context = await DbFactory.CreateDbContextAsync();
+                customer = await context.Customer
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(c => c.CreatedBy == UserId);
+
+                // ✅ Debugging (check if customer was found)
+                Console.WriteLine($"DEBUG: Found customer? {customer != null}");
+            }
         }
     }
 

@@ -59,6 +59,6 @@ namespace BIGBACK.Migrations
                 keyColumn: "Id",
                 keyValue: 2);
         }
-           
+
     }
 }

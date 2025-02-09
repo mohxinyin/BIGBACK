@@ -6,9 +6,8 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
 
-<h2>BusinessOwner</h2>
+<h1 class="text-center mb-4">Edit your details</h1>
 <hr />
 @if (BusinessOwner is null)
 {
@@ -16,40 +15,70 @@
 }
 else
 {
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-4">
             <EditForm method="post" Model="BusinessOwner" OnValidSubmit="UpdateBusinessOwner" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
+                <ValidationSummary role="alert" />
                 <input type="hidden" name="BusinessOwner.Id" value="@BusinessOwner.Id" />
                 <div class="mb-3">
-                    <label for="businessownername" class="form-label">BusinessOwnerName:</label>
+                    <label for="businessownername" class="form-label">Name:</label>
                     <InputText id="businessownername" @bind-Value="BusinessOwner.BusinessOwnerName" class="form-control" />
                     <ValidationMessage For="() => BusinessOwner.BusinessOwnerName" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="businessownerrcontact" class="form-label">BusinessOwnerrContact:</label>
+                    <label for="businessownerrcontact" class="form-label">Contact:</label>
                     <InputText id="businessownerrcontact" @bind-Value="BusinessOwner.BusinessOwnerrContact" class="form-control" />
                     <ValidationMessage For="() => BusinessOwner.BusinessOwnerrContact" class="text-danger" />
                 </div>
                 <div class="mb-3">
-                    <label for="businessowneremail" class="form-label">BusinessOwnerEmail:</label>
+                    <label for="businessowneremail" class="form-label">Email:</label>
                     <InputText id="businessowneremail" @bind-Value="BusinessOwner.BusinessOwnerEmail" class="form-control" />
                     <ValidationMessage For="() => BusinessOwner.BusinessOwnerEmail" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
-                    <label for="businessownergender" class="form-label">BusinessOwnerGender:</label>
-                    <InputText id="businessownergender" @bind-Value="BusinessOwner.BusinessOwnerGender" class="form-control" />
+                    <label for="businessownergender" class="form-label">Gender:</label>
+                    <InputSelect id="businessownergender" @bind-Value="BusinessOwner.BusinessOwnerGender" class="form-control">
+                        <option value="Female">Female</option>
+                        <option value="Male">Male</option>
+                    </InputSelect>
                     <ValidationMessage For="() => BusinessOwner.BusinessOwnerGender" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+
+                @*  CreatedBy,UpdatedBy,DateCreated,DateUpdated fields  *@
+
+                <div class="mb-3" style="display:none;">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="BusinessOwner.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => BusinessOwner.CreatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3" style="display:none;">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="BusinessOwner.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => BusinessOwner.UpdatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3" style="display:none;">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="BusinessOwner.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => BusinessOwner.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3" style="display:none;">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="BusinessOwner.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => BusinessOwner.DateUpdated" class="text-danger" />
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
             </EditForm>
         </div>
     </div>
 }
 
-<div>
-    <a href="/businessowners">Back to List</a>
+
+<div class="mt-3 text-center">
+    <a href="/businessowners/details">Back to My Profile</a>
 </div>
 
 @code {
@@ -59,8 +88,24 @@ else
     [SupplyParameterFromForm]
     private BusinessOwner? BusinessOwner { get; set; }
 
+    //Create userId string to store the user id, default value is "System".
+    private string userId = "System";
+    //Inject the AuthenticationStateProvider to get the user id.
+
+    @inject AuthenticationStateProvider authenticationStateProvider
+
     protected override async Task OnInitializedAsync()
     {
+        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        // Get the userId claim
+        var userIdClaim = user.FindFirst("userId");
+        if (userIdClaim != null)
+        {
+            userId = userIdClaim.Value;
+        }
+
         using var context = DbFactory.CreateDbContext();
         BusinessOwner ??= await context.BusinessOwner.FirstOrDefaultAsync(m => m.Id == Id);
 
@@ -75,6 +120,13 @@ else
     private async Task UpdateBusinessOwner()
     {
         using var context = DbFactory.CreateDbContext();
+
+        //Set the userId to the UpdatedBy fields.
+        BusinessOwner.UpdatedBy = userId;
+
+        //Set the DateUpdated fields to the current date and time.
+        BusinessOwner.DateUpdated = DateTime.Now;
+
         context.Attach(BusinessOwner!).State = EntityState.Modified;
 
         try
@@ -93,7 +145,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/businessowners");
+        NavigationManager.NavigateTo("/businessowners/details");
     }
 
     private bool BusinessOwnerExists(int id)

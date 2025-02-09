@@ -3,14 +3,18 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @using BIGBACK.Domain
 @using BIGBACK.Data
+@implements IAsyncDisposable
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
 
 <PageTitle>Delivery List</PageTitle>
 
 <h1>Index</h1>
 
-<p>
-    <a href="deliveries/create">Create New</a>
-</p>
+<AuthorizeView Roles="Administrator,BusinessOwner">
+    <a href="deliveries/create" class="btn btn-primary">Create New Delivery</a>
+</AuthorizeView>
+
+
 
 <QuickGrid Class="table" Items="context.Delivery">
     <PropertyColumn Property="delivery => delivery.DeliveryTime" />
@@ -27,10 +31,15 @@
     <PropertyColumn Property="delivery => delivery.Order.OrderTotal" Title="OrderTotal" />
     <PropertyColumn Property="delivery => delivery.Order.OrderStatus" Title="OrderStatus" />
 
+    <PropertyColumn Property="delivery => delivery.DeliveryRider.Rider.RiderName" Title="RiderName" />
+
     <TemplateColumn Context="delivery">
-        <a href="@($"deliveries/edit?id={delivery.Id}")">Edit</a> |
-        <a href="@($"deliveries/details?id={delivery.Id}")">Details</a> |
-        <a href="@($"deliveries/delete?id={delivery.Id}")">Delete</a>
+        <AuthorizeView Roles="Administrator,BusinessOwner">
+            <a href="@($"deliveries/edit?id={delivery.Id}")" class="btn btn-warning btn-sm">Edit</a> 
+            <a href="@($"deliveries/delete?id={delivery.Id}")" class="btn btn-danger btn-sm">Delete</a>
+        </AuthorizeView>
+        <a href="@($"deliveries/details?id={delivery.Id}")" class="btn btn-info btn-sm">Details</a>
+
     </TemplateColumn>
 </QuickGrid>
 
@@ -42,11 +51,13 @@
     {
         context = DbFactory.CreateDbContext();
 
-        // Eagerly load related entities
+        // Eagerly load related entities, including the DeliveryRider and Rider
         deliveries = context.Delivery
             .Include(d => d.Customer)
             .Include(d => d.Order)
             .Include(d => d.Business)
+            .Include(d => d.DeliveryRider)    // Include the DeliveryRider
+                .ThenInclude(dr => dr.Rider)  // Then include the Rider from DeliveryRider
             .ToList();
     }
 

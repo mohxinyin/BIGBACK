@@ -1,4 +1,7 @@
 
+
+
+
 body {
     font-family: "Times New Roman", Times, serif;
     font-size: 16px;
@@ -6,6 +9,7 @@ body {
     color: #333;
     margin: 0;
     padding: 0;
+
 }
 
 /* ====== Links ====== */
@@ -59,6 +63,7 @@ input, textarea, select {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+
 }
 
 /* ====== Header Styles ====== */
@@ -109,4 +114,20 @@ th {
         width: 100%;
         padding: 12px;
     }
+}
+
+
+.dropdown-menu {
+    position: relative !important; /* Keeps dropdown floating */
+    z-index: 1051; /* Ensure it appears above other elements */
+    display: none; /* Hide by default */
+}
+
+.dropdown:hover .dropdown-menu,
+.show > .dropdown-menu {
+    display: block; /* Show when clicked */
+}
+.navbar {
+    position: relative;
+    z-index: 1050; /* Higher than content */
 }

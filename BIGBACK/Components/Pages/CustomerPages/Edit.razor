@@ -1,4 +1,4 @@
-﻿@page "/customers/edit"
+﻿@page "/customer/edit"
 @using Microsoft.EntityFrameworkCore
 @using BIGBACK.Domain
 @inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
@@ -6,79 +6,111 @@
 
 <PageTitle>Edit</PageTitle>
 
-<h1>Edit</h1>
-
-<h2>Customer</h2>
+<h1 class="text-center mb-4">Edit your details</h1>
 <hr />
+
 @if (Customer is null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    <div class="row">
+    <div class="row justify-content-center">
         <div class="col-md-4">
             <EditForm method="post" Model="Customer" OnValidSubmit="UpdateCustomer" FormName="edit" Enhance>
                 <DataAnnotationsValidator />
-                <ValidationSummary role="alert"/>
+                <ValidationSummary role="alert" />
                 <input type="hidden" name="Customer.Id" value="@Customer.Id" />
+
                 <div class="mb-3">
-                    <label for="customername" class="form-label">CustomerName:</label>
+                    <label for="customername" class="form-label">Customer Name:</label>
                     <InputText id="customername" @bind-Value="Customer.CustomerName" class="form-control" />
                     <ValidationMessage For="() => Customer.CustomerName" class="text-danger" />
                 </div>
+
                 <div class="mb-3">
-                    <label for="customermobilenumber" class="form-label">CustomerMobileNumber:</label>
+                    <label for="customermobilenumber" class="form-label">Customer Mobile Number:</label>
                     <InputText id="customermobilenumber" @bind-Value="Customer.CustomerMobileNumber" class="form-control" />
                     <ValidationMessage For="() => Customer.CustomerMobileNumber" class="text-danger" />
                 </div>
+
+                <!-- Stagnant Email (Read-Only) -->
                 <div class="mb-3">
-                    <label for="customergender" class="form-label">CustomerGender:</label>
-                    <InputText id="customergender" @bind-Value="Customer.CustomerGender" class="form-control" />
-                    <ValidationMessage For="() => Customer.CustomerGender" class="text-danger" />
+                    <label for="customeremail" class="form-label">Email:</label>
+                    <InputText id="customeremail" @bind-Value="Customer.CustomerEmail" class="form-control" readonly />
                 </div>
+
+                <!-- Stagnant Gender (Read-Only) -->
                 <div class="mb-3">
-                    <label for="customeraddress" class="form-label">CustomerAddress:</label>
+                    <label for="customergender" class="form-label">Gender:</label>
+                    <InputText id="customergender" @bind-Value="Customer.CustomerGender" class="form-control" readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label for="customeraddress" class="form-label">Customer Address:</label>
                     <InputText id="customeraddress" @bind-Value="Customer.CustomerAddress" class="form-control" />
                     <ValidationMessage For="() => Customer.CustomerAddress" class="text-danger" />
                 </div>
-                <div class="mb-3">
-                    <label for="customeremail" class="form-label">CustomerEmail:</label>
-                    <InputText id="customeremail" @bind-Value="Customer.CustomerEmail" class="form-control" />
-                    <ValidationMessage For="() => Customer.CustomerEmail" class="text-danger" />
+
+                @*  Hidden Fields  *@
+                <div class="mb-3" style="display:none;">
+                    <label for="createdby" class="form-label">CreatedBy:</label>
+                    <InputText id="createdby" @bind-Value="Customer.CreatedBy" class="form-control" />
+                    <ValidationMessage For="() => Customer.CreatedBy" class="text-danger" />
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <div class="mb-3" style="display:none;">
+                    <label for="updatedby" class="form-label">UpdatedBy:</label>
+                    <InputText id="updatedby" @bind-Value="Customer.UpdatedBy" class="form-control" />
+                    <ValidationMessage For="() => Customer.UpdatedBy" class="text-danger" />
+                </div>
+                <div class="mb-3" style="display:none;">
+                    <label for="datecreated" class="form-label">DateCreated:</label>
+                    <InputDate id="datecreated" @bind-Value="Customer.DateCreated" class="form-control" />
+                    <ValidationMessage For="() => Customer.DateCreated" class="text-danger" />
+                </div>
+                <div class="mb-3" style="display:none;">
+                    <label for="dateupdated" class="form-label">DateUpdated:</label>
+                    <InputDate id="dateupdated" @bind-Value="Customer.DateUpdated" class="form-control" />
+                    <ValidationMessage For="() => Customer.DateUpdated" class="text-danger" />
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
             </EditForm>
         </div>
     </div>
 }
 
-<div>
-    <a href="/customers">Back to List</a>
+<div class="mt-3 text-center">
+    <a href="/customer/profile">Back to My Profile</a>
 </div>
 
 @code {
-    //Create userId string to store the user id, default value is "System".
-    private string userId = "System";
-    //Inject the AuthenticationStateProvider to get the user id.
-    @inject AuthenticationStateProvider authenticationStateProvider
-
     [SupplyParameterFromQuery]
     private int Id { get; set; }
 
     [SupplyParameterFromForm]
     private Customer? Customer { get; set; }
 
+    //Create userId string to store the user id, default value is "System".
+    private string userId = "System";
+
+    //Inject the AuthenticationStateProvider to get the user id.
+    @inject AuthenticationStateProvider AuthenticationStateProvider
+
     protected override async Task OnInitializedAsync()
     {
-        var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = authState.User;
+
         // Get the userId claim
         var userIdClaim = user.FindFirst("userId");
         if (userIdClaim != null)
         {
             userId = userIdClaim.Value;
         }
+
         using var context = DbFactory.CreateDbContext();
         Customer ??= await context.Customer.FirstOrDefaultAsync(m => m.Id == Id);
 
@@ -93,11 +125,19 @@ else
     private async Task UpdateCustomer()
     {
         using var context = DbFactory.CreateDbContext();
-        //Set the userId to the UpdatedBy fields.
+
+        // Set the userId to the UpdatedBy fields.
         Customer.UpdatedBy = userId;
-        //Set the DateUpdated fields to the current date and time.
+
+        // Set the DateUpdated fields to the current date and time.
         Customer.DateUpdated = DateTime.Now;
+
+        // Attach entity to track changes
         context.Attach(Customer!).State = EntityState.Modified;
+
+        // Prevent Email & Gender from updating
+        context.Entry(Customer).Property(c => c.CustomerEmail).IsModified = false;
+        context.Entry(Customer).Property(c => c.CustomerGender).IsModified = false;
 
         try
         {
@@ -115,7 +155,7 @@ else
             }
         }
 
-        NavigationManager.NavigateTo("/customers");
+        NavigationManager.NavigateTo("/customer/profile");
     }
 
     private bool CustomerExists(int id)

@@ -11,5 +11,7 @@
         public string? UpdatedBy { get; set; }
         public DateTime DateCreated { get; set; }
         public DateTime DateUpdated { get; set; }
+
+        public virtual ICollection<DeliveryRider> DeliveryRiders { get; set; }
     }
 }

@@ -10,9 +10,11 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Register confirmation</PageTitle>
+@inject ILogger<ConfirmEmail> Logger
 
-<h1>Register confirmation</h1>
+<PageTitle>Register Confirmation</PageTitle>
+
+<h1>Register Confirmation</h1>
 
 <StatusMessage Message="@statusMessage" />
 
@@ -32,37 +34,55 @@ else
     private string? emailConfirmationLink;
     private string? statusMessage;
 
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
-
     [SupplyParameterFromQuery]
     private string? Email { get; set; }
 
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
+    // Explicitly retrieve UserId and Role from query string
+    [SupplyParameterFromQuery]
+    private string? UserId { get; set; }
+
+    [SupplyParameterFromQuery]
+    private string? Role { get; set; } // ✅ Ensure Role is retrieved
+
+    // Explicitly retrieve RoleId from query string
+    [SupplyParameterFromQuery]
+    private string? RoleId { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
-        if (Email is null)
+        if (Email is null || UserId is null || Role is null || RoleId is null)
         {
-            RedirectManager.RedirectTo("");
+            RedirectManager.RedirectTo("/error"); // ✅ Redirect if missing parameters
+            return;
         }
 
         var user = await UserManager.FindByEmailAsync(Email);
         if (user is null)
         {
-            HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = "Error finding user for unspecified email";
+            statusMessage = "Error: User not found.";
         }
         else if (EmailSender is IdentityNoOpEmailSender)
         {
-            // Once you add a real email sender, you should remove this code that lets you confirm the account
-            var userId = await UserManager.GetUserIdAsync(user);
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
             emailConfirmationLink = NavigationManager.GetUriWithQueryParameters(
-                NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
-                new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
+                 "Account/ConfirmEmail",
+                 new Dictionary<string, object?>
+                     {
+                         ["userId"] = UserId,
+                         ["role"] = Role,
+                         ["roleId"] = RoleId, // ✅ Ensure RoleId is passed
+                         ["code"] = code,
+                         ["email"] = Email // ✅ Ensure email is passed
+                     }
+                 );
+
+            Logger.LogInformation($"🔗 DEBUG: Confirmation Link Generated: {emailConfirmationLink}");
         }
     }
+
 }

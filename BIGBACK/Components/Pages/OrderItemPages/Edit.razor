@@ -22,6 +22,8 @@ else
                 <DataAnnotationsValidator />
                 <ValidationSummary role="alert"/>
                 <input type="hidden" name="OrderItem.Id" value="@OrderItem.Id" />
+
+
                 <div class="mb-3">
                     <label for="orderitemqty" class="form-label">OrderItemQty:</label>
                     <InputNumber id="orderitemqty" @bind-Value="OrderItem.OrderItemQty" class="form-control" />
@@ -32,12 +34,13 @@ else
                     <InputText id="orderitempromo" @bind-Value="OrderItem.OrderItemPromo" class="form-control" />
                     <ValidationMessage For="() => OrderItem.OrderItemPromo" class="text-danger" />
                 </div>
-                <div class="mb-3">
+
+                <div class="mb-3" style="display:none;">
                     <label for="orderid" class="form-label">OrderId:</label>
                     <InputNumber id="orderid" @bind-Value="OrderItem.OrderId" class="form-control" />
                     <ValidationMessage For="() => OrderItem.OrderId" class="text-danger" />
                 </div>
-                <div class="mb-3">
+                <div class="mb-3" style="display:none;">
                     <label for="menuitemid" class="form-label">MenuItemId:</label>
                     <InputNumber id="menuitemid" @bind-Value="OrderItem.MenuItemId" class="form-control" />
                     <ValidationMessage For="() => OrderItem.MenuItemId" class="text-danger" />
