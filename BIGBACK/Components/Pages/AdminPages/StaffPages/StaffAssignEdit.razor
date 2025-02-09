@@ -1,0 +1,144 @@
+﻿@page "/staff/staffassign/edit"
+@using Microsoft.EntityFrameworkCore
+@using BIGBACK.Domain
+@inject IDbContextFactory<BIGBACK.Data.BIGBACKContext> DbFactory
+@inject NavigationManager NavigationManager
+
+<PageTitle>✏️ Edit Staff & Rider Assignment</PageTitle>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1 class="text-warning">✏️ Edit Assignment</h1>
+        <a class="btn btn-secondary" href="/staff/staffassign">⬅ 🔙 Back to List</a>
+    </div>
+
+    @if (SelectedOrder is null)
+    {
+        <p class="text-center fs-4">⏳ <em>Loading... Please wait</em> ⏳</p>
+    }
+    else
+    {
+        <div class="card shadow-lg p-4 border-primary">
+            <EditForm method="post" Model="SelectedOrder" OnValidSubmit="UpdateOrder" FormName="edit" Edit>
+                <DataAnnotationsValidator />
+                <ValidationSummary class="text-danger fw-bold" role="alert" />
+
+                <input type="hidden" name="SelectedOrder.Id" value="@SelectedOrder.Id" />
+
+                <div class="mb-3">
+                    <label for="orderstatus" class="form-label">📌 Order Status:</label>
+                    <InputText id="orderstatus" @bind-Value="SelectedOrder.OrderStatus" class="form-control border-info" />
+                    <ValidationMessage For="() => SelectedOrder.OrderStatus" class="text-danger fw-bold" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="rider" class="form-label">🚲 Assign Rider:</label>
+                    <InputSelect id="rider" @bind-Value="SelectedOrder.RiderId" class="form-control border-success">
+                        <option value="0">🛵 Select Rider</option>
+                        @foreach (var rider in Riders)
+                        {
+                            <option value="@rider.Id">🏍️ @rider.RiderName</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => SelectedOrder.RiderId" class="text-danger fw-bold" />
+                </div>
+
+                <div class="mb-3">
+                    <label for="staff" class="form-label">👔 Assign Staff:</label>
+                    <InputSelect id="staff" @bind-Value="SelectedOrder.StaffId" class="form-control border-warning">
+                        <option value="0">👤 Select Staff</option>
+                        @foreach (var staff in StaffMembers)
+                        {
+                            <option value="@staff.Id">👔 @staff.StaffName</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="() => SelectedOrder.StaffId" class="text-danger fw-bold" />
+                </div>
+
+                <div class="d-flex justify-content-end mt-3">
+                    <button type="submit" class="btn btn-success btn-lg">💾 Save Changes</button>
+                </div>
+            </EditForm>
+        </div>
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery]
+    private int Id { get; set; }
+
+    private Order? SelectedOrder { get; set; }
+    private List<Rider> Riders = new();
+    private List<Staff> StaffMembers = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var context = DbFactory.CreateDbContext();
+
+        // Explicitly tracking
+        SelectedOrder = await context.Order
+            .Where(o => o.Id == Id)
+            .Include(o => o.Customer) // Optional: If needed for display
+            .AsTracking()
+            .FirstOrDefaultAsync();
+
+        if (SelectedOrder is null)
+        {
+            Console.WriteLine($"❌ Order with ID {Id} not found!");
+            NavigationManager.NavigateTo("/notfound");
+            return;
+        }
+
+        Riders = await context.Rider.ToListAsync();
+        StaffMembers = await context.Staff.ToListAsync();
+        Console.WriteLine($"✅ Loaded Order ID: {SelectedOrder.Id}");
+    }
+
+
+    private async Task UpdateOrder()
+    {
+        if (SelectedOrder is null)
+        {
+            Console.WriteLine("❌ SelectedOrder is null. Cannot update!");
+            return;
+        }
+
+        try
+        {
+            using var context = DbFactory.CreateDbContext();
+            var existingOrder = await context.Order.FirstOrDefaultAsync(o => o.Id == SelectedOrder.Id);
+
+            if (existingOrder is not null)
+            {
+                Console.WriteLine($"🔄 Updating Order {existingOrder.Id}...");
+
+                // Explicitly setting fields
+                existingOrder.RiderId = SelectedOrder.RiderId;
+                existingOrder.StaffId = SelectedOrder.StaffId;
+                existingOrder.OrderStatus = SelectedOrder.OrderStatus;
+
+                context.Entry(existingOrder).State = EntityState.Modified;
+
+                await context.SaveChangesAsync();
+                Console.WriteLine("✅ Order Updated Successfully!");
+
+                NavigationManager.NavigateTo("/staff/staffassign", forceLoad: true);
+            }
+            else
+            {
+                Console.WriteLine($"⚠️ Could not find Order ID {SelectedOrder.Id} in the database!");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error updating Order: {ex.Message}");
+        }
+    }
+
+
+    private bool OrderExists(int id)
+    {
+        using var context = DbFactory.CreateDbContext();
+        return context.Order.Any(e => e.Id == id);
+    }
+}
